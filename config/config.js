@@ -32,7 +32,7 @@ module.exports = {
         database: DB_DB_NAME,
         host: DB_HOSTNAME,
         port: DB_PORT,
-        dialect: DIALECT,
+        dialect: 'postgres',
         seederStorage: SEEDER_STORAGE
     },
     production: {
@@ -41,7 +41,7 @@ module.exports = {
         database: HEROKU_DB_DB_NAME,
         host: HEROKU_DB_HOSTNAME,
         port: HEROKU_DB_PORT,
-        dialect: HEROKU_DIALECT,
+        dialect: 'postgres',
         seederStorage: HEROKU_SEEDER_STORAGE
     }
   }
