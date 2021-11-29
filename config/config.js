@@ -5,15 +5,7 @@ const {
     DB_DB_NAME, 
     DB_HOSTNAME,
     DB_PORT,
-    DIALECT,
     SEEDER_STORAGE,
-    HEROKU_DB_USERNAME, 
-    HEROKU_DB_PASSWORD, 
-    HEROKU_DB_DB_NAME, 
-    HEROKU_DB_HOSTNAME,
-    HEROKU_DB_PORT,
-    HEROKU_DIALECT,
-    HEROKU_SEEDER_STORAGE 
 } = process.env;
 
 module.exports = {
