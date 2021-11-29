@@ -6,7 +6,14 @@ const {
     DB_HOSTNAME,
     DB_PORT,
     DIALECT,
-    SEEDER_STORAGE 
+    SEEDER_STORAGE,
+    HEROKU_DB_USERNAME, 
+    HEROKU_DB_PASSWORD, 
+    HEROKU_DB_DB_NAME, 
+    HEROKU_DB_HOSTNAME,
+    HEROKU_DB_PORT,
+    HEROKU_DIALECT,
+    HEROKU_SEEDER_STORAGE 
 } = process.env;
 
 module.exports = {
@@ -29,13 +36,13 @@ module.exports = {
         seederStorage: SEEDER_STORAGE
     },
     production: {
-        username: DB_USERNAME,
-        password: DB_PASSWORD,
-        database: DB_DB_NAME,
-        host: DB_HOSTNAME,
-        port: DB_PORT,
-        dialect: DIALECT,
-        seederStorage: SEEDER_STORAGE
+        username: HEROKU_DB_USERNAME,
+        password: HEROKU_DB_PASSWORD,
+        database: HEROKU_DB_DB_NAME,
+        host: HEROKU_DB_HOSTNAME,
+        port: HEROKU_DB_PORT,
+        dialect: HEROKU_DIALECT,
+        seederStorage: HEROKU_SEEDER_STORAGE
     }
   }
   

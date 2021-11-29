@@ -12,11 +12,12 @@ const db = {};
 let sequelize;
 if (config.use_env_variable) {
   config.logging = false;
-  console.log(config)
+  // console.log(config)
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
   config.logging = false;
-  console.log(config)
+  config.ssl = true;
+  // console.log(config)
   sequelize = new Sequelize(config.database, config.username, config.password,  config);
 }
 
