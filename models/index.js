@@ -16,7 +16,12 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
   config.logging = false;
-  config.ssl = false;
+  config.dialectOptions = {
+    ssl: {
+        require: true,
+        rejectUnauthorized: false
+    }
+ };
   console.log(config)
   sequelize = new Sequelize(config.database, config.username, config.password,  config);
 }
