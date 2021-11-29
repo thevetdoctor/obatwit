@@ -1,0 +1,38 @@
+{
+  "name": "twitee",
+  "version": "1.0.0",
+  "description": "A mini and substandard runoff of Twitter.",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon start index.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thevetdoctor/twitee.git"
+  },
+  "keywords": [
+    "twitter",
+    "mini",
+    "flexit"
+  ],
+  "author": "obafemi oderanti",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thevetdoctor/twitee/issues"
+  },
+  "homepage": "https://github.com/thevetdoctor/twitee#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.15",
+    "oba-http-response": "^1.0.1",
+    "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.12.0-alpha.1"
+  }
+}
