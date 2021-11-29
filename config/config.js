@@ -36,13 +36,13 @@ module.exports = {
         seederStorage: SEEDER_STORAGE
     },
     production: {
-        username: HEROKU_DB_USERNAME,
-        password: HEROKU_DB_PASSWORD,
-        database: HEROKU_DB_DB_NAME,
-        host: HEROKU_DB_HOSTNAME,
-        port: HEROKU_DB_PORT,
+        username: DB_USERNAME,
+        password: DB_PASSWORD,
+        database: DB_DB_NAME,
+        host: DB_HOSTNAME,
+        port: DB_PORT,
         dialect: 'postgres',
-        seederStorage: HEROKU_SEEDER_STORAGE
+        seederStorage: SEEDER_STORAGE
     }
   }
   
