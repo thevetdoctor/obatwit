@@ -30,7 +30,16 @@ exports.getTwits = async(req, res) => {
                         isDeleted: false
                     },
                 include: [
-                    { model: Comments, as: 'comments' },
+                    { model: Users, as: 'twits',
+                            attributes: ['username', 'email']
+                    },
+                    { model: Comments, as: 'comments',
+                        include: [
+                            { model: Users, as: 'usercomments',
+                            attributes: ['username', 'email']
+                        }
+                        ]
+                    },
                     { model: Likes, as: 'likes',
                         include: [
                             { model: Users, as: 'userlikes',
@@ -58,7 +67,13 @@ exports.getTwit = async(req, res) => {
                         isDeleted: false
                     },
                 include: [
-                    { model: Comments, as: 'comments' },
+                    { model: Comments, as: 'comments',
+                        include: [
+                            { model: Users, as: 'usercomments',
+                            attributes: ['username', 'email']
+                        }
+                        ] 
+                    },
                     { model: Likes, as: 'likes',
                         include: [
                             { model: Users, as: 'userlikes',

@@ -15,7 +15,7 @@ module.exports = async (receiver) => {
       const html =  `
         <h2>Welcome to Twitee</h2>
           <p>You just signed up to the next big thing in the social media space in Africa.</p>
-          <p>Connect with millions of like-minded individualsand organizations, and enjoy the power of networking.</p>
+          <p>Connect with millions of like-minded individuals and organizations, and enjoy the power of networking.</p>
           <p>Please update your profile on the app to get more personalised information in your email inbox</p>
           <p>Welcome on board</p>
           Twitee Team`;

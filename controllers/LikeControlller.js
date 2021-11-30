@@ -8,7 +8,6 @@ exports.likeTwit = async(req, res) => {
     const { twitId } = req.params;
     const { userId } = req.body;
     if(!(twitId && userId)) return response(res, 400, null, 'Please supply missing input(s)');
-    console.log(twitId, userId);
     try {
         const twitExist = await Twits.findOne({ 
             where: {
@@ -26,9 +25,9 @@ exports.likeTwit = async(req, res) => {
             raw: true
         });
         if(like) {
-                console.log(like ? 'liked' : 'unliked');
+                // console.log(like ? 'liked' : 'unliked');
                 if(like.isLiked) {
-                    console.log('about to be unliked');
+                    // console.log('about to be unliked');
                     await Likes.update({
                         isLiked: false
                     }, 
@@ -58,7 +57,7 @@ exports.likeTwit = async(req, res) => {
                         });
                     return response(res, 200, { twit }, null, 'Twit unliked successfully');
                 } else {
-                    console.log('about to be liked again');
+                    // console.log('about to be liked again');
                     await Likes.update({
                         isLiked: true
                     }, 
@@ -89,7 +88,7 @@ exports.likeTwit = async(req, res) => {
                     return response(res, 200, { twit }, null, 'Twit liked successfully');
                 }
             } else {
-                console.log('first-time like');
+                // console.log('first-time like');
                 const newLike = await Likes.create({ twitId, userId });
                 const likedTwit = await Twits.update({
                     likecount: Sequelize.literal('likecount + 1')

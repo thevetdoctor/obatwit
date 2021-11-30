@@ -11,7 +11,13 @@ const app = express();
 app.use(morgan('combined'));
 app.use(parser.json());
 app.use(parser.urlencoded({ extended: false }));
-
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE');
+  
+    next();
+})
 routeHandler(app);
 
 // Handles all errors
