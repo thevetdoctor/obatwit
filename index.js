@@ -3,6 +3,7 @@ const parser = require('body-parser');
 const morgan = require('morgan');
 const db = require('./models/index');
 const routeHandler = require('./routes/index');
+const path = require('path');
 require('dotenv').config();
 
 const port = process.env.PORT || 4000;
@@ -18,6 +19,8 @@ app.use((req, res, next) => {
   
     next();
 })
+app.use(express.static(path.join(__dirname, './ui/build')));
+
 routeHandler(app);
 
 // Handles all errors
@@ -32,9 +35,10 @@ app.use((err, req, res, next) => {
 });
 
 app.get('/', (req, res) => {
-    return res.status(200).json({
-        message: 'Welcome to Twitee'
-    });
+    // return res.status(200).json({
+    //     message: 'Welcome to Twitee'
+    // });
+    res.sendFile(path.join(__dirname, './ui/build/', 'index.html'));
 });
 
 app.listen(port, () => {
