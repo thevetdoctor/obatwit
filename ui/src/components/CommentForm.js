@@ -11,7 +11,7 @@ export default function CommentForm(props) {
 
     
     // const baseUrl = 'http://localhost:4000';
-    const baseUrl = 'http://oba-twit.herokuapp.com';
+    const baseUrl = 'https://oba-twit.herokuapp.com';
     const apiUrl = `${baseUrl}/comments`; 
 
     const handleChange = (e) => {

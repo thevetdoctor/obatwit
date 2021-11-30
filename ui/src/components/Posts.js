@@ -14,7 +14,7 @@ export default function Posts(props) {
 
     const history = useHistory();
   
-const baseUrl = 'http://oba-twit.herokuapp.com';
+const baseUrl = 'https://oba-twit.herokuapp.com';
 // const baseUrl = 'http://localhost:4000';
 const apiUrl = `${baseUrl}/auth/${signup ? 'signup' : 'login'}`; 
 
