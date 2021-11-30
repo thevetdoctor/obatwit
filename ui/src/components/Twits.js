@@ -20,8 +20,8 @@ export default function Twits() {
     const history = useHistory();
     const token = localStorage.getItem('token');
 
-    // const baseUrl = 'http://oba-twit.herokuapp.com';
-    const baseUrl = 'http://localhost:4000';
+    const baseUrl = 'http://oba-twit.herokuapp.com';
+    // const baseUrl = 'http://localhost:4000';
     const apiUrl = `${baseUrl}/twits`;
 
     const showForm = () => {

@@ -10,7 +10,8 @@ export default function CommentForm(props) {
     const token = localStorage.getItem('token'); 
 
     
-    const baseUrl = 'http://localhost:4000';
+    // const baseUrl = 'http://localhost:4000';
+    const baseUrl = 'http://oba-twit.herokuapp.com';
     const apiUrl = `${baseUrl}/comments`; 
 
     const handleChange = (e) => {

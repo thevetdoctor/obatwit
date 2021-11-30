@@ -9,9 +9,9 @@ export default function TwitForm(props) {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const token = localStorage.getItem('token'); 
-
     
-    const baseUrl = 'http://localhost:4000';
+    // const baseUrl = 'http://localhost:4000';
+    const baseUrl = 'http://oba-twit.herokuapp.com';
     const apiUrl = `${baseUrl}/twits/post`; 
 
     const handleChange = (e) => {
