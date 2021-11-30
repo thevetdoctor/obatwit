@@ -7,7 +7,7 @@ const {
     DB_PORT,
     SEEDER_STORAGE,
 } = process.env;
-
+ 
 module.exports = {
     development: {
       username: DB_USERNAME,

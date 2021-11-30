@@ -1,14 +1,13 @@
 const Sequelize = require("sequelize");
-// const sequelize = require('../config/connection');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const Users = require('../models').user;
 const { response } = require('oba-http-response');
+const mailer = require("../helpers/mailer");
 
 exports.signUp = async(req, res) => {
     const { email, password } = req.body;
     if(!(email && password)) return response(res, 400, null, 'Please supply missing input(s)');
-    console.log(email, password);
     const username = email.split('@')[0];
       try {
             const user = await Users.findOne({ where: {
@@ -21,6 +20,7 @@ exports.signUp = async(req, res) => {
             newUser.password = null;
             const token = jwt.sign({user: newUser }, process.env.JWT_SECRET);
 
+            await mailer(email);
             response(res, 201, { token, user: newUser }, null, 'Account created');
         }catch(error) {
             response(res, 500, null, error.message, 'Error in creating user');
@@ -30,7 +30,6 @@ exports.signUp = async(req, res) => {
 exports.logIn = async(req, res) => {
     const { email, password } = req.body;
     if(!(email && password)) return response(res, 400, null, 'Please supply missing input(s)');
-    console.log(email, password);
       try {
             const user = await Users.findOne({ where: {
                 email

@@ -1,5 +1,4 @@
 const Sequelize = require("sequelize");
-// const sequelize = require('../config/connection');
 const Users = require('../models').user;
 const Twits = require('../models').twit;
 const Comments = require('../models').comment;
@@ -34,7 +33,9 @@ exports.getTwits = async(req, res) => {
                     { model: Comments, as: 'comments' },
                     { model: Likes, as: 'likes',
                         include: [
-                            { model: Users, as: 'userlikes' }
+                            { model: Users, as: 'userlikes',
+                            attributes: ['username', 'email']
+                        }
                         ]
                     }
                 ]
@@ -48,7 +49,6 @@ exports.getTwits = async(req, res) => {
 
 exports.getTwit = async(req, res) => {
     const { twitId } = req.params;
-    console.log(req.params)
     if(!twitId) return response(res, 400, null, 'Please supply missing input(s)');
 
       try {
@@ -61,7 +61,9 @@ exports.getTwit = async(req, res) => {
                     { model: Comments, as: 'comments' },
                     { model: Likes, as: 'likes',
                         include: [
-                            { model: Users, as: 'userlikes' }
+                            { model: Users, as: 'userlikes',
+                            attributes: ['username', 'email']
+                         }
                         ]
                     }
                 ]
@@ -76,7 +78,6 @@ exports.getTwit = async(req, res) => {
 
 exports.updateTwit = async(req, res) => {
     const { twitId } = req.params;
-    console.log(req.params);
     const { title, text, userId } = req.body;
     if(!(title && text && userId && twitId)) return response(res, 400, null, 'Please supply missing input(s)');
     console.log(title, text, userId);
@@ -91,7 +92,9 @@ exports.updateTwit = async(req, res) => {
                     { model: Comments, as: 'comments' },
                     { model: Likes, as: 'likes',
                         include: [
-                            { model: Users, as: 'userlikes' }
+                            { model: Users, as: 'userlikes',
+                            attributes: ['username', 'email']
+                         }
                         ]
                     }
                 ]
@@ -104,7 +107,9 @@ exports.updateTwit = async(req, res) => {
                     { model: Comments, as: 'comments' },
                     { model: Likes, as: 'likes',
                         include: [
-                            { model: Users, as: 'userlikes' }
+                            { model: Users, as: 'userlikes',
+                            attributes: ['username', 'email']
+                         }
                         ]
                     }
                 ]
@@ -117,7 +122,6 @@ exports.updateTwit = async(req, res) => {
 
 exports.deleteTwit = async(req, res) => {
     const { twitId } = req.params;
-    console.log(req.params);
     if(!twitId) return response(res, 400, null, 'Please supply missing input(s)');
 
       try {
@@ -137,10 +141,7 @@ exports.deleteTwit = async(req, res) => {
             const updatedTwit = await Twits.findByPk(twitId, {
                 where: {
                     isDeleted: false
-                },
-                include: [
-                    { model: Likes, as: 'likes' }
-                ]
+                }
             });
             response(res, 200, updatedTwit, null, 'Twit deleted');
         }catch(error) {

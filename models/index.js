@@ -11,16 +11,11 @@ const db = {};
 
 let sequelize;
 if (config.use_env_variable) {
-  config.logging = false;
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+  sequelize = new Sequelize(process.env[config.use_env_variable], {config, dialect: 'postgres', logging: false});
 } else {
-  config.logging = false;
-
-  console.log(config)
-  sequelize = new Sequelize(config.database, config.username, config.password, {config, dialect: 'postgres', ssl: {
-    require: true,
-    rejectUnauthorized: false
-}});
+  // sequelize = new Sequelize(config.database, config.username, config.password, {config, dialect: 'postgres', logging: false});
+//  console.log(process.env.DB_URI);
+  sequelize = new Sequelize(process.env.DB_URI);
 }
 
 

@@ -4,10 +4,10 @@ const TwitController = require('../controllers/TwitController');
 const checkAuth = require('../helpers/auth');
 const userAuth = require('../helpers/userAuth');
 
-router.post('/post', TwitController.postTwit);
-router.get('/', TwitController.getTwits);
-router.get('/:twitId', checkAuth, userAuth, TwitController.getTwit);
-router.patch('/:twitId', TwitController.updateTwit);
-router.delete('/:twitId', TwitController.deleteTwit);
+router.post('/post', checkAuth, TwitController.postTwit);
+router.get('/', checkAuth, TwitController.getTwits);
+router.get('/:twitId', checkAuth, TwitController.getTwit);
+router.patch('/:twitId', checkAuth, userAuth, TwitController.updateTwit);
+router.delete('/:twitId', checkAuth, userAuth, TwitController.deleteTwit);
 
 module.exports = router;

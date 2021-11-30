@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     isLiked: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false
+      defaultValue: true
     },
   }, {
     sequelize,

@@ -1,5 +1,4 @@
 const Sequelize = require("sequelize");
-// const sequelize = require('../config/connection');
 const Users = require('../models').user;
 const Twits = require('../models').twit;
 const Comments = require('../models').comment;
@@ -9,7 +8,6 @@ exports.postComment = async(req, res) => {
     const { twitId } = req.params;
     const { text, userId } = req.body;
     if(!(twitId && text && userId)) return response(res, 400, null, 'Please supply missing input(s)');
-    console.log(twitId, text, userId);
     try {
         const twitExist = await Twits.findOne({ 
             where: {

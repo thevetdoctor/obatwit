@@ -1,5 +1,4 @@
 const Sequelize = require("sequelize");
-// const sequelize = require('../config/connection');
 const Users = require('../models').user;
 const Twits = require('../models').twit;
 const Likes = require('../models').like;
@@ -40,15 +39,7 @@ exports.likeTwit = async(req, res) => {
                         likecount: Sequelize.literal('likecount - 1')
                     },
                     { 
-                        where: { id: twitId },
-                        include: [
-                            { model: Likes, as: 'likes',
-                                include: [
-                                    { model: Users, as: 'userlikes' }
-                                ]
-                            }
-                        ],
-                        returning: true
+                        where: { id: twitId }
                     });
                     const twit = await Twits.findOne({
                             where: {
@@ -58,12 +49,14 @@ exports.likeTwit = async(req, res) => {
                             include: [
                                 { model: Likes, as: 'likes',
                                     include: [
-                                        { model: Users, as: 'userlikes' }
+                                        { model: Users, as: 'userlikes',
+                                attributes: ['username', 'email']
+                            }
                                     ]
                                 }
                             ]
                         });
-                    return response(res, 200, { likedTwit, twit }, null, 'Twit unliked successfully');
+                    return response(res, 200, { twit }, null, 'Twit unliked successfully');
                 } else {
                     console.log('about to be liked again');
                     await Likes.update({
@@ -76,15 +69,7 @@ exports.likeTwit = async(req, res) => {
                         likecount: Sequelize.literal('likecount + 1')
                     }, 
                     { 
-                        where: { id: twitId },
-                        include: [
-                            { model: Likes, as: 'likes',
-                                include: [
-                                    { model: Users, as: 'userlikes' }
-                                ]
-                            }
-                        ],
-                        returning: true
+                        where: { id: twitId }
                     });
                     const twit = await Twits.findOne({
                         where: {
@@ -94,12 +79,14 @@ exports.likeTwit = async(req, res) => {
                         include: [
                             { model: Likes, as: 'likes',
                                 include: [
-                                    { model: Users, as: 'userlikes' }
+                                    { model: Users, as: 'userlikes',
+                                    attributes: ['username', 'email']
+                                }
                                 ]
                             }
                         ]
                     });
-                    return response(res, 200, { likedTwit, twit }, null, 'Twit liked successfully');
+                    return response(res, 200, { twit }, null, 'Twit liked successfully');
                 }
             } else {
                 console.log('first-time like');
@@ -108,15 +95,7 @@ exports.likeTwit = async(req, res) => {
                     likecount: Sequelize.literal('likecount + 1')
                 }, 
                 { 
-                    where: { id: twitId },
-                    include: [
-                        { model: Likes, as: 'likes',
-                            include: [
-                                { model: Users, as: 'userlikes' }
-                            ]
-                        }
-                    ],
-                    returning: true
+                    where: { id: twitId }
                 });
                 const twit = await Twits.findOne({
                     where: {
@@ -126,12 +105,14 @@ exports.likeTwit = async(req, res) => {
                     include: [
                         { model: Likes, as: 'likes',
                             include: [
-                                { model: Users, as: 'userlikes' }
+                                { model: Users, as: 'userlikes',
+                                attributes: ['username', 'email']
+                             }
                             ]
                         }
                     ]
                 });
-                return response(res, 201, { likedTwit, twit }, null, 'Twit liked successfully');
+                return response(res, 200, { twit }, null, 'Twit liked successfully');
 
             }
         }catch(error) {
