@@ -32,8 +32,8 @@ exports.likeTwit = async(req, res) => {
                         isLiked: false
                     }, 
                     { 
-                        where: { twitId }
-                    });
+                        where: { twitId, userId }
+                    }); // Fixed bug to only update specific like record of the user
                     const likedTwit = await Twits.update({
                         likecount: Sequelize.literal('likecount - 1')
                     },
@@ -62,8 +62,8 @@ exports.likeTwit = async(req, res) => {
                         isLiked: true
                     }, 
                     { 
-                        where: { twitId }
-                    });
+                        where: { twitId, userId }
+                    }); // Fixed bug to only update specific like record of the user
                     const likedTwit = await Twits.update({
                         likecount: Sequelize.literal('likecount + 1')
                     }, 
