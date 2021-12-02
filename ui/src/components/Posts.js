@@ -6,6 +6,12 @@ import axios from 'axios';
 import Loader from 'react-loader-spinner';
 import GoogleAuth from './GoogleAuth';
 import { baseUrl } from '../helper';
+import LinkedinAuth from './LinkedinAuth';
+import dotenv from "dotenv";
+
+dotenv.config();
+const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+console.log('id', clientId, process.env);
 
 export const authenticate = async(google = false, email, password = null, apiUrl, error, setError, setLoading, history, name) => {
     setLoading(true);
@@ -20,8 +26,17 @@ export const authenticate = async(google = false, email, password = null, apiUrl
             }
         })
         .catch(error => {
-            // console.log(error.response);
-            setError(error.response.data.error);
+            if(error.response) {
+                setError(error.response?.data?.error);
+                setTimeout(() => {
+                    setError('');
+                }, 1000);
+            } else {
+                setError('Please check your network');
+                setTimeout(() => {
+                    setError('');
+                }, 1000);
+            }
         });
     } else {
         res = await axios({
@@ -33,8 +48,10 @@ export const authenticate = async(google = false, email, password = null, apiUrl
             }
         })
         .catch(error => {
-            // console.log(error.response);
             setError(error.response.data.error);
+            setTimeout(() => {
+                setError('');
+            }, 1000);
         });
 
     }
@@ -45,7 +62,6 @@ export const authenticate = async(google = false, email, password = null, apiUrl
             history.push('/twits');
         } else {
             setLoading(false);
-            // console.log('Error found');
         }
 }
 
@@ -56,8 +72,6 @@ export default function Posts(props) {
     const [loading, setLoading] = useState(false);
     const [signup, setSignup] = useState(JSON.parse(localStorage.getItem('signup')));
     const token = localStorage.getItem('token');
-    // 865349714041-35tbv6kfmsdueb9cb018vukqpdul0shv.apps.googleusercontent.com
-    // vBv8xgYZfxpBoTYg9JTv8qvb
     const history = useHistory();
   
 const apiUrl = `${baseUrl}/auth/${signup ? 'signup' : 'login'}`; 
@@ -71,7 +85,6 @@ const handleChange = (e) => {
 }
 
 const handleSignupMode = () => {
-    // console.log(signup);
     if(!signup) {
         setSignup(true);
         localStorage.setItem('signup', true);
@@ -86,12 +99,16 @@ useEffect(() => {
         history.push('/');
     }
     return () => {
-        // console.log('cleanup posts');
     }
 }, []);
 
     return (
-        <div className='text-center'>
+        <div className='text-center align-items-center'>
+            <p className='italic text-white-700 font-medium text-center mb-5'>
+                <span className='text-purple-900 font-bold text-xl'>
+                    Twitee
+                </span> .... Feel free, express our mind ....
+            </p>
             <h1 style={{fontSize: 20}} className='font-bold text-md mb-7'>
                 {signup ?  'Signup' : 'Login'}
             </h1>
@@ -102,7 +119,7 @@ useEffect(() => {
                 placeholder='email'
                 onChange={handleChange}
                 className='px-3 rounded mb-5'
-                />
+                /><br/>
             <input 
                 type='password'
                 name='password'
@@ -149,6 +166,7 @@ useEffect(() => {
                 loading={loading}
                 setLoading={setLoading}
             />
+            {/* <LinkedinAuth /> */}
         </div>
     )
 }

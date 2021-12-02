@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios';
 import Loader from 'react-loader-spinner';
+import { baseUrl } from '../helper';
 
 export default function TwitForm(props) {
     const [title, setTitle] = useState('');
@@ -10,8 +11,6 @@ export default function TwitForm(props) {
     const [loading, setLoading] = useState(false);
     const token = localStorage.getItem('token'); 
     
-    // const baseUrl = 'http://localhost:4000';
-    const baseUrl = 'https://oba-twit.herokuapp.com';
     const apiUrl = `${baseUrl}/twits/post`; 
 
     const handleChange = (e) => {
@@ -76,7 +75,7 @@ export default function TwitForm(props) {
             {textArea}
             <div style={{flexDirection: 'column'}} className='flex mb-5'>
                 {error && <span className='mb-2 text-red-800 text-md'>{error}</span>}
-                <div className='justify-items-center'>
+                <div className='justify-items-center mt-2'>
                     <span 
                         style={{cursor: 'pointer'}}
                         onClick={() => props.showForm()}
@@ -89,7 +88,7 @@ export default function TwitForm(props) {
                     <span 
                         style={{cursor: 'pointer'}}
                         onClick={sendTwit}
-                        className='hover:bg-green-900 bg-green-400 font-medium p-2 rounded text-white mx-2'
+                        className='hover:bg-green-900 bg-green-400 font-medium p-1 rounded text-white mx-2'
                     >    
                         Send
                     </span>

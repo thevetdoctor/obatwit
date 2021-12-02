@@ -1,21 +1,31 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Twitee App",
+  "name": "Twitee App",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "fruits-120.png",
+      "sizes": "120x120",
+      "type": "image/png"
     },
     {
-      "src": "logo192.png",
+      "src": "fruits-144.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "144x144"
     },
     {
-      "src": "logo512.png",
+      "src": "fruits-152.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "152x152"
+    },
+    {
+      "src": "fruits-167.png",
+      "type": "image/png",
+      "sizes": "168x168"
+    },
+    {
+      "src": "fruits-180.png",
+      "type": "image/png",
+      "sizes": "180x168"
     }
   ],
   "start_url": ".",

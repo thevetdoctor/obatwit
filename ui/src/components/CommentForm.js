@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios';
 import Loader from 'react-loader-spinner';
+import { baseUrl } from '../helper';
 
 export default function CommentForm(props) {
     const [text, setText] = useState('');
@@ -8,10 +9,7 @@ export default function CommentForm(props) {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const token = localStorage.getItem('token'); 
-
     
-    // const baseUrl = 'http://localhost:4000';
-    const baseUrl = 'https://oba-twit.herokuapp.com';
     const apiUrl = `${baseUrl}/comments`; 
 
     const handleChange = (e) => {

@@ -4,7 +4,11 @@ import { useHistory } from 'react-router-dom';
 import { GoogleLogin } from 'react-google-login';
 import { authenticate } from './Posts';
 import { baseUrl } from '../helper';
-const clientId = '865349714041-35tbv6kfmsdueb9cb018vukqpdul0shv.apps.googleusercontent.com';
+import dotenv from "dotenv";
+
+dotenv.config();
+const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+console.log('id', clientId);
 
 export default function GoogleAuth(props) {
     const { error, setError, loading, setLoading } = props;

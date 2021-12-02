@@ -7,21 +7,22 @@ import { BsPersonFill, BsChatTextFill } from 'react-icons/bs';
 import { AiTwotoneLike, AiTwotoneDelete, AiFillHome } from 'react-icons/ai';
 import { FiLogOut } from 'react-icons/fi';
 import { RiChatNewLine } from 'react-icons/ri';
+import { IoIosPeople } from 'react-icons/io';
 import TwitForm from './TwitForm';
 import CommentForm from './CommentForm';
+import { baseUrl } from '../helper';
 
 export default function Twits() {
     const [error, setError] = useState('');
     const [twits, setTwits] = useState([]);
     const [formActive, setFormActive] = useState(false);
     const [sync, setSync] = useState(false);
+    const [users, setUsers] = useState(0);
 
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
     const history = useHistory();
     const token = localStorage.getItem('token');
 
-    const baseUrl = 'https://oba-twit.herokuapp.com';
-    // const baseUrl = 'http://localhost:4000';
     const apiUrl = `${baseUrl}/twits`;
 
     const showForm = () => {
@@ -72,10 +73,32 @@ export default function Twits() {
             }
     }
 
+    const getUsers = async() => {
+        const res = await axios({
+            method: 'GET',
+            url: `${baseUrl}/auth/users`,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+            })
+            .catch(error => {
+                if(error.isAxiosError) {
+                    console.log(error.isAxiosError);
+                }
+            });
+            if(res && res.data.success) {
+                setUsers(res.data.data.count);
+            } else {
+                console.log('Error found');
+                setError('Error found');
+            }
+    }
+
 useEffect(() => {
     if(!token) {
         history.push('/');
     }
+    getUsers();
     return () => {
         console.log('cleanup twits 1');
     }
@@ -92,13 +115,15 @@ useEffect(async() => {
     return (
         <div className='mb-5'>
             {formActive && <TwitForm error={error} showForm={showForm} sync={sync} setSync={setSync}/>}
+            <p className='italic text-white-700 font-medium text-center'><span className='text-purple-900 font-bold text-xl'>Twitee</span> .... Feel free, express our mind ....</p>
             <p className='py-2 px-2 rounded bg-blue-500 mb-4 flex justify-between'>
                 <span className='text-left'><AiFillHome /></span>
+                {users > 0 && <span className='text-left flex'><IoIosPeople size={25}/>{users}</span>}
                 <span style={{cursor: 'pointer'}} className='text-right' onClick={logout}>
                     <FiLogOut />
                 </span>
             </p>
-            <span style={{cursor: 'pointer'}} className='text-xs my-10' onClick={showForm}><RiChatNewLine size={15} color='teal'/></span>
+            <span style={{cursor: 'pointer'}} className='text-xs my-10 sticky top-50' onClick={showForm}><RiChatNewLine size={15} color='teal'/></span>
             <p className='text-center font-bold text-blue-500 mb-4'>Twits</p>
             {
                 twits.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((twit, idx) => 
