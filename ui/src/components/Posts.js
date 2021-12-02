@@ -6,8 +6,10 @@ import axios from 'axios';
 import Loader from 'react-loader-spinner';
 import GoogleAuth from './GoogleAuth';
 import { baseUrl } from '../helper';
-import LinkedinAuth from './LinkedinAuth';
+// import LinkedinAuth from './LinkedinAuth';
 import dotenv from "dotenv";
+import chat from './chat.jpg';
+import { CgCopyright } from 'react-icons/cg';
 
 dotenv.config();
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
@@ -103,11 +105,11 @@ useEffect(() => {
 }, []);
 
     return (
-        <div className='text-center align-items-center'>
+        <div className=' text-center align-items-center'>
             <p className='italic text-white-700 font-medium text-center mb-5'>
                 <span className='text-purple-900 font-bold text-xl'>
                     Twitee
-                </span> .... Feel free, express our mind ....
+                </span> .... Feel free, express yourself, network ....
             </p>
             <h1 style={{fontSize: 20}} className='font-bold text-md mb-7'>
                 {signup ?  'Signup' : 'Login'}
@@ -167,6 +169,14 @@ useEffect(() => {
                 setLoading={setLoading}
             />
             {/* <LinkedinAuth /> */}
+            <p className="text-white-400 bold flex text-center"><CgCopyright /> Twitee</p>         
+            
+          <img 
+            src={chat}
+            alt='CHat'
+            className=''
+            style={{borderRadius: '5', width: '100'}}
+          />
         </div>
     )
 }

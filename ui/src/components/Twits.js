@@ -3,10 +3,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import Moment from 'react-moment';
-import { BsPersonFill, BsChatTextFill } from 'react-icons/bs';
+import { BsPersonFill, BsChatTextFill, BsFillChatDotsFill } from 'react-icons/bs';
 import { AiTwotoneLike, AiTwotoneDelete, AiFillHome } from 'react-icons/ai';
 import { FiLogOut } from 'react-icons/fi';
-import { RiChatNewLine } from 'react-icons/ri';
 import { IoIosPeople } from 'react-icons/io';
 import TwitForm from './TwitForm';
 import CommentForm from './CommentForm';
@@ -115,16 +114,19 @@ useEffect(async() => {
     return (
         <div className='mb-5'>
             {formActive && <TwitForm error={error} showForm={showForm} sync={sync} setSync={setSync}/>}
-            <p className='italic text-white-700 font-medium text-center'><span className='text-purple-900 font-bold text-xl'>Twitee</span> .... Feel free, express our mind ....</p>
-            <p className='py-2 px-2 rounded bg-blue-500 mb-4 flex justify-between'>
+            <p className='italic text-white-700 font-medium text-center'><span className='text-purple-900 font-bold text-xl'>Twitee</span> .... Feel free, express yourself, network ....</p>
+            <p className='py-2 px-2 rounded bg-blue-300 mb-4 flex justify-between'>
                 <span className='text-left'><AiFillHome /></span>
                 {users > 0 && <span className='text-left flex'><IoIosPeople size={25}/>{users}</span>}
                 <span style={{cursor: 'pointer'}} className='text-right' onClick={logout}>
                     <FiLogOut />
                 </span>
             </p>
-            <span style={{cursor: 'pointer'}} className='text-xs my-10 sticky top-50' onClick={showForm}><RiChatNewLine size={15} color='teal'/></span>
-            <p className='text-center font-bold text-blue-500 mb-4'>Twits</p>
+            <div style={{cursor: 'pointer'}} className='w-full text-white-400 flex justify-between' onClick={showForm}>
+                <span></span>
+                <span className='font-bold mb-4 italic'>Twits</span>
+                <span style={{position: '-webkit-sticky'}} className='sticky top-4 mr-4 -ml-6'><BsFillChatDotsFill size={25} /></span>
+            </div>
             {
                 twits.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((twit, idx) => 
                     <Twit key={idx} twit={twit} email={email} apiCallHook={apiCallHook} baseUrl={baseUrl} sync={sync} setSync={setSync} showForm={showForm} formActive={formActive}/>
@@ -164,7 +166,7 @@ const Twit = (props) => {
         <span className='text-xs mb-2'>
             <Moment fromNow>{createdAt}</Moment>
         </span>
-        <p>{text}</p>
+        <p className='font-sans antialiased'>{text}</p>
         <p className='text-xs text-gray-800 flex my-2'>
             <span className='mx-2 flex'><BsPersonFill size={15}/> {email === twits.email ? 'Me' : twits.username}</span>
             <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => likeTwit()}>

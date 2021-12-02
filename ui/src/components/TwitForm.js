@@ -23,34 +23,38 @@ export default function TwitForm(props) {
     }
 
     const sendTwit = async() => {
-                setLoading(true);
-                const res = await axios({
-                    method: 'POST',
-                    url: `${apiUrl}`,
-                    data: {title, text},
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                        }
-                    })
-                    .catch(error => {
-                            console.log(error.response);
-                            setError(error.response.data.error);
-                    });
-                    console.log(res);
-                    if(res && res.data.success) {
-                        setLoading(false);
-                        props.setSync(!props.sync);
-                        props.showForm();
-                    } else {
-                        setLoading(false);
-                        console.log('Error found'); 
+            if(!(title && text)) {
+                setError('Inputs required');
+                return;
+            }
+            setLoading(true);
+            const res = await axios({
+                method: 'POST',
+                url: `${apiUrl}`,
+                data: {title, text},
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                     }
+                })
+                .catch(error => {
+                        console.log(error.response);
+                        setError(error.response.data.error);
+                });
+                console.log(res);
+                if(res && res.data.success) {
+                    setLoading(false);
+                    props.setSync(!props.sync);
+                    props.showForm();
+                } else {
+                    setLoading(false);
+                    console.log('Error found'); 
+                }
     }
 
     return (
-        <div className='text-center'>
-             <h1 style={{fontSize: 20}} className='font-bold text-md mb-7'>
+        <div className='text-center sticky top-5 rounded pb-1 bg-blue-300'>
+             <h1 style={{fontSize: 20}} className='font-bold text-base mb-3'>
                 New twit
             </h1>
             <input 
@@ -60,7 +64,8 @@ export default function TwitForm(props) {
                 placeholder='title'
                 onChange={handleChange}
                 className='px-3 py-1 rounded mb-5'
-                />
+                required
+                /><br/>
             <input 
                 type='textarea'
                 name='text'
@@ -71,6 +76,7 @@ export default function TwitForm(props) {
                 placeholder='Drop in your twit ...' 
                 onChange={handleChange}
                 className='px-3 rounded mb-5 h-40 text-md text-gray-600'
+                required
             /><br/>
             {textArea}
             <div style={{flexDirection: 'column'}} className='flex mb-5'>
