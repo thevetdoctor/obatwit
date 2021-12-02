@@ -173,6 +173,7 @@ const Twit = (props) => {
                 <AiTwotoneLike color={likeCount > 0 ? 'blue' : 'gray'} size={15}/><span className='text-xs'>{likeCount}</span>
             </span>
             {/* <span className='flex'><FcLike size={15}/></span> */}
+            {/* <span className='flex'><FcLike size={15}/></span> */}
             <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => commentTwit()}>
                 <BsChatTextFill size={15}/>
             </span>
