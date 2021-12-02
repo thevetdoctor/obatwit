@@ -4,16 +4,26 @@ const bcrypt = require('bcrypt');
 const Users = require('../models').user;
 const { response } = require('oba-http-response');
 const mailer = require("../helpers/mailer");
+const randomId = require('oba-random-id');
 
 exports.signUp = async(req, res) => {
-    const { email, password } = req.body;
-    if(!(email && password)) return response(res, 400, null, 'Please supply missing input(s)');
-    const username = email.split('@')[0];
-      try {
-            const user = await Users.findOne({ where: {
-                email
-            }});
-            if(user) return response(res, 400, null, 'User exists');
+    const { email, password, auth, name } = req.body;
+    let username;
+    if(!auth) {
+        if(!(email && password)) return response(res, 400, null, 'Please supply missing input(s)');
+        username = email.split('@')[0];
+    } else {
+        username = name;
+    }
+    try {
+        const user = await Users.findOne({ where: {
+            email
+        }});
+        if(user) return response(res, 400, null, 'User exists');
+        
+        if(auth) {
+            password = randomId(10);
+        }
 
             const hash = bcrypt.hashSync(password, 10);
             const newUser = await Users.create({username, email, password: hash});
@@ -28,16 +38,20 @@ exports.signUp = async(req, res) => {
 }; 
 
 exports.logIn = async(req, res) => {
-    const { email, password } = req.body;
-    if(!(email && password)) return response(res, 400, null, 'Please supply missing input(s)');
+    const { email, password, auth } = req.body;
+    if(!auth) {
+        if(!(email && password)) return response(res, 400, null, 'Please supply missing input(s)');
+    }
       try {
             const user = await Users.findOne({ where: {
                 email
             }});
             if(!user) return response(res, 400, null, 'User does not exist');
 
-            const compared = bcrypt.compareSync(password, user.password);
-            if(!compared) return response(res, 400, null, 'Invalid credentials');
+            if(!auth) {
+                const compared = bcrypt.compareSync(password, user.password);
+                if(!compared) return response(res, 400, null, 'Invalid credentials');
+            }
 
             user.password = null;
             const token = jwt.sign({user: user }, process.env.JWT_SECRET);
