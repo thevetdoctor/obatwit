@@ -7,7 +7,7 @@ const mailer = require("../helpers/mailer");
 const randomId = require('oba-random-id');
 
 exports.signUp = async(req, res) => {
-    const { email, password, auth, name } = req.body;
+    let { email, password, auth, name } = req.body;
     let username;
     if(!auth) {
         if(!(email && password)) return response(res, 400, null, 'Please supply missing input(s)');
