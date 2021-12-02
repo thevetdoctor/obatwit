@@ -22,7 +22,7 @@ exports.signUp = async(req, res) => {
         if(user) return response(res, 400, null, 'User exists');
         
         if(auth) {
-            password = randomId(10);
+            password = 'google';
         }
 
             const hash = bcrypt.hashSync(password, 10);
@@ -49,6 +49,9 @@ exports.logIn = async(req, res) => {
             if(!user) return response(res, 400, null, 'User does not exist');
 
             if(!auth) {
+                if(bcrypt.compareSync('google', user.password)) {
+                    return response(res, 400, null, 'Please login with the google button');
+                }
                 const compared = bcrypt.compareSync(password, user.password);
                 if(!compared) return response(res, 400, null, 'Invalid credentials');
             }
@@ -65,14 +68,12 @@ exports.logIn = async(req, res) => {
 exports.getUsers = async(req, res) => {
     console.log('user email', req.userEmail, Users);
       try {
-            const users = await Users.findAll();
+            const users = await Users.findAll({
+                attributes: ['email']
+            });
             console.log(users);
-            response(res, 200, { users }, null, 'List of users');
+            response(res, 200, { count: users.length, users }, null, 'List of users');
         }catch(error) {
-            if(error.message.search('Validation') >= 0) {
-                return response(res, 400, null, 'Email not valid');
-            }
-           
-            response(res, 500, null, error.message, 'Error in creating user');
+            response(res, 500, null, error.message, 'Error in getting users');
         }
 }; 
