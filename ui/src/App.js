@@ -8,7 +8,7 @@ import { CgCopyright } from 'react-icons/cg';
 function App() {
     const [loggedIn, setLoggedIn] = useState(JSON.parse(localStorage.getItem('loggedIn')));
     const [signup, setSignup] = useState(JSON.parse(localStorage.getItem('signup')) || false);
-    console.log(loggedIn, localStorage.getItem('signup'));
+    // console.log(loggedIn, localStorage.getItem('signup'));
     
   return (
     <Router>

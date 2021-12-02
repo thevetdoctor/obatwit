@@ -1,8 +1,53 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import Loader from 'react-loader-spinner';
+import GoogleAuth from './GoogleAuth';
+import { baseUrl } from '../helper';
+
+export const authenticate = async(google = false, email, password = null, apiUrl, error, setError, setLoading, history, name) => {
+    setLoading(true);
+    let res;
+    if(!google) {
+        res = await axios({
+            method: 'POST',
+            url: `${apiUrl}`,
+            data: {email, password},
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .catch(error => {
+            // console.log(error.response);
+            setError(error.response.data.error);
+        });
+    } else {
+        res = await axios({
+            method: 'POST',
+            url: `${apiUrl}`,
+            data: {email, password: 'passs', auth: 'google', name},
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .catch(error => {
+            // console.log(error.response);
+            setError(error.response.data.error);
+        });
+
+    }
+        if(res && res.data.success) {
+            localStorage.setItem('email', email);
+            localStorage.setItem('token', res.data.data.token);
+            setLoading(false);
+            history.push('/twits');
+        } else {
+            setLoading(false);
+            // console.log('Error found');
+        }
+}
 
 export default function Posts(props) {
     const [email, setEmail] = useState('');
@@ -11,11 +56,10 @@ export default function Posts(props) {
     const [loading, setLoading] = useState(false);
     const [signup, setSignup] = useState(JSON.parse(localStorage.getItem('signup')));
     const token = localStorage.getItem('token');
-
+    // 865349714041-35tbv6kfmsdueb9cb018vukqpdul0shv.apps.googleusercontent.com
+    // vBv8xgYZfxpBoTYg9JTv8qvb
     const history = useHistory();
   
-const baseUrl = 'https://oba-twit.herokuapp.com';
-// const baseUrl = 'http://localhost:4000';
 const apiUrl = `${baseUrl}/auth/${signup ? 'signup' : 'login'}`; 
 
 const handleChange = (e) => {
@@ -27,7 +71,7 @@ const handleChange = (e) => {
 }
 
 const handleSignupMode = () => {
-    console.log(signup);
+    // console.log(signup);
     if(!signup) {
         setSignup(true);
         localStorage.setItem('signup', true);
@@ -36,37 +80,13 @@ const handleSignupMode = () => {
         localStorage.setItem('signup', false);
     }
 }
-const authenticate = async() => {
-    setLoading(true);
-    const res = await axios({
-        method: 'POST',
-        url: `${apiUrl}`,
-        data: {email, password},
-        headers: {
-            'Content-Type': 'application/json',
-            }
-        })
-        .catch(error => {
-            console.log(error.response);
-            setError(error.response.data.error);
-        });
-        if(res && res.data.success) {
-            localStorage.setItem('email', email);
-            localStorage.setItem('token', res.data.data.token);
-            setLoading(false);
-            history.push('/twits');
-        } else {
-            setLoading(false);
-            console.log('Error found');
-        }
-}
 
 useEffect(() => {
     if(!token) {
         history.push('/');
     }
     return () => {
-        console.log('cleanup posts');
+        // console.log('cleanup posts');
     }
 }, []);
 
@@ -97,7 +117,7 @@ useEffect(() => {
                     {!loading ?
                     <span 
                         style={{cursor: 'pointer'}}
-                        onClick={authenticate}
+                        onClick={() => authenticate(false, email, password, apiUrl, error, setError, setLoading, history)}
                         className='hover:bg-green-900 bg-green-400 font-medium p-2 rounded w-6 h-3 text-white'
                     >    
                         {signup ? 'Signup' : 'Login' }
@@ -112,7 +132,7 @@ useEffect(() => {
                         />
                      </span>}
                 </div>
-                <span className='text-xs mt-5'>
+                <span className='text-xs mt-4 mb-4'>
                 {signup ? 'Already signed up ?' : 'Not registered ?' }
                      
                 <a 
@@ -123,6 +143,12 @@ useEffect(() => {
                     {signup ? ' Login here' : ' Signup here!' }
                 </a></span>
             </div>
+            <GoogleAuth 
+                error={error}
+                setError={setError}
+                loading={loading}
+                setLoading={setLoading}
+            />
         </div>
     )
 }
