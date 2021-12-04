@@ -53,7 +53,7 @@ export default function TwitForm(props) {
     }
 
     return (
-        <div className='text-center sticky top-5 rounded pb-1 bg-blue-300'>
+        <div className='text-center sticky top-5 rounded pb-1 bg-blue-200 mb-1'>
              <h1 style={{fontSize: 20}} className='font-bold text-base mb-3'>
                 New twit
             </h1>
@@ -63,7 +63,7 @@ export default function TwitForm(props) {
                 value={title} 
                 placeholder='title'
                 onChange={handleChange}
-                className='px-3 py-1 rounded mb-5'
+                className='px-3 py-1 rounded mb-2'
                 required
                 /><br/>
             <input 
@@ -75,7 +75,7 @@ export default function TwitForm(props) {
                 value={text} 
                 placeholder='Drop in your twit ...' 
                 onChange={handleChange}
-                className='px-3 rounded mb-5 h-40 text-md text-gray-600'
+                className='px-3 rounded mb-1 h-40 text-md text-gray-600'
                 required
             /><br/>
             {textArea}

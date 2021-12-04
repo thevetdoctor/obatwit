@@ -19,6 +19,7 @@ export default function Twits() {
     const [users, setUsers] = useState(0);
 
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
+    const img = localStorage.getItem('img') ? localStorage.getItem('img') : '';
     const history = useHistory();
     const token = localStorage.getItem('token');
 
@@ -65,7 +66,6 @@ export default function Twits() {
                 }
             });
             if(res && res.data.success) {
-                console.log(res.data.data)
                 setTwits(res.data.data);
             } else {
                 console.log('Error found'); 
@@ -93,7 +93,6 @@ export default function Twits() {
                 setError('Error found');
             }
     }
-const img = localStorage.getItem('img');
 
 useEffect(() => {
     if(!token) {
@@ -118,8 +117,11 @@ useEffect(async() => {
             {formActive && <TwitForm error={error} showForm={showForm} sync={sync} setSync={setSync}/>}
             <p className='italic text-white-700 font-medium text-center'><span className='text-purple-900 font-bold text-xl'>Twitee</span> .... Feel free, express yourself, network ....</p>
             <div className='py-2 px-2 rounded bg-blue-300 mb-4 flex justify-between'>
-                {!img  && <span className='text-left'><AiFillHome /></span>}
-                {img && <span><img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} /></span>}
+                {img !== 'null' ? (
+                    <span>
+                        <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />
+                    </span>) 
+                    : <span className='text-left'><AiFillHome size={25} /></span>}
                 {users > 0 && <span className='text-left flex'><IoIosPeople size={25}/>{users}</span>}
                 <span style={{cursor: 'pointer'}} className='text-right' onClick={logout}><Logout />
                 </span>
@@ -170,12 +172,17 @@ const Twit = (props) => {
         </span>
         <p className='font-sans antialiased'>{text}</p>
         <p className='text-xs text-gray-800 flex my-2'>
-            <span className='mx-2 flex'><BsPersonFill size={15}/> {email === twits.email ? 'Me' : twits.username}</span>
+            <span className='mx-2 flex'>
+                {twits.imageUrl ? (
+                <span className='mr-1'>
+                    <img src={twits.imageUrl} alt='Profile' style={{width: '20px', height: '20px', borderRadius: '50%'}} />
+                </span>)
+                : <BsPersonFill size={15}/>}
+                {email === twits.email ? 'Me' : twits.username}
+            </span>
             <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => likeTwit()}>
                 <AiTwotoneLike color={likeCount > 0 ? 'blue' : 'gray'} size={15}/><span className='text-xs'>{likeCount}</span>
             </span>
-            {/* <span className='flex'><FcLike size={15}/></span> */}
-            {/* <span className='flex'><FcLike size={15}/></span> */}
             <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => commentTwit()}>
                 <BsChatTextFill size={15}/>
             </span>
@@ -206,7 +213,11 @@ const Comment = (props) => {
             </span>
             <p>{text}</p>
             <span className='mx-2 flex items-justify text-xs'>
-                <BsPersonFill size={15}/>
+                {usercomments.imageUrl ? (
+                <span className='mr-1'>
+                    <img src={usercomments.imageUrl} alt='Profile' style={{width: '20px', height: '20px', borderRadius: '50%'}} />
+                </span>)
+                : <BsPersonFill size={15}/>}
                 <span className=''>
                     {email === usercomments.email ? 'Me' : usercomments.username}
                 </span>
