@@ -69,9 +69,10 @@ export default function TwitForm(props) {
             <input 
                 type='textarea'
                 name='text'
-                rows={5}
-                cols={8}
+                rows="5"
+                Cols="8"
                 maxLength={160}
+                // wrap={true}
                 value={text} 
                 placeholder='Drop in your twit ...' 
                 onChange={handleChange}

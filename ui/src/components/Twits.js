@@ -115,7 +115,7 @@ useEffect(async() => {
     return (
         <div className='mb-5'>
             {formActive && <TwitForm error={error} showForm={showForm} sync={sync} setSync={setSync}/>}
-            <p className='italic text-white-700 font-medium text-center'><span className='text-purple-900 font-bold text-xl'>Twitee</span> .... Feel free, express yourself, network ....</p>
+            <p className='italic text-white-700 font-medium text-center'><span className='text-purple-900 font-bold text-xl'>Twitee<br/></span> .... Feel free, express yourself, network ....</p>
             <div className='py-2 px-2 rounded bg-blue-300 mb-4 flex justify-between'>
                 {img !== 'null' ? (
                     <span>

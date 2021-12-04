@@ -110,7 +110,7 @@ useEffect(() => {
         <div className=' text-center align-items-center'>
             <p className='italic text-white-700 font-medium text-center mb-5'>
                 <span className='text-purple-900 font-bold text-xl'>
-                    Twitee
+                    Twitee<br/>
                 </span> .... Feel free, express yourself, network ....
             </p>
             <h1 style={{fontSize: 20}} className='font-bold text-md mb-7'>
