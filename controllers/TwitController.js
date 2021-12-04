@@ -31,19 +31,19 @@ exports.getTwits = async(req, res) => {
                     },
                 include: [
                     { model: Users, as: 'twits',
-                            attributes: ['username', 'email']
+                            attributes: ['username', 'email', 'imageUrl']
                     },
                     { model: Comments, as: 'comments',
                         include: [
                             { model: Users, as: 'usercomments',
-                            attributes: ['username', 'email']
+                            attributes: ['username', 'email', 'imageUrl']
                         }
                         ]
                     },
                     { model: Likes, as: 'likes',
                         include: [
                             { model: Users, as: 'userlikes',
-                            attributes: ['username', 'email']
+                            attributes: ['username', 'email', 'imageUrl']
                         }
                         ]
                     }
@@ -70,14 +70,14 @@ exports.getTwit = async(req, res) => {
                     { model: Comments, as: 'comments',
                         include: [
                             { model: Users, as: 'usercomments',
-                            attributes: ['username', 'email']
+                            attributes: ['username', 'email', 'imageUrl']
                         }
                         ] 
                     },
                     { model: Likes, as: 'likes',
                         include: [
                             { model: Users, as: 'userlikes',
-                            attributes: ['username', 'email']
+                            attributes: ['username', 'email', 'imageUrl']
                          }
                         ]
                     }
@@ -108,7 +108,7 @@ exports.updateTwit = async(req, res) => {
                     { model: Likes, as: 'likes',
                         include: [
                             { model: Users, as: 'userlikes',
-                            attributes: ['username', 'email']
+                            attributes: ['username', 'email', 'imageUrl']
                          }
                         ]
                     }
@@ -123,7 +123,7 @@ exports.updateTwit = async(req, res) => {
                     { model: Likes, as: 'likes',
                         include: [
                             { model: Users, as: 'userlikes',
-                            attributes: ['username', 'email']
+                            attributes: ['username', 'email', 'imageUrl']
                          }
                         ]
                     }

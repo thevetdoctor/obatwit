@@ -7,7 +7,8 @@ const mailer = require("../helpers/mailer");
 const randomId = require('oba-random-id');
 
 exports.signUp = async(req, res) => {
-    let { email, password, auth, name } = req.body;
+    let { email, password, auth, name, imageUrl } = req.body;
+    console.log('image', imageUrl)
     let username;
     if(!auth) {
         if(!(email && password)) return response(res, 400, null, 'Please supply missing input(s)');
@@ -26,7 +27,7 @@ exports.signUp = async(req, res) => {
         }
 
             const hash = bcrypt.hashSync(password, 10);
-            const newUser = await Users.create({username, email, password: hash});
+            const newUser = await Users.create({username, email, password: hash, imageUrl});
             newUser.password = null;
             const token = jwt.sign({user: newUser }, process.env.JWT_SECRET);
 
@@ -38,16 +39,20 @@ exports.signUp = async(req, res) => {
 }; 
 
 exports.logIn = async(req, res) => {
-    const { email, password, auth } = req.body;
+    const { email, password, auth, imageUrl } = req.body;
+    console.log('image', imageUrl)
     if(!auth) {
         if(!(email && password)) return response(res, 400, null, 'Please supply missing input(s)');
     }
       try {
             const user = await Users.findOne({ where: {
                 email
-            }});
+            }, raw: true});
             if(!user) return response(res, 400, null, 'User does not exist');
-
+            console.log('user', user)
+            if(!user.imageUrl) {
+                await Users.update({imageUrl}, {where: {email}});
+            }
             if(!auth) {
                 if(bcrypt.compareSync('google', user.password)) {
                     return response(res, 400, null, 'Please login with the google button');
@@ -71,7 +76,7 @@ exports.getUsers = async(req, res) => {
             const users = await Users.findAll({
                 attributes: ['email']
             });
-            console.log(users);
+            // console.log(users);
             response(res, 200, { count: users.length, users }, null, 'List of users');
         }catch(error) {
             response(res, 500, null, error.message, 'Error in getting users');

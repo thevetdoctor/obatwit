@@ -5,11 +5,11 @@ import { useHistory } from 'react-router-dom';
 import Moment from 'react-moment';
 import { BsPersonFill, BsChatTextFill, BsFillChatDotsFill } from 'react-icons/bs';
 import { AiTwotoneLike, AiTwotoneDelete, AiFillHome } from 'react-icons/ai';
-import { FiLogOut } from 'react-icons/fi';
 import { IoIosPeople } from 'react-icons/io';
 import TwitForm from './TwitForm';
 import CommentForm from './CommentForm';
 import { baseUrl } from '../helper';
+import { Logout } from './GoogleAuth';
 
 export default function Twits() {
     const [error, setError] = useState('');
@@ -65,6 +65,7 @@ export default function Twits() {
                 }
             });
             if(res && res.data.success) {
+                console.log(res.data.data)
                 setTwits(res.data.data);
             } else {
                 console.log('Error found'); 
@@ -92,6 +93,7 @@ export default function Twits() {
                 setError('Error found');
             }
     }
+const img = localStorage.getItem('img');
 
 useEffect(() => {
     if(!token) {
@@ -115,17 +117,17 @@ useEffect(async() => {
         <div className='mb-5'>
             {formActive && <TwitForm error={error} showForm={showForm} sync={sync} setSync={setSync}/>}
             <p className='italic text-white-700 font-medium text-center'><span className='text-purple-900 font-bold text-xl'>Twitee</span> .... Feel free, express yourself, network ....</p>
-            <p className='py-2 px-2 rounded bg-blue-300 mb-4 flex justify-between'>
-                <span className='text-left'><AiFillHome /></span>
+            <div className='py-2 px-2 rounded bg-blue-300 mb-4 flex justify-between'>
+                {!img  && <span className='text-left'><AiFillHome /></span>}
+                {img && <span><img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} /></span>}
                 {users > 0 && <span className='text-left flex'><IoIosPeople size={25}/>{users}</span>}
-                <span style={{cursor: 'pointer'}} className='text-right' onClick={logout}>
-                    <FiLogOut />
+                <span style={{cursor: 'pointer'}} className='text-right' onClick={logout}><Logout />
                 </span>
-            </p>
-            <div style={{cursor: 'pointer'}} className='w-full text-white-400 flex justify-between' onClick={showForm}>
+            </div>
+            <div className='w-full text-white-400 flex justify-between' onClick={showForm}>
                 <span></span>
                 <span className='font-bold mb-4 italic'>Twits</span>
-                <span style={{position: '-webkit-sticky'}} className='sticky top-4 mr-4 -ml-6'><BsFillChatDotsFill size={25} /></span>
+                <span style={{cursor: 'pointer'}} className='sticky top-4 mr-4 -ml-6'><BsFillChatDotsFill size={25} /></span>
             </div>
             {
                 twits.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((twit, idx) => 
@@ -147,15 +149,15 @@ const Twit = (props) => {
     }
 
     const likeTwit = () => {
-        console.log('like twit with id: ', id);
+        // console.log('like twit with id: ', id);
         apiCallHook('POST', `${baseUrl}/likes/like/${id}`);
     }
     const commentTwit = () => {
-        console.log('comment twit with id: ', id);
+        // console.log('comment twit with id: ', id);
         showCommentForm();
     }
     const deleteTwit = () => {
-        console.log('delete twit with id: ', id);
+        // console.log('delete twit with id: ', id);
         apiCallHook('DELETE', `${baseUrl}/twits/${id}`);
     }
 

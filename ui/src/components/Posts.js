@@ -13,9 +13,10 @@ import { CgCopyright } from 'react-icons/cg';
 
 dotenv.config();
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-console.log('id', clientId, process.env);
+// console.log('id', clientId, process.env);
 
-export const authenticate = async(google = false, email, password = null, apiUrl, error, setError, setLoading, history, name) => {
+export const authenticate = async(google = false, email, password = null, apiUrl, error, setError, setLoading, history, name, imageUrl) => {
+    localStorage.setItem('img', imageUrl);
     setLoading(true);
     let res;
     if(!google) {
@@ -44,7 +45,7 @@ export const authenticate = async(google = false, email, password = null, apiUrl
         res = await axios({
             method: 'POST',
             url: `${apiUrl}`,
-            data: {email, password: 'passs', auth: 'google', name},
+            data: {email, password: 'passs', auth: 'google', name, imageUrl},
             headers: {
                 'Content-Type': 'application/json',
             }
@@ -59,6 +60,7 @@ export const authenticate = async(google = false, email, password = null, apiUrl
     }
         if(res && res.data.success) {
             localStorage.setItem('email', email);
+            localStorage.setItem('img', res.data.data.user.imageUrl);
             localStorage.setItem('token', res.data.data.token);
             setLoading(false);
             history.push('/twits');
