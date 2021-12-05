@@ -5,6 +5,7 @@ module.exports = {
     extend: {
        fontFamily: {
        Rampart: ['Roboto', "sans-serif"],
+       Rampart: ['Allura', "sans-serif"],
        }
     },
   },

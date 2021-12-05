@@ -187,7 +187,7 @@ const Twit = (props) => {
         <span className='text-xs mb-2'>
             <Moment fromNow>{createdAt}</Moment>
         </span>
-        <p  style={{fontFamily: 'Roboto', fontWeight: '500'}} className=''>{text}</p>
+        <p  style={{fontFamily: 'Dancing Script', fontWeight: '500', fontSize: '18px'}} className=''>{text}</p>
         <p className='text-xs text-gray-800 flex my-2'>
             <span className='mx-2 flex'>
                 {twits.imageUrl ? (
@@ -239,8 +239,8 @@ const Comment = (props) => {
             <span className='text-xs mb-2'>
             <Moment fromNow>{createdAt}</Moment>
             </span>
-            <p style={{fontFamily: 'Roboto', fontWeight: '500'}}>{text}</p>
-            <span className='mx-2 flex items-justify text-xs'>
+            <p style={{fontFamily: 'Dancing Script', fontWeight: '500', fontSize: '18px'}} className=''>{text}</p>
+            <span className='mx-2 flex items-justify text-xs my-2'>
                 {usercomments.imageUrl ? (
                 <span className='mr-1'>
                     <img src={usercomments.imageUrl} alt='Profile' style={{width: '20px', height: '20px', borderRadius: '50%'}} />
