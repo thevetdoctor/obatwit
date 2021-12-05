@@ -98,7 +98,7 @@ export default function Twits() {
             }
     }
 
-    const checkOpenForms = async () => {
+    const checkOpenForms = () => {
         console.log('checking open forms', twits.filter(twit => twit.formActive));
         let closedTwits = twits.map(twit => {
             twit.formActive = false;
