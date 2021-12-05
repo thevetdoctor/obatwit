@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import axios from 'axios';
 import Loader from 'react-loader-spinner';
 import { baseUrl } from '../helper';
+// import AttachImage from './AttachImage';
 
 export default function TwitForm(props) {
-    const [title, setTitle] = useState('');
-    const [text, setText] = useState('');
+    const [title, setTitle] = useState(localStorage.getItem('twitTitle') ? localStorage.getItem('twitTitle') : '');
+    const [text, setText] = useState(localStorage.getItem('twitText') ? localStorage.getItem('twitText') : '');
     const [textArea, setTextArea] = useState(160);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -16,9 +17,11 @@ export default function TwitForm(props) {
     const handleChange = (e) => {
         if(e.target.name === 'title') {
             setTitle(e.target.value);
+            localStorage.setItem('twitTitle', e.target.value)
         } else {
             setText(e.target.value);
             setTextArea(160 - e.target.value.length)
+            localStorage.setItem('twitText', e.target.value)
         }
     }
 
@@ -44,6 +47,8 @@ export default function TwitForm(props) {
                 // console.log(res);
                 if(res && res.data.success) {
                     setLoading(false);
+                    localStorage.removeItem('twitTitle');
+                    localStorage.removeItem('twitText');
                     props.setSync(!props.sync);
                     props.showForm();
                 } else {
@@ -57,6 +62,8 @@ export default function TwitForm(props) {
              <h1 style={{fontSize: 20}} className='font-bold text-base mb-3'>
                 New twit
             </h1>
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', borderRadius: '20%'}}>
+
             <input 
                 type='text'
                 name='title'
@@ -65,20 +72,25 @@ export default function TwitForm(props) {
                 onChange={handleChange}
                 className='px-3 py-1 rounded mb-2'
                 required
-                /><br/>
+                />
             <input 
                 type='textarea'
                 name='text'
                 rows="5"
-                Cols="8"
+                cols="8"
                 maxLength={160}
                 // wrap={true}
                 value={text} 
                 placeholder='Drop in your twit ...' 
                 onChange={handleChange}
-                className='px-3 rounded mb-1 h-40 text-md text-gray-600'
+                style={{height: '100px'}}
+                className='px-3 rounded mb-1 text-md text-gray-600'
                 required
-            /><br/>
+            />
+                {/* <span style={{display: 'flex', alignSelf: 'center', marginLeft: '5em'}}>
+                    <AttachImage />
+                </span> */}
+                </div>
             {textArea}
             <div style={{flexDirection: 'column'}} className='flex mb-5'>
                 {error && <span className='mb-2 text-red-800 text-md'>{error}</span>}

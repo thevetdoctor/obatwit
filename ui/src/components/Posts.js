@@ -31,14 +31,14 @@ export const authenticate = async(google = false, email, password = null, apiUrl
         .catch(error => {
             if(error.response) {
                 setError(error.response?.data?.error);
-                setTimeout(() => {
-                    setError('');
-                }, 1000);
+                // setTimeout(() => {
+                //     setError('');
+                // }, 1000);
             } else {
                 setError('Please check your network');
-                setTimeout(() => {
-                    setError('');
-                }, 1000);
+                // setTimeout(() => {
+                //     setError('');
+                // }, 1000);
             }
         });
     } else {
@@ -52,9 +52,9 @@ export const authenticate = async(google = false, email, password = null, apiUrl
         })
         .catch(error => {
             setError(error.response.data.error);
-            setTimeout(() => {
-                setError('');
-            }, 1000);
+            // setTimeout(() => {
+            //     setError('');
+            // }, 1000);
         });
 
     }
@@ -107,8 +107,8 @@ useEffect(() => {
 }, []);
 
     return (
-        <div className=' text-center align-items-center'>
-            <p className='italic text-white-700 font-medium text-center mb-5'>
+        <div style={{fontFamily: 'Roboto', fontWeight: '600'}} className='font-Roboto text-center align-items-center'>
+            <p style={{fontFamily: 'Roboto', fontWeight: '600'}} className='italic text-white-700 font-medium text-center mb-5'>
                 <span className='text-purple-900 font-bold text-xl'>
                     Twitee<br/>
                 </span> .... Feel free, express yourself, network ....
