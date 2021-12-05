@@ -225,7 +225,7 @@ const Twit = (props) => {
 const Comment = (props) => {
     const { comment: { id, text, usercomments, likecomments, createdAt }, email, apiCallHook } = props;
 
-    const likeCount = likecomments.filter(like => like.isLiked).length;
+    const likeCount = likecomments?.filter(like => like.isLiked).length;
     const likeComment = () => {
         apiCallHook('POST', `${baseUrl}/likecomments/like/${id}`);
     }
