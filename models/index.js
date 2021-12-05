@@ -22,7 +22,7 @@ if (config.use_env_variable) {
 sequelize.authenticate()
 .then(()=>{
   console.log('Connection to database establised');
-})
+}) 
 .catch(err => {
   console.error(`Unable to connect to database:`, err);
 });
@@ -66,6 +66,11 @@ db.user.hasMany(db.like, {
   foreignKey: 'userId'
 });
 
+db.user.hasMany(db.likecomment, {
+  as: 'userlikecomments',
+  foreignKey: 'userId'
+});
+
 db.twit.belongsTo(db.user, {
   as: 'twits',
   foreignKey: 'userId'
@@ -81,9 +86,19 @@ db.like.belongsTo(db.user, {
   foreignKey: 'userId'
 });
 
+db.likecomment.belongsTo(db.user, {
+  as: 'userlikecomments',
+  foreignKey: 'userId'
+});
+
 db.twit.hasMany(db.like, {
   as: 'likes',
   foreignKey: 'twitId'
+});
+
+db.comment.hasMany(db.likecomment, {
+  as: 'likecomments',
+  foreignKey: 'commentId'
 });
 
 db.twit.hasMany(db.comment, {
@@ -94,6 +109,11 @@ db.twit.hasMany(db.comment, {
 db.like.belongsTo(db.twit, {
   as: 'likes',
   foreignKey: 'twitId'
+});
+
+db.likecomment.belongsTo(db.comment, {
+  as: 'likecomments',
+  foreignKey: 'commentId'
 });
 
 db.comment.belongsTo(db.twit, {

@@ -3,6 +3,7 @@ const Users = require('../models').user;
 const Twits = require('../models').twit;
 const Comments = require('../models').comment;
 const Likes = require('../models').like;
+const LikeComments = require('../models').likecomment;
 const { response } = require('oba-http-response');
 
 exports.postTwit = async(req, res) => {
@@ -36,8 +37,11 @@ exports.getTwits = async(req, res) => {
                     { model: Comments, as: 'comments',
                         include: [
                             { model: Users, as: 'usercomments',
-                            attributes: ['username', 'email', 'imageUrl']
-                        }
+                                attributes: ['username', 'email', 'imageUrl']
+                            },
+                            { model: LikeComments, as: 'likecomments',
+                                // attributes: ['username', 'email', 'imageUrl']
+                            }
                         ]
                     },
                     { model: Likes, as: 'likes',
@@ -70,8 +74,11 @@ exports.getTwit = async(req, res) => {
                     { model: Comments, as: 'comments',
                         include: [
                             { model: Users, as: 'usercomments',
-                            attributes: ['username', 'email', 'imageUrl']
-                        }
+                                attributes: ['username', 'email', 'imageUrl']
+                            },
+                            { model: LikeComments, as: 'likecomments',
+                                // attributes: ['username', 'email', 'imageUrl']
+                            }
                         ] 
                     },
                     { model: Likes, as: 'likes',

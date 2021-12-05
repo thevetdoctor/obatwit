@@ -2,6 +2,7 @@ const Sequelize = require("sequelize");
 const Users = require('../models').user;
 const Twits = require('../models').twit;
 const Comments = require('../models').comment;
+const LikeComments = require('../models').likecomment;
 const { response } = require('oba-http-response');
 
 exports.postComment = async(req, res) => {
@@ -31,4 +32,35 @@ exports.postComment = async(req, res) => {
     }catch(error) {
         response(res, 500, null, error.message, 'Error in sending comment');
     }
+};
+
+
+exports.deleteComment = async(req, res) => {
+    const { commentId } = req.params;
+    if(!commentId) return response(res, 400, null, 'Please supply missing input(s)');
+
+      try {
+            const comment = await Comments.findOne({ 
+                where: { 
+                        id: commentId,
+                        isDeleted: false
+                    }
+                }, {
+                include: [
+                    { model: LikeComments, as: 'likecomments' }
+                ]
+            });
+            if(!comment) return response(res, 400, null, 'Comment not found');
+            await Comments.update({ isDeleted: true }, { where: { id: commentId }});
+            
+            const updatedComment = await Comments.findByPk(commentId, {
+                where: {
+                    isDeleted: false
+                }
+            });
+            response(res, 200, updatedComment, null, 'Comment deleted');
+        }catch(error) {
+            response(res, 500, null, error.message, 'Error in deleting comment');
+        }
 }; 
+
