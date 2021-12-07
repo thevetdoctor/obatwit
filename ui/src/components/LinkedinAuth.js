@@ -7,7 +7,7 @@ dotenv.config();
 export default function LinkedinAuth() {
     const { linkedInLogin } = useLinkedIn({
         clientId: process.env.REACT_APP_LINKEDIN_CLIENT_ID,
-        redirectUri: `${window.location.origin}/linkedin`,
+        redirectUri: `http://localhost:3000/login/callback`,
         onSuccess: (code) => {
           console.log(code, window.location.origin);
         },
