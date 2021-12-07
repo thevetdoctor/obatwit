@@ -14,7 +14,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 /* eslint-disable no-unused-vars */
-
 // eslint-disable-next-line no-restricted-globals
 const ignored = self.__WB_MANIFEST;
 
@@ -128,8 +127,7 @@ function checkValidServiceWorker(swUrl, config) {
         // No service worker found. Probably a different app. Reload the page.
         navigator.serviceWorker.ready.then(registration => {
           registration.unregister().then(() => {
-            if(window) window.location.reload();
-           
+            window.location.reload();
           });
         });
       } else {

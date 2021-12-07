@@ -130,7 +130,7 @@ useEffect(async() => {
         <div style={{fontFamily: 'Roboto', fontWeight: '600'}} className='mb-5 font-Roboto'>
             {formActive && <TwitForm error={error} showForm={showForm} sync={sync} setSync={setSync}/>}
             <p style={{fontFamily: 'Roboto', fontWeight: '600'}} className='italic text-white-700 font-medium text-center'><span className='text-purple-900 font-bold text-xl'>Twitee<br/></span> .... Feel free, express yourself, network ....</p>
-            <div className='py-2 px-2 rounded bg-gray-300 mb-4 flex justify-between'>
+            <div className='py-2 px-2 rounded bg-gray-100 mb-4 flex justify-between'>
                 {img !== 'null' ? (
                     <span>
                         <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />
@@ -182,12 +182,12 @@ const Twit = (props) => {
 
 
     return (
-    <div className='bg-gray-100 rounded p-5 mb-2'>
-        <p className='font-bold text-center'>{title}</p>
+    <div className='bg-gray-200 rounded p-5 mb-2'>
+        <p style={{fontWeight: 'bolder'}} className='font-bold text-md text-center'>{title}</p>
         <span className='text-xs mb-2'>
             <Moment fromNow>{createdAt}</Moment>
         </span>
-        <p  style={{fontFamily: 'Dancing Script', fontWeight: '500', fontSize: '18px'}} className=''>{text}</p>
+        <p  style={{fontFamily: 'Architects Daughter', fontWeight: '500', fontSize: '18px'}} className=''>{text}</p>
         <p className='text-xs text-gray-800 flex my-2'>
             <span className='mx-2 flex'>
                 {twits.imageUrl ? (
@@ -235,11 +235,11 @@ const Comment = (props) => {
     }
 
     return(
-        <div className='bg-green-400 mb-2 p-2 rounded'>
+        <div className='bg-green-300 mb-2 p-2 rounded'>
             <span className='text-xs mb-2'>
             <Moment fromNow>{createdAt}</Moment>
             </span>
-            <p style={{fontFamily: 'Dancing Script', fontWeight: '500', fontSize: '18px'}} className=''>{text}</p>
+            <p style={{fontFamily: 'Architects Daughter', fontWeight: '500', fontSize: '18px'}} className=''>{text}</p>
             <span className='mx-2 flex items-justify text-xs my-2'>
                 {usercomments.imageUrl ? (
                 <span className='mr-1'>
