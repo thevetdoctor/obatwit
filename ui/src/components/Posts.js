@@ -77,7 +77,7 @@ export default function Posts(props) {
     const [signup, setSignup] = useState(JSON.parse(localStorage.getItem('signup')));
     const token = localStorage.getItem('token');
     const history = useHistory();
-  
+//   console.log(token);
 const apiUrl = `${baseUrl}/auth/${signup ? 'signup' : 'login'}`; 
 
 const handleChange = (e) => {
@@ -99,8 +99,9 @@ const handleSignupMode = () => {
 }
 
 useEffect(() => {
-    if(!token) {
-        history.push('/');
+    if(token) {
+        // history.push('/');
+        history.push('/twits');
     }
     return () => {
     }
@@ -164,12 +165,12 @@ useEffect(() => {
                     {signup ? ' Login here' : ' Signup here!' }
                 </a></span>
             </div>
-            <GoogleAuth 
+            {!token && <GoogleAuth 
                 error={error}
                 setError={setError}
                 loading={loading}
                 setLoading={setLoading}
-            />
+            />}
             {/* <LinkedinAuth /> */}
             <p className="text-white-400 bold flex text-center"><CgCopyright /> Twitee</p>         
             

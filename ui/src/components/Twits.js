@@ -53,6 +53,10 @@ export default function Twits() {
     }
 
     const getTwits = async() => {
+        if(!token) {
+            console.log('Not loggedin');
+            return;
+        }
         const res = await axios({
             method: 'GET',
             url: `${apiUrl}`,
