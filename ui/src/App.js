@@ -7,45 +7,24 @@ import Twits from './components/Twits';
 function App() {
     const [loggedIn, setLoggedIn] = useState(JSON.parse(localStorage.getItem('loggedIn')));
     const [signup, setSignup] = useState(JSON.parse(localStorage.getItem('signup')) || false);
-    // console.log(loggedIn, localStorage.getItem('signup'));
-    // button.addEventListener('click', () => {
+      const username = localStorage.getItem('username');
+      // console.log(username)
       Notification.requestPermission().then((result) => {
         if (result === 'granted') {
           randomNotification();
         }
       });
-    // })
-      const games = [
-        {
-          name: 'Obafemi',
-          author: 'Obafemi',
-        },
-        {
-          name: 'Oyetoke',
-          author: 'Oyetoke',
-        },
-        {
-          name: 'Demilade',
-          author: 'Demilade',
-        },
-        {
-          name: 'Damilola',
-          author: 'Damilola',
-        },
-      ]
+
     function randomNotification() {
-      const randomItem = Math.floor(Math.random() * games.length);
-      const notifTitle = games[randomItem].name;
-      // const notifBody = `Notified by ${games[randomItem].author}`;
-      const notifBody = `Notified`;
+      const notifTitle = username ? `Hello, ${username}` : 'Hello !';
+      const notifBody = `Have you checked Twitee today?`;
       const notifImg = `https://res.cloudinary.com/thevetdoctor/image/upload/v1599332593/g1rozhabxswegvhp59h3.jpg`;
       const options = {
         body: notifBody,
         icon: notifImg,
       };
-      console.log(options.body)
       new Notification(notifTitle, options);
-      setTimeout(randomNotification, 30000);
+      setTimeout(randomNotification, 3 * 60 * 60 * 1000);
     }
   return (
     <Router>
@@ -56,7 +35,6 @@ function App() {
               <Route exact path="/" component={Posts} />
               <Route exact path="/twits" component={Twits} />
       </Switch>
-            {/* <Posts /> */}
           </div>
         </div> 
     </Router>

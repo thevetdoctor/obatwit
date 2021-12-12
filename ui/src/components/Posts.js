@@ -61,6 +61,7 @@ export const authenticate = async(google = false, email, password = null, apiUrl
         if(res && res.data.success) {
             localStorage.setItem('email', email);
             localStorage.setItem('img', res.data.data.user.imageUrl);
+            localStorage.setItem('username', res.data.data.user?.username);
             localStorage.setItem('token', res.data.data.token);
             setLoading(false);
             history.push('/twits');
