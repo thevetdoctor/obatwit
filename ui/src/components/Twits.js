@@ -11,6 +11,7 @@ import TwitForm from './TwitForm';
 import CommentForm from './CommentForm';
 import { baseUrl } from '../helper';
 import { Logout } from './GoogleAuth';
+import Loader from 'react-loader-spinner';
 
 export default function Twits() {
     const [error, setError] = useState('');
@@ -131,7 +132,7 @@ useEffect(async() => {
 }, [sync]);
     
     return (
-        <div style={{fontFamily: 'Roboto', fontWeight: '600'}} className='mb-5 font-Roboto'>
+        <div style={{fontFamily: 'Roboto', fontWeight: '600', fontSize: '1.2em'}} className='mb-5 font-Roboto'>
             {formActive && <TwitForm error={error} showForm={showForm} sync={sync} setSync={setSync}/>}
             <p style={{fontFamily: 'Roboto', fontWeight: '600'}} className='italic text-white-700 font-medium text-center'><span className='text-purple-900 font-bold text-xl'>Twitee<br/></span> .... Feel free, express yourself, network ....</p>
             <div className='py-2 px-2 rounded bg-gray-100 mb-4 flex justify-between'>
@@ -141,13 +142,14 @@ useEffect(async() => {
                     </span>) 
                     : <span className='text-left'><AiFillHome size={25} /></span>}
                 {users > 0 && <span className='text-left flex'><IoIosPeople size={25}/>{users}</span>}
+                <span style={{cursor: 'pointer'}} className='sticky top-4 mr-4 -ml-6'><RiChatNewLine size={25} onClick={showForm} /></span>
                 <span style={{cursor: 'pointer'}} className='text-right' onClick={logout}><Logout />
                 </span>
             </div>
             <div className='w-full text-white-400 flex justify-between' onClick={showForm}>
                 <span></span>
-                <span className='font-bold mb-4 italic'>Twits</span>
-                <span style={{cursor: 'pointer'}} className='sticky top-4 mr-4 -ml-6'><RiChatNewLine size={25} /></span>
+                {/* <span className='font-bold mb-4 italic'>Twits</span> */}
+                {/* <span style={{cursor: 'pointer'}} className='sticky top-4 mr-4 -ml-6'><RiChatNewLine size={25} /></span> */}
             </div>
             {
                 twits.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((twit, idx) => 
@@ -160,8 +162,10 @@ useEffect(async() => {
 
 const Twit = (props) => {
     const [commentFormActive, setCommentFormActive] = useState(false);
+    const [likeLoading, setLikeLoading] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
 
-    const { twit: {id, title, text, twits, likes, comments, createdAt }, email, apiCallHook, baseUrl, sync, setSync, checkOpenForms } = props;
+    const { twit: {id, title, text, imageUrl, twits, likes, comments, createdAt }, email, apiCallHook, baseUrl, sync, setSync, checkOpenForms } = props;
 
     // console.log(comments);
     const likeCount = likes.filter(like => like.isLiked).length;
@@ -171,6 +175,10 @@ const Twit = (props) => {
     }
     
     const likeTwit = () => {
+        setLikeLoading(true);
+        setTimeout(() => {
+            setLikeLoading(false);
+        }, 1000);
         // console.log('like twit with id: ', id);
         apiCallHook('POST', `${baseUrl}/likes/like/${id}`);
     }
@@ -181,18 +189,25 @@ const Twit = (props) => {
     }
     const deleteTwit = () => {
         // console.log('delete twit with id: ', id);
+        setDeleteLoading(true);
+        setTimeout(() => {
+            setLikeLoading(false);
+        }, 1000);
         apiCallHook('DELETE', `${baseUrl}/twits/${id}`);
     }
 
 
     return (
-    <div className='bg-gray-200 rounded p-5 mb-2'>
+    <div  style={{backgroundColor: 'white'}} className='bg-gray-200 rounded p-5 mb-2'>
         <p style={{fontWeight: 'bolder'}} className='font-bold text-md text-center'>{title}</p>
         <span className='text-xs mb-2'>
             <Moment fromNow>{createdAt}</Moment>
         </span>
-        <p  style={{fontFamily: 'Architects Daughter', fontWeight: '500', fontSize: '18px'}} className=''>{text}</p>
-        <p className='text-xs text-gray-800 flex my-2'>
+        <div  style={{fontFamily: 'Architects Daughter', fontWeight: '500', fontSize: '18px'}} className='text-start'>{text}</div>
+        <span>
+            {imageUrl && <img src={imageUrl} width={50} height={50} />}
+        </span>
+        <div className='text-xs text-gray-800 flex my-2'>
             <span className='mx-2 flex'>
                 {twits.imageUrl ? (
                 <span className='mr-1'>
@@ -202,16 +217,23 @@ const Twit = (props) => {
                 {email === twits.email ? 'Me' : twits.username}
             </span>
             <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => likeTwit()}>
-                <AiTwotoneLike color={likeCount > 0 ? 'blue' : 'gray'} size={15}/><span className='text-xs'>{likeCount}</span>
+               {!likeLoading ? 
+               <>
+               <AiTwotoneLike color={likeCount > 0 ? 'blue' : 'gray'} size={15}/>
+                <span className='text-xs'>{likeCount}</span>
+                </>:
+                <LoadSpan height={20} width={20} color='#00bfff' />}
             </span>
             <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => commentTwit()}>
                 <BsChatTextFill size={15}/>
             </span>
             {email === twits.email &&
             <span style={{cursor: 'pointer'}} className='mx-2 flex hover:text-red-800' onClick={() => deleteTwit()}>
-                <AiTwotoneDelete size={15} color='red'/>
+                {!deleteLoading ? 
+                <AiTwotoneDelete size={15} color='red'/>:
+                <LoadSpan height={20} width={20} color='#00bfff' />}
             </span>}
-        </p>
+        </div>
         {commentFormActive && <CommentForm twitId={id} showCommentForm={showCommentForm} sync={sync} setSync={setSync}/>}
 
         {comments.length > 0 && 
@@ -229,11 +251,22 @@ const Twit = (props) => {
 const Comment = (props) => {
     const { comment: { id, text, usercomments, likecomments, createdAt }, email, apiCallHook } = props;
 
+    const [likeLoading, setLikeLoading] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
+
     const likeCount = likecomments?.filter(like => like.isLiked).length;
     const likeComment = () => {
+        setLikeLoading(true);
+        setTimeout(() => {
+            setLikeLoading(false);
+        }, 1000);
         apiCallHook('POST', `${baseUrl}/likecomments/like/${id}`);
     }
     const deleteComment = () => {
+        setDeleteLoading(true);
+        setTimeout(() => {
+            setLikeLoading(false);
+        }, 1000);
         // console.log('delete twit with id: ', id);
         apiCallHook('DELETE', `${baseUrl}/comments/${id}`);
     }
@@ -254,14 +287,33 @@ const Comment = (props) => {
                     {email === usercomments.email ? 'Me' : usercomments.username}
                 </span>
                 <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => likeComment()}>
+                {!likeLoading ? 
+                    <>
                     <AiTwotoneLike color={likeCount > 0 ? 'blue' : 'gray'} size={15}/>
                     <span className='text-xs'>{likeCount}</span>
+                    </>:
+                    <LoadSpan height={20} width={20} color='white' />}
                 </span>
                 {email === usercomments.email &&
                 <span style={{cursor: 'pointer'}} className='mx-2 flex hover:text-red-800' onClick={() => deleteComment()}>
+                {!likeLoading ? 
                     <AiTwotoneDelete size={15} color='red'/>
+                    :
+                    <LoadSpan height={20} width={20} color='white' />}
                 </span>}
             </span>
         </div>
     )
 }
+
+const LoadSpan = ({height, width, color}) => (
+            <span 
+            className='m-auto'>
+                        <Loader 
+                        type='ThreeDots'
+                        color={color}
+                        height={height} 
+                        width={width} 
+                        />
+            </span>
+            )

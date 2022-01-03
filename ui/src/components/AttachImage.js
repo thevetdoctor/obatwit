@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 // import Loader from "react-loader-spinner";
-// import { FaCheck } from "react-icons/fa";
+import { FaCamera } from "react-icons/fa";
 
-export default function AttachImage() {
+export default function AttachImage({imageUrl, setImageUrl}) {
     
     const [uploading, setUploading] = useState("");
     const [imgUrl, setImgUrl] = useState("");
 
     const handleImage = async(e) => {
+        console.log(e.target)
         setUploading("loading");
         const serviceImage = e.target.files[0];
         const data = new FormData();
@@ -20,26 +21,35 @@ export default function AttachImage() {
         });
         const imgLink = await res.json();
         setImgUrl(imgLink.secure_url);
-        console.log('image uploaded' ,imgLink.secure_url);
+        setImageUrl(imgLink.secure_url);
+        // console.log('image uploaded' ,imgLink.secure_url);
         // const images = [imgLink.secure_url, ...serviceImages];
         // setServiceImages(images);
         setUploading("done");
-        console.log(imgUrl);
+        // console.log(imgUrl);
       }
     return (
-        <div className="service-section attach-images flex">
+        <div className="flex">
             {imgUrl ? 
                 <img 
-                    src={imgUrl} alt='post' style={{width: '200px', height: '100px', marginLeft: '-50px'}}
+                    src={imgUrl} alt='post' style={{width: '11em', height: '9em'}} className='rounded'
                 /> :
+                <>
+                {/* <span className='ml-3 cursor-pointer flex'><FaCamera size={25}  /> */}
+                <label className='ml-3 cursor-pointer flex'><FaCamera size={25}  />{' '} <span className='ml-2'>Add Image</span>
+
                 <input
                     type="file"
                     placeholder=""
                     accept="image/*"
                     capture
-                    className=""
+                    className="hidden"
                     onChange={e => handleImage(e)}
-                />
+                    />
+                    </label>
+                {/* <span className='ml-2'>Add Image</span> */}
+                {/* </span> */}
+                </>
             //   {uploading === "loading" &&
             //   <Loader 
             //       type='TailSpin'

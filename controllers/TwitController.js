@@ -7,9 +7,9 @@ const LikeComments = require('../models').likecomment;
 const { response } = require('oba-http-response');
 
 exports.postTwit = async(req, res) => {
-    const { title, text, userId } = req.body;
+    const { title, text, imageUrl, userId } = req.body;
     if(!(title && text && userId)) return response(res, 400, null, 'Please supply missing input(s)');
-    console.log(title, text, userId);
+    // console.log(title, text, imageUrl, userId);
       try {
             const twit = await Twits.findOne({ where: {
                 title,
@@ -102,7 +102,7 @@ exports.updateTwit = async(req, res) => {
     const { twitId } = req.params;
     const { title, text, userId } = req.body;
     if(!(title && text && userId && twitId)) return response(res, 400, null, 'Please supply missing input(s)');
-    console.log(title, text, userId);
+    // console.log(title, text, userId);
 
       try {
             const twit = await Twits.findOne({ 

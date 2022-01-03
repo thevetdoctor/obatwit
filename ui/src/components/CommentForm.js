@@ -55,12 +55,13 @@ export default function CommentForm(props) {
              <p style={{fontSize: 20}} className='font-bold text-xs mb-3'>
                 New Comment
             </p>
-            <input 
+            <textarea 
                 type='textarea'
                 name='text'
                 rows={5}
                 cols={8}
                 maxLength={160}
+                style={{width: '15em', height: '8em'}}
                 value={text} 
                 placeholder='Drop in your comment ...' 
                 onChange={handleChange}

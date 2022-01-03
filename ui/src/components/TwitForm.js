@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import axios from 'axios';
 import Loader from 'react-loader-spinner';
 import { baseUrl } from '../helper';
-// import AttachImage from './AttachImage';
+import AttachImage from './AttachImage';
 
 export default function TwitForm(props) {
     const [title, setTitle] = useState(localStorage.getItem('twitTitle') ? localStorage.getItem('twitTitle') : '');
     const [text, setText] = useState(localStorage.getItem('twitText') ? localStorage.getItem('twitText') : '');
+    const [imageUrl, setImageUrl] = useState(localStorage.getItem('twitImage') ? localStorage.getItem('twitImage') : '');
     const [textArea, setTextArea] = useState(160);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -34,7 +35,7 @@ export default function TwitForm(props) {
             const res = await axios({
                 method: 'POST',
                 url: `${apiUrl}`,
-                data: {title, text},
+                data: {title, text, imageUrl},
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -73,23 +74,23 @@ export default function TwitForm(props) {
                 className='px-3 py-1 rounded mb-2'
                 required
                 />
-            <input 
+            <textarea 
                 type='textarea'
                 name='text'
-                rows="5"
-                cols="8"
+                rows={4}
+                cols={3}
+                style={{width: '13em', height: '12em'}}
                 maxLength={160}
-                // wrap={true}
-                value={text} 
+                value={text}
+                overflow="hidden"
                 placeholder='Drop in your twit ...' 
                 onChange={handleChange}
-                style={{height: '100px'}}
                 className='px-3 rounded mb-1 text-md text-gray-600'
                 required
             />
-                {/* <span style={{display: 'flex', alignSelf: 'center', marginLeft: '5em'}}>
-                    <AttachImage />
-                </span> */}
+                <span style={{display: 'flex', marginLeft: '0em'}}>
+                    <AttachImage imageUrl={imageUrl} setImageUrl={setImageUrl} />
+                </span>
                 </div>
             {textArea}
             <div style={{flexDirection: 'column'}} className='flex mb-5'>

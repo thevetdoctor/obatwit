@@ -28,6 +28,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    imageUrl: {
+      type: DataTypes.STRING(500),
+    },
     userId: {
       type: DataTypes.UUID,
       allowNull: false
