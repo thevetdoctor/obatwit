@@ -207,15 +207,15 @@ const Twit = (props) => {
     return (
     <div  style={{fontSize: '1.1em'}} className='bg-gray-100 rounded p-5 mb-2'>
         <p style={{fontWeight: '600', fontFamily: 'Architects Daughter'}} className='text-md text-center'>{title}</p>
-        <span className='text-xs mb-2'>
+        <span className='text-xs mb-5'>
             <Moment fromNow>{createdAt}</Moment>
         </span>
         
-        <div  style={{fontFamily: 'Architects Daughter', fontWeight: '500'}} className='px-3'>{text}</div>
+        <div  style={{fontFamily: 'Architects Daughter', fontWeight: '500'}} className='p-3'>{text}</div>
         <span>
             {imageUrl && <img src={imageUrl} width='100%' alt='imgurl' className='rounded' />}
         </span>
-        <div style={{fontSize: '0.8em'}} className='text-xs text-gray-800 flex mt-7'>
+        <div style={{fontSize: '0.8em'}} className='text-xs text-gray-800 flex mt-2'>
             <span className='mx-2 flex'>
                 {twits.imageUrl ? (
                 <span className='mr-1'>
@@ -284,8 +284,8 @@ const Comment = (props) => {
             <span className='text-xs mb-2'>
             <Moment fromNow>{createdAt}</Moment>
             </span>
-            <p style={{fontFamily: 'Architects Daughter', fontWeight: '500', fontSize: '18px'}} className='px-3'>{text}</p>
-            <span style={{fontSize: '0.8em'}} className='mx-2 flex items-justify text-xs mt-7'>
+            <p style={{fontFamily: 'Architects Daughter', fontWeight: '500', fontSize: '18px'}} className='p-3'>{text}</p>
+            <span style={{fontSize: '0.8em'}} className='mx-2 flex items-justify text-xs mt-2'>
                 {usercomments.imageUrl ? (
                 <span className='mr-1'>
                     <img src={usercomments.imageUrl} alt='Profile' style={{width: '20px', height: '20px', borderRadius: '50%'}} />
