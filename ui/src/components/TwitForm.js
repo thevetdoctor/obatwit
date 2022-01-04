@@ -28,6 +28,10 @@ export default function TwitForm(props) {
 
     const sendTwit = async() => {
             if(!(title && text)) {
+                if(!title) {
+                    setError('Title is required');
+                    return;
+                }
                 setError('Inputs required');
                 return;
             }
@@ -59,8 +63,8 @@ export default function TwitForm(props) {
     }
 
     return (
-        <div className='text-center sticky top-5 rounded pb-1 bg-blue-200 mb-1'>
-             <h1 style={{fontSize: 20}} className='font-bold text-base mb-3'>
+        <div className='text-center sticky top-0 rounded pb-1 bg-blue-200 mt-3 pt-3 mb-1'>
+             <h1 style={{fontSize: '1.5em'}} className='font-bold text-base mb-3'>
                 New twit
             </h1>
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', borderRadius: '20%'}}>
@@ -72,6 +76,7 @@ export default function TwitForm(props) {
                 placeholder='title'
                 onChange={handleChange}
                 className='px-3 py-1 rounded mb-2'
+                style={{width: '20em', border: 'none'}}
                 required
                 />
             <textarea 
@@ -79,7 +84,7 @@ export default function TwitForm(props) {
                 name='text'
                 rows={4}
                 cols={3}
-                style={{width: '13em', height: '12em'}}
+                style={{width: '20em', height: `${imageUrl ? '5em' : '13em'}`, border: 'none'}}
                 maxLength={160}
                 value={text}
                 overflow="hidden"
@@ -88,11 +93,11 @@ export default function TwitForm(props) {
                 className='px-3 rounded mb-1 text-md text-gray-600'
                 required
             />
-                <span style={{display: 'flex', marginLeft: '0em'}}>
+                <span style={{display: 'flex', width: '20em'}} className='justify-between px-3 mt-2 mb-2'>
                     <AttachImage imageUrl={imageUrl} setImageUrl={setImageUrl} />
+                <span>{textArea}</span>
                 </span>
                 </div>
-            {textArea}
             <div style={{flexDirection: 'column'}} className='flex mb-5'>
                 {error && <span className='mb-2 text-red-800 text-md'>{error}</span>}
                 <div className='justify-items-center mt-2'>

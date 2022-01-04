@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 // import Loader from "react-loader-spinner";
 import { FaCamera } from "react-icons/fa";
@@ -32,7 +33,7 @@ export default function AttachImage({imageUrl, setImageUrl}) {
         <div className="flex">
             {imgUrl ? 
                 <img 
-                    src={imgUrl} alt='post' style={{width: '11em', height: '9em'}} className='rounded'
+                    src={imgUrl} alt='post' style={{width: '20em', height: '9em'}} className='rounded'
                 /> :
                 <>
                 {/* <span className='ml-3 cursor-pointer flex'><FaCamera size={25}  /> */}

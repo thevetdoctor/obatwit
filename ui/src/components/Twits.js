@@ -132,9 +132,16 @@ useEffect(async() => {
 }, [sync]);
     
     return (
-        <div style={{fontFamily: 'Roboto', fontWeight: '600', fontSize: '1.2em'}} className='mb-5 font-Roboto'>
+        <div style={{fontFamily: 'Roboto', fontWeight: '600', height: '90vh'}} className='mb-5'>
+            <span style={{cursor: 'pointer', borderRadius: '50%'}} className='fixed bottom-16 right-4 bg-green-500 p-4 text-white'><RiChatNewLine size={25} onClick={showForm} /></span>
             {formActive && <TwitForm error={error} showForm={showForm} sync={sync} setSync={setSync}/>}
-            <p style={{fontFamily: 'Roboto', fontWeight: '600'}} className='italic text-white-700 font-medium text-center'><span className='text-purple-900 font-bold text-xl'>Twitee<br/></span> .... Feel free, express yourself, network ....</p>
+            
+            {!formActive && <>
+            <p style={{fontFamily: 'Architects Daughter', fontWeight: '600'}} className='italic text-center mb-2'>
+                <span style={{fontSize: '1.8em'}} className='text-purple-900 font-bold'>Twitee<br/>
+                </span> 
+                <span style={{fontSize: '1em'}}>.... Feel free, express yourself, network ....</span>
+            </p>
             <div className='py-2 px-2 rounded bg-gray-100 mb-4 flex justify-between'>
                 {img !== 'null' ? (
                     <span>
@@ -142,7 +149,7 @@ useEffect(async() => {
                     </span>) 
                     : <span className='text-left'><AiFillHome size={25} /></span>}
                 {users > 0 && <span className='text-left flex'><IoIosPeople size={25}/>{users}</span>}
-                <span style={{cursor: 'pointer'}} className='sticky top-4 mr-4 -ml-6'><RiChatNewLine size={25} onClick={showForm} /></span>
+                {/* <span style={{cursor: 'pointer', borderRadius: '50%'}} className='sticky top-4  bg-green-300 p-2 text-white mr-4 -ml-6'><RiChatNewLine size={25} onClick={showForm} /></span> */}
                 <span style={{cursor: 'pointer'}} className='text-right' onClick={logout}><Logout />
                 </span>
             </div>
@@ -156,6 +163,7 @@ useEffect(async() => {
                     <Twit key={idx} twit={twit} email={email} apiCallHook={apiCallHook} baseUrl={baseUrl} sync={sync} setSync={setSync} showForm={showForm} formActive={formActive} checkOpenForms={checkOpenForms} />
                 )
             }
+            </>}
         </div>
     )
 }
@@ -198,16 +206,16 @@ const Twit = (props) => {
 
 
     return (
-    <div  style={{backgroundColor: 'white'}} className='bg-gray-200 rounded p-5 mb-2'>
-        <p style={{fontWeight: 'bolder'}} className='font-bold text-md text-center'>{title}</p>
+    <div  style={{backgroundColor: 'white', fontSize: '1.2em'}} className='bg-gray-200 rounded p-5 mb-2'>
+        <p style={{fontWeight: '800', fontFamily: 'Architects Daughter'}} className='text-md text-center'>{title}</p>
         <span className='text-xs mb-2'>
             <Moment fromNow>{createdAt}</Moment>
         </span>
-        <div  style={{fontFamily: 'Architects Daughter', fontWeight: '500', fontSize: '18px'}} className='text-start'>{text}</div>
+        <div  style={{fontFamily: 'Architects Daughter', fontWeight: '500'}} className='text-start'>{text}</div>
         <span>
-            {imageUrl && <img src={imageUrl} width={50} height={50} />}
+            {imageUrl && <img src={imageUrl} width='100%' alt='imgurl' />}
         </span>
-        <div className='text-xs text-gray-800 flex my-2'>
+        <div style={{fontSize: '0.8em'}} className='text-xs text-gray-800 flex my-2'>
             <span className='mx-2 flex'>
                 {twits.imageUrl ? (
                 <span className='mr-1'>
@@ -272,12 +280,12 @@ const Comment = (props) => {
     }
 
     return(
-        <div className='bg-green-300 mb-2 p-2 rounded'>
+        <div className='bg-blue-300 mb-2 p-2 rounded'>
             <span className='text-xs mb-2'>
             <Moment fromNow>{createdAt}</Moment>
             </span>
             <p style={{fontFamily: 'Architects Daughter', fontWeight: '500', fontSize: '18px'}} className=''>{text}</p>
-            <span className='mx-2 flex items-justify text-xs my-2'>
+            <span style={{fontSize: '0.8em'}} className='mx-2 flex items-justify text-xs my-2'>
                 {usercomments.imageUrl ? (
                 <span className='mr-1'>
                     <img src={usercomments.imageUrl} alt='Profile' style={{width: '20px', height: '20px', borderRadius: '50%'}} />
@@ -296,7 +304,7 @@ const Comment = (props) => {
                 </span>
                 {email === usercomments.email &&
                 <span style={{cursor: 'pointer'}} className='mx-2 flex hover:text-red-800' onClick={() => deleteComment()}>
-                {!likeLoading ? 
+                {!deleteLoading ? 
                     <AiTwotoneDelete size={15} color='red'/>
                     :
                     <LoadSpan height={20} width={20} color='white' />}

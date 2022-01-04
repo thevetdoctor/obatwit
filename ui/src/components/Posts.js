@@ -110,10 +110,10 @@ useEffect(() => {
 
     return (
         <div style={{fontFamily: 'Roboto', fontWeight: '600'}} className='font-Roboto text-center align-items-center'>
-            <p style={{fontFamily: 'Roboto', fontWeight: '600'}} className='italic text-white-700 font-medium text-center mb-5'>
-                <span className='text-purple-900 font-bold text-xl'>
-                    Twitee<br/>
-                </span> .... Feel free, express yourself, network ....
+             <p style={{fontFamily: 'Architects Daughter', fontWeight: '600'}} className='italic text-center mb-2'>
+                <span style={{fontSize: '1.8em'}} className='text-purple-900 font-bold'>Twitee<br/>
+                </span> 
+                <span style={{fontSize: '1em'}}>.... Feel free, express yourself, network ....</span>
             </p>
             <h1 style={{fontSize: 20}} className='font-bold text-md mb-7'>
                 {signup ?  'Signup' : 'Login'}
