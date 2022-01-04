@@ -29,14 +29,14 @@ function App() {
   return (
     <Router>
         {/* <div className="h-full w-full m-0 max-w-sm mx-auto bg-blue-200 rounded-xl shadow-md flex"> */}
-        <div className="font-Roboto h-1 w-full m-0 max-w-xl max-h-xl my-0 mx-auto bg-blue-300 rounded-xl shadow-md -px-3">
-              <div className="bg-gray-100 rounded-xl p-4">
+        {/* <div className="font-Roboto w-full m-0 max-w-xl max-h-xl my-0 mx-auto rounded-xl shadow-md -px-3"> */}
+              {/* <div className="bg-gray-200 rounded-xl p-4"> */}
       <Switch>
               <Route exact path="/" component={Posts} />
               <Route exact path="/twits" component={Twits} />
       </Switch>
-          </div>
-        </div> 
+          {/* </div>ff */}
+        {/* </div>  */}
     </Router>
   );
 }

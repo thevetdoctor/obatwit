@@ -110,7 +110,7 @@ useEffect(() => {
 
     return (
         <div style={{fontFamily: 'Roboto', fontWeight: '600'}} className='font-Roboto text-center align-items-center'>
-             <p style={{fontFamily: 'Architects Daughter', fontWeight: '600'}} className='italic text-center mb-2'>
+             <p style={{fontFamily: 'Architects Daughter', fontWeight: '300'}} className='italic text-center mb-2'>
                 <span style={{fontSize: '1.8em'}} className='text-purple-900 font-bold'>Twitee<br/>
                 </span> 
                 <span style={{fontSize: '1em'}}>.... Feel free, express yourself, network ....</span>
@@ -173,7 +173,6 @@ useEffect(() => {
                 setLoading={setLoading}
             />}
             {/* <LinkedinAuth /> */}
-            <p className="text-white-400 bold flex text-center"><CgCopyright /> Twitee</p>         
             
           <img 
             src={chat}
@@ -181,6 +180,7 @@ useEffect(() => {
             className=''
             style={{borderRadius: '5', width: '100'}}
           />
+            <p className="text-white-400 bold flex text-center"><CgCopyright /> Twitee</p>         
         </div>
     )
 }
