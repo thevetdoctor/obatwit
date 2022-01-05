@@ -6,6 +6,7 @@ import Moment from 'react-moment';
 import { BsPersonFill, BsChatTextFill } from 'react-icons/bs';
 import { AiTwotoneLike, AiTwotoneDelete, AiFillHome } from 'react-icons/ai';
 import { IoIosPeople } from 'react-icons/io';
+import { GrEdit } from 'react-icons/gr';
 import { RiChatNewLine } from 'react-icons/ri';
 import TwitForm from './TwitForm';
 import CommentForm from './CommentForm';
@@ -36,10 +37,11 @@ export default function Twits() {
         history.push('/');
     }
 
-    const apiCallHook = async(method, url) => {
+    const apiCallHook = async(method, url, data) => {
         await axios({
             method,
             url,
+            data,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -168,13 +170,32 @@ useEffect(async() => {
 }
 
 const Twit = (props) => {
+    const { twit: {id, title, text, imageUrl, twits, likes, comments, createdAt, updatedAt }, email, apiCallHook, baseUrl, sync, setSync, checkOpenForms } = props;
+    
     const [commentFormActive, setCommentFormActive] = useState(false);
+    const [editLoading, setEditLoading] = useState(false);
     const [likeLoading, setLikeLoading] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
+    const [storyText, setStoryText] = useState(text);
+    const [editForm, setEditForm] = useState(false);
 
-    const { twit: {id, title, text, imageUrl, twits, likes, comments, createdAt }, email, apiCallHook, baseUrl, sync, setSync, checkOpenForms } = props;
+    const handleStoryChange = (e) => {
+        setStoryText(e.target.value);
+    }
 
-    // console.log(comments);
+    const editStory = () => {
+        setEditForm(!editForm);
+        setStoryText(text);
+    }
+   
+    const updateStory = () => {
+        apiCallHook('PATCH', `${baseUrl}/twits/${id}`, {text: storyText});
+        setEditLoading(true);
+        setTimeout(() => {
+            setEditLoading(false);
+            setEditForm(false);
+        }, 1000);
+    }
     const likeCount = likes.filter(like => like.isLiked).length;
     const showCommentForm = () => {
         setCommentFormActive(!commentFormActive);
@@ -186,19 +207,16 @@ const Twit = (props) => {
         setTimeout(() => {
             setLikeLoading(false);
         }, 1000);
-        // console.log('like twit with id: ', id);
         apiCallHook('POST', `${baseUrl}/likes/like/${id}`);
     }
     const commentTwit = () => {
-        // console.log('comment twit with id: ', id);
         checkOpenForms();
         showCommentForm();
     }
     const deleteTwit = () => {
-        // console.log('delete twit with id: ', id);
         setDeleteLoading(true);
         setTimeout(() => {
-            setLikeLoading(false);
+            setDeleteLoading(false);
         }, 1000);
         apiCallHook('DELETE', `${baseUrl}/twits/${id}`);
     }
@@ -207,11 +225,45 @@ const Twit = (props) => {
     return (
     <div  style={{fontSize: '1.1em'}} className='bg-gray-100 rounded p-5 mb-2'>
         <p style={{fontWeight: '600', fontFamily: 'Architects Daughter'}} className='text-md text-center'>{title}</p>
-        <span className='text-xs mb-5'>
+        <span className='text-xs mb-5 flex justify-between'>
             <Moment fromNow>{createdAt}</Moment>
+        {(email === twits.email) && !editForm && 
+            <span className='cursor-pointer mr-3' onClick={() => editStory()}> 
+                <GrEdit size={15} />
+            </span>
+        }
         </span>
-        
-        <div  style={{fontFamily: 'Architects Daughter', fontWeight: '500'}} className='p-3'>{text}</div>
+        {editForm && <div className='mb-5'>
+                <textarea 
+                    className='border-red-700 border-0 p-2 mb-2 rounded bg-white-300 outline-none'
+                    style={{width: '100%'}}
+                    cols={3}
+                    rows={4}
+                    maxLength={160}
+                    value={storyText}
+                    onChange={handleStoryChange}
+                    required={true}
+                    /><br />
+                {!editLoading ? 
+                 <>
+                    <span 
+                        className='cursor-pointer bg-gray-500 p-2 m-2 text-white rounded hover:bg-gray-400' onClick={() => editStory()}
+                    > 
+                        Cancel 
+                    </span>
+                    <span 
+                    className='cursor-pointer bg-green-600 p-2 mb-2 text-white rounded hover:bg-green-400 hover:text-black' onClick={() => updateStory()}
+                    > 
+                        Update Story 
+                    </span>
+                </>
+                :
+                    <LoadSpan height={20} width={20} color='#00bfff' />}
+                </div>}
+
+        {!editForm && <div  style={{fontFamily: 'Architects Daughter', fontWeight: '500'}} className='p-3'>{text}<br />
+        {((new Date(updatedAt).getTime() - new Date(createdAt).getTime()) > 0) && <span className='text-xs'>Updated <Moment fromNow>{updatedAt}</Moment></span>}
+        </div>}
         <span>
             {imageUrl && <img src={imageUrl} width='100%' alt='imgurl' className='rounded' />}
         </span>

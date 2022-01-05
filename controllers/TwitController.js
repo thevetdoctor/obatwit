@@ -100,9 +100,9 @@ exports.getTwit = async(req, res) => {
 
 exports.updateTwit = async(req, res) => {
     const { twitId } = req.params;
-    const { title, text, userId } = req.body;
-    if(!(title && text && userId && twitId)) return response(res, 400, null, 'Please supply missing input(s)');
-    // console.log(title, text, userId);
+    const { text, userId } = req.body;
+    console.log(text, userId, twitId);
+    if(!(text && userId && twitId)) return response(res, 400, null, 'Please supply missing input(s)');
 
       try {
             const twit = await Twits.findOne({ 
@@ -122,7 +122,7 @@ exports.updateTwit = async(req, res) => {
                 ]
             });
             if(!twit) return response(res, 400, null, 'Twit not found');
-            await Twits.update({ title, text }, { where: { id: twitId }});
+            await Twits.update({ text }, { where: { id: twitId }});
             
             const updatedTwit = await Twits.findByPk(twitId, {
                 include: [

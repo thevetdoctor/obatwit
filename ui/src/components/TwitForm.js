@@ -101,22 +101,24 @@ export default function TwitForm(props) {
             <div style={{flexDirection: 'column'}} className='flex mb-5'>
                 {error && <span className='mb-2 text-red-800 text-md'>{error}</span>}
                 <div className='justify-items-center mt-2'>
+                    {!loading ?
+                    <>
                     <span 
                         style={{cursor: 'pointer'}}
                         onClick={() => props.showForm()}
                         className='hover:bg-gray-900 bg-gray-400 font-medium p-1 rounded text-white'
-                    >    
+                        >    
                         Cancel
                     </span>
 
-                    {!loading ?
                     <span 
-                        style={{cursor: 'pointer'}}
-                        onClick={sendTwit}
-                        className='hover:bg-green-900 bg-green-400 font-medium p-1 rounded text-white mx-2'
+                    style={{cursor: 'pointer'}}
+                    onClick={sendTwit}
+                    className='hover:bg-green-900 bg-green-400 font-medium p-1 rounded text-white mx-2'
                     >    
                         Send
                     </span>
+                    </>
                     :
                     <span className='m-auto'>
                         <Loader 
