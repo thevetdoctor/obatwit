@@ -3,14 +3,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import Moment from 'react-moment';
-import { BsPersonFill, BsChatTextFill } from 'react-icons/bs';
+import { BsPersonFill, BsChatTextFill, BsShareFill } from 'react-icons/bs';
 import { AiTwotoneLike, AiTwotoneDelete, AiFillHome } from 'react-icons/ai';
 import { IoIosPeople } from 'react-icons/io';
 import { GrEdit } from 'react-icons/gr';
 import { RiChatNewLine } from 'react-icons/ri';
 import TwitForm from './TwitForm';
 import CommentForm from './CommentForm';
-import { baseUrl } from '../helper';
+import { baseUrl, frontendUrl } from '../helper';
 import { Logout } from './GoogleAuth';
 import Loader from 'react-loader-spinner';
 
@@ -157,10 +157,10 @@ useEffect(async() => {
                     </span>
                 </div>
                 <div className=''>
-                
+                {/* <a href='#30dc1957-c052-4a66-8921-b72fa9ad151d'>#30dc1957-c052-4a66-8921-b72fa9ad151d</a> */}
                 {
                     twits.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((twit, idx) => 
-                        <Twit key={idx} twit={twit} email={email} apiCallHook={apiCallHook} baseUrl={baseUrl} sync={sync} setSync={setSync} showForm={showForm} formActive={formActive} checkOpenForms={checkOpenForms} />
+                        <Twit key={idx} twit={twit} email={email} apiCallHook={apiCallHook} baseUrl={baseUrl} frontendUrl={frontendUrl} sync={sync} setSync={setSync} showForm={showForm} formActive={formActive} checkOpenForms={checkOpenForms} />
                     )
                 }
                 </div>
@@ -170,7 +170,7 @@ useEffect(async() => {
 }
 
 const Twit = (props) => {
-    const { twit: {id, title, text, imageUrl, twits, likes, comments, createdAt, updatedAt }, email, apiCallHook, baseUrl, sync, setSync, checkOpenForms } = props;
+    const { twit: {id, title, text, imageUrl, twits, likes, comments, createdAt, updatedAt }, email, apiCallHook, baseUrl, frontendUrl, sync, setSync, checkOpenForms } = props;
     
     const [commentFormActive, setCommentFormActive] = useState(false);
     const [editLoading, setEditLoading] = useState(false);
@@ -178,9 +178,17 @@ const Twit = (props) => {
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [storyText, setStoryText] = useState(text);
     const [editForm, setEditForm] = useState(false);
+    const [linkCopied, setLinkCopied] = useState(false);
 
     const handleStoryChange = (e) => {
         setStoryText(e.target.value);
+    }
+
+    const copyTwitLink = () => {
+        clipboardCopy(`${frontendUrl}/#${id}`);
+        setTimeout(() => {
+            setLinkCopied(false);
+        }, 1000);
     }
 
     const editStory = () => {
@@ -221,21 +229,38 @@ const Twit = (props) => {
         apiCallHook('DELETE', `${baseUrl}/twits/${id}`);
     }
 
-
+    const clipboardCopy = async (text) => {
+        if ('clipboard' in navigator) {
+            console.log('Link copied');
+            setLinkCopied(true);
+          return await navigator.clipboard.writeText(text);
+        } else {
+            console.log('Link copy is not supported');
+        }
+      }
     return (
-    <div  style={{fontSize: '1.1em'}} className='bg-gray-100 rounded p-5 mb-2'>
-        <p style={{fontWeight: '600', fontFamily: 'Architects Daughter'}} className='text-md text-center'>{title}</p>
+    <div id={`${id}`} style={{fontSize: '1.1em'}} className='shadow-md border-2 border-solid border-gray-300 rounded p-5 mb-2'>
+        <p className='flex justify-between mb-2'>
+            <span></span>
+            <span style={{fontWeight: '600', fontFamily: 'Architects Daughter'}} className='text-md self-center'>{title}</span>
+            <span className={!linkCopied ? 'mr-2 mb-1 invisible text-xs self-end' : 'mr-2 mb-1 text-xs self-end'}>copied</span>
+        </p>
         <span className='text-xs mb-5 flex justify-between'>
             <Moment fromNow>{createdAt}</Moment>
+        <span className='flex'>
         {(email === twits.email) && !editForm && 
-            <span className='cursor-pointer mr-3' onClick={() => editStory()}> 
-                <GrEdit size={15} />
+            <span className='cursor-pointer mr-3 hover:bg-blue-400 text-black hover:text-white p-2 -mt-2 rounded-full' onClick={() => editStory()}> 
+                <GrEdit size={20} />
             </span>
         }
+            <span className={linkCopied ? 'flex-col hover:bg-blue-400 rounded-full p-2 text-white bg-blue-900 cursor-pointer -mt-2 mr-3' : 'rounded-full hover:bg-blue-400 p-2 cursor-pointer -mt-2 mr-3'} onClick={() => copyTwitLink()}> 
+                <BsShareFill size={20} />
+            </span>
+        </span>
         </span>
         {editForm && <div className='mb-5'>
                 <textarea 
-                    className='border-red-700 border-0 p-2 mb-2 rounded bg-white-300 outline-none'
+                    className='border-gray-200 border-2 p-2 mb-2 rounded bg-white-300 focus:outline-none'
                     style={{width: '100%'}}
                     cols={3}
                     rows={4}
