@@ -42,7 +42,7 @@ export default function AttachImage({imageUrl, setImageUrl}) {
                 <input
                     type="file"
                     placeholder=""
-                    accept="image/*"
+                    accept="image/*;capture=camera"
                     capture
                     className="hidden"
                     onChange={e => handleImage(e)}
