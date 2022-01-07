@@ -122,28 +122,41 @@ db.comment.belongsTo(db.twit, {
 });
 
 // relations for followers table
-db.user.hasMany(db.follower, {
+
+db.user.belongsToMany(db.user, {
+  through: db.follower,
   as: 'followers',
-  // as: 'following',
   foreignKey: 'userId'
 });
 
-db.user.hasMany(db.follower, {
+db.user.belongsToMany(db.user, {
+  through: db.follower,
   as: 'following',
-  // as: 'followers',
   foreignKey: 'followerId'
 });
 
-db.follower.belongsTo(db.user, {
-  as: 'followers',
-  // as: 'following',
-  foreignKey: 'userId'
-});
+// db.user.hasMany(db.follower, {
+//   as: 'followers',
+//   // as: 'following',
+//   foreignKey: 'userId'
+// });
 
-db.follower.belongsTo(db.user, {
-  as: 'following',
-  // as: 'following',
-  foreignKey: 'followerId'
-});
+// db.user.hasMany(db.follower, {
+//   as: 'following',
+//   // as: 'followers',
+//   foreignKey: 'followerId'
+// });
+
+// db.follower.belongsTo(db.user, {
+//   as: 'followers',
+//   // as: 'following',
+//   foreignKey: 'userId'
+// });
+
+// db.follower.belongsTo(db.user, {
+//   as: 'following',
+//   // as: 'following',
+//   foreignKey: 'followerId'
+// });
 
 module.exports = db;

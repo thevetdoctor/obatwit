@@ -88,21 +88,22 @@ exports.getUserProfile = async(req, res) => {
     const { username } = req.params;
     console.log(username)
     try {
-            const user = await Users.findOne({ where: { username },
-                attributes: ['id', 'username', 'email', 'imageUrl', 'createdAt']
-            });
-            const following = await Followers.findAll({ where: {
-                followerId: user.id,
-                isFollowed: true
-            },
-                attributes: ['userId'],
+            const user = await Users.findOne({ 
+                where: { 
+                    username 
+                },
+                attributes: ['id', 'username', 'email', 'imageUrl', 'createdAt'],
                 include: [
                     {model: Users, as: 'followers',
-                    attributes: ['id', 'username', 'email', 'imageUrl']
-                }
-                ]
+                    attributes: ['id', 'username', 'email', 'imageUrl'],
+                    },
+                    {model: Users, as: 'following',
+                    attributes: ['id', 'username', 'email', 'imageUrl'],
+                    }
+                  ]
             });
-            response(res, 200, { user, following }, null, 'User data');
+            if(!user) return response(res, 400, null, 'User not found');
+            response(res, 200, { user }, null, 'User data');
         }catch(error) {
             response(res, 500, null, error.message, 'Error in getting users');
         }

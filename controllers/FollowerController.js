@@ -44,19 +44,17 @@ exports.getFollowers = async(req, res) => {
     const { userId } = req.body;
     if(!userId) return response(res, 400, null, 'userId is required');
       try {
-        const followers = await Followers.findAll({ where: {
-            userId,
-            isFollowed: true
-        },
-        attributes: ['followerId'],
-            // include: [
-            //     {model: Users, as: 'followers',
-            //     attributes: ['id', 'username', 'email', 'imageUrl']
-            // }
-            // ]
+          const followers = await Users.findOne({ 
+              where: { 
+                  id: userId
+                },
+            attributes: ['id', 'username', 'email', 'imageUrl'],
+            include: [
+                {model: Users, as: 'followers',
+                attributes: ['id', 'username', 'email', 'imageUrl'],
+                }
+            ]
         });
-            if(!followers) return response(res, 400, null, 'No followers found');
-
             response(res, 200, followers, null, 'List of followers');
         }catch(error) {
             response(res, 500, null, error.message, 'Error in getting followers');
@@ -67,19 +65,24 @@ exports.getFollowing = async(req, res) => {
     const { userId } = req.body;
     if(!userId) return response(res, 400, null, 'userId is required');
       try {
-            const following = await Followers.findAll({ where: {
-                followerId: userId,
-                isFollowed: true
-            },
-                attributes: ['userId'],
-                include: [
-                    {model: Users,
-                    attributes: ['id', 'username', 'email', 'imageUrl']
-                }
-                ]
-            });
+        const following = await Users.findOne({ 
+            where: { 
+                id: userId
+              },
+            attributes: ['id', 'username', 'email', 'imageUrl'],
+            include: [
+              {model: Users, as: 'following',
+            //   where: {imageUrl: {[Sequelize.Op.ne]: null}},
+              attributes: ['id', 'username', 'email', 'imageUrl'],
+            //   include: [
+            //       {model: Followers, where: {isFollowed: true}}
+            //     ]
+              }
+            ],
+        });   
             if(!following) return response(res, 400, null, 'No following found');
-
+            const followingNotFalse = following.following;
+            console.log(followingNotFalse);
             response(res, 200, following, null, 'List of users being followed');
         }catch(error) {
             response(res, 500, null, error.message, 'Error in getting following');
@@ -89,6 +92,7 @@ exports.getFollowing = async(req, res) => {
 exports.updateFollowingStatus = async(req, res) => {
     const { userId, followerId } = req.body;
     if(!(userId && followerId)) return response(res, 400, null, 'Please supply missing input(s)');
+    if(userId === followerId) return response(res, 400, null, 'User cannot unfollow self');
       try {
             const follower = await Followers.findOne({ where: {
                 userId: followerId,
@@ -107,6 +111,7 @@ exports.updateFollowingStatus = async(req, res) => {
             }
 
         }catch(error) {
+            console.log(error.message);
             if(error.message.search('invalid') >= 0) return response(res, 400, null, 'Invalid input supplied');
             response(res, 500, null, error.message, 'Error in unfollowing user');
         }
