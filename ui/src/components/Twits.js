@@ -155,7 +155,7 @@ useEffect(() => {
                 </p>
                 <div className='py-2 px-2 rounded mb-4 flex justify-between'>
                     {img !== 'null' ? (
-                        <span>
+                        <span className= 'cursor-pointer'  onClick= {e => history.push(`/${email.split('@')[0]}`)}>
                             <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />
                         </span>) 
                         : <span className='text-left'><AiFillHome size={25} /></span>}
@@ -165,7 +165,6 @@ useEffect(() => {
                     </span>
                 </div>
                 <div className=''>
-                {/* <a href='#30dc1957-c052-4a66-8921-b72fa9ad151d'>#30dc1957-c052-4a66-8921-b72fa9ad151d</a> */}
                 {
                     twits.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((twit, idx) => 
                         <Twit key={idx} twit={twit} email={email} apiCallHook={apiCallHook} baseUrl={baseUrl} frontendUrl={frontendUrl} sync={sync} setSync={setSync} showForm={showForm} formActive={formActive} checkOpenForms={checkOpenForms} />
@@ -401,9 +400,9 @@ const Comment = (props) => {
     )
 }
 
-const LoadSpan = ({height, width, color}) => (
+export const LoadSpan = ({height, width, color}) => (
             <span 
-            className='m-auto'>
+            className='m-auto mr-4'>
                         <Loader 
                         type='ThreeDots'
                         color={color}
