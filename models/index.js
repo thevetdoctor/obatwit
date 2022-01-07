@@ -121,4 +121,29 @@ db.comment.belongsTo(db.twit, {
   foreignKey: 'twitId'
 });
 
+// relations for followers table
+db.user.hasMany(db.follower, {
+  as: 'followers',
+  // as: 'following',
+  foreignKey: 'userId'
+});
+
+db.user.hasMany(db.follower, {
+  as: 'following',
+  // as: 'followers',
+  foreignKey: 'followerId'
+});
+
+db.follower.belongsTo(db.user, {
+  as: 'followers',
+  // as: 'following',
+  foreignKey: 'userId'
+});
+
+db.follower.belongsTo(db.user, {
+  as: 'following',
+  // as: 'following',
+  foreignKey: 'followerId'
+});
+
 module.exports = db;
