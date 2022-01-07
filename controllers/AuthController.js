@@ -2,6 +2,7 @@ const Sequelize = require("sequelize");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const Users = require('../models').user;
+const Followers = require('../models').follower;
 const { response } = require('oba-http-response');
 const mailer = require("../helpers/mailer");
 const randomId = require('oba-random-id');
@@ -78,6 +79,30 @@ exports.getUsers = async(req, res) => {
             });
             // console.log(users);
             response(res, 200, { count: users.length, users }, null, 'List of users');
+        }catch(error) {
+            response(res, 500, null, error.message, 'Error in getting users');
+        }
+}; 
+
+exports.getUserProfile = async(req, res) => {
+    const { username } = req.params;
+    console.log(username)
+    try {
+            const user = await Users.findOne({ where: { username },
+                attributes: ['id', 'username', 'email', 'imageUrl', 'createdAt']
+            });
+            const following = await Followers.findAll({ where: {
+                followerId: user.id,
+                isFollowed: true
+            },
+                attributes: ['userId'],
+                include: [
+                    {model: Users, as: 'followers',
+                    attributes: ['id', 'username', 'email', 'imageUrl']
+                }
+                ]
+            });
+            response(res, 200, { user, following }, null, 'User data');
         }catch(error) {
             response(res, 500, null, error.message, 'Error in getting users');
         }

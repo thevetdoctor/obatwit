@@ -72,11 +72,11 @@ exports.getFollowing = async(req, res) => {
                 isFollowed: true
             },
                 attributes: ['userId'],
-                // include: [
-                //     {model: Users, as: 'following',
-                //     attributes: ['id', 'username', 'email', 'imageUrl']
-                // }
-                // ]
+                include: [
+                    {model: Users,
+                    attributes: ['id', 'username', 'email', 'imageUrl']
+                }
+                ]
             });
             if(!following) return response(res, 400, null, 'No following found');
 
