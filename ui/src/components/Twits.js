@@ -132,7 +132,15 @@ useEffect(async() => {
         console.log('cleanup twits 2');
     }
 }, [sync]);
-    
+
+useEffect(() => {
+    setTimeout(() => {
+        const id = window.location.hash.replace('#', '');
+        const element = document.getElementById(id);
+        if (element) element.scrollIntoView();
+      }, 0);
+});
+
     return (
         <div style={{fontFamily: 'Roboto', fontWeight: '600', height: '90vh'}} className='mb-5 p-3'>
             <span style={{cursor: 'pointer', borderRadius: '50%'}} className='fixed bottom-16 right-4 bg-green-500 p-4 text-white'><RiChatNewLine size={25} onClick={showForm} /></span>
@@ -239,10 +247,10 @@ const Twit = (props) => {
         }
       }
     return (
-    <div id={`${id}`} style={{fontSize: '1.1em'}} className='shadow-md border-2 border-solid border-gray-300 rounded p-5 mb-2'>
+    <div id={`${id}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 rounded p-5 mb-4'>
         <p className='flex justify-between mb-2'>
             <span></span>
-            <span style={{fontWeight: '600', fontFamily: 'Architects Daughter'}} className='text-md self-center'>{title}</span>
+            <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>{title}</span>
             <span className={!linkCopied ? 'mr-2 mb-1 invisible text-xs self-end' : 'mr-2 mb-1 text-xs self-end'}>copied</span>
         </p>
         <span className='text-xs mb-5 flex justify-between'>
@@ -286,7 +294,7 @@ const Twit = (props) => {
                     <LoadSpan height={20} width={20} color='#00bfff' />}
                 </div>}
 
-        {!editForm && <div  style={{fontFamily: 'Architects Daughter', fontWeight: '500'}} className='p-3'>{text}<br />
+        {!editForm && <div className='p-3 font-semibold'>{text}<br />
         {((new Date(updatedAt).getTime() - new Date(createdAt).getTime()) > 0) && <span className='text-xs'>Updated <Moment fromNow>{updatedAt}</Moment></span>}
         </div>}
         <span>
@@ -361,7 +369,7 @@ const Comment = (props) => {
             <span className='text-xs mb-2'>
             <Moment fromNow>{createdAt}</Moment>
             </span>
-            <p style={{fontFamily: 'Architects Daughter', fontWeight: '500', fontSize: '18px'}} className='p-3'>{text}</p>
+            <p className='p-3 font-semibold'>{text}</p>
             <span style={{fontSize: '0.8em'}} className='mx-2 flex items-justify text-xs mt-2'>
                 {usercomments.imageUrl ? (
                 <span className='mr-1'>
