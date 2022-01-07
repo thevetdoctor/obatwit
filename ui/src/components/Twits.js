@@ -179,7 +179,6 @@ useEffect(() => {
 
 const Twit = (props) => {
     const { twit: {id, title, text, imageUrl, twits, likes, comments, createdAt, updatedAt }, email, apiCallHook, baseUrl, frontendUrl, sync, setSync, checkOpenForms } = props;
-    
     const [commentFormActive, setCommentFormActive] = useState(false);
     const [editLoading, setEditLoading] = useState(false);
     const [likeLoading, setLikeLoading] = useState(false);
@@ -187,6 +186,8 @@ const Twit = (props) => {
     const [storyText, setStoryText] = useState(text);
     const [editForm, setEditForm] = useState(false);
     const [linkCopied, setLinkCopied] = useState(false);
+
+    const history = useHistory();
 
     const handleStoryChange = (e) => {
         setStoryText(e.target.value);
@@ -301,7 +302,7 @@ const Twit = (props) => {
             {imageUrl && <img src={imageUrl} width='100%' alt='imgurl' className='rounded' />}
         </span>
         <div style={{fontSize: '0.8em'}} className='text-xs text-gray-800 flex mt-2'>
-            <span className='mx-2 flex'>
+            <span className='mx-2 flex cursor-pointer'  onClick= {e => history.push(`/${twits.username}`)}>
                 {twits.imageUrl ? (
                 <span className='mr-1'>
                     <img src={twits.imageUrl} alt='Profile' style={{width: '20px', height: '20px', borderRadius: '50%'}} />
@@ -346,6 +347,7 @@ const Comment = (props) => {
 
     const [likeLoading, setLikeLoading] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
+    const history = useHistory();
 
     const likeCount = likecomments?.filter(like => like.isLiked).length;
     const likeComment = () => {
@@ -371,12 +373,12 @@ const Comment = (props) => {
             </span>
             <p className='p-3 font-semibold'>{text}</p>
             <span style={{fontSize: '0.8em'}} className='mx-2 flex items-justify text-xs mt-2'>
-                {usercomments.imageUrl ? (
-                <span className='mr-1'>
+                {usercomments.imageUrl ?
+                <span className='mr-1 cursor-pointer' onClick= {e => history.push(`/${usercomments.username}`)}>
                     <img src={usercomments.imageUrl} alt='Profile' style={{width: '20px', height: '20px', borderRadius: '50%'}} />
-                </span>)
+                </span>
                 : <BsPersonFill size={15}/>}
-                <span className=''>
+                <span className='cursor-pointer' onClick= {e => history.push(`/${usercomments.username}`)}>
                     {email === usercomments.email ? 'Me' : usercomments.username}
                 </span>
                 <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => likeComment()}>
