@@ -46,6 +46,7 @@ export default function People() {
                     if(method === 'GET') {
                     setUserData(res.data.data.user);
                     setPeopleData(res.data.data.users);
+                    // console.log(res.data.data.users);
                     // const followers = res.data.data.user.followers.filter(user => user.follower.isFollowed);
                     // const following = res.data.data.user.following.filter(user => user.follower.isFollowed);
                     // setFollowerz(followers);
@@ -96,8 +97,14 @@ export default function People() {
                     className={'text-white bg-blue-400 rounded hover:bg-blue-400 p-2 mb-2 cursor-pointer'} 
                     onClick= {() => history.push(`/${person.username}`)}
                 > 
-                {person.username}<br/>
-                {person.email}
+                <span className='mx-2 flex cursor-pointer'  onClick= {e => history.push(`/${person.username}`)}>
+                {person.imageUrl ? (
+                <span className='mr-2'>
+                    <img src={person.imageUrl} alt='Profile' style={{width: '1.5em', height: '1.5em', borderRadius: '50%'}} />
+                </span>)
+                : <span className='mr-2 text-black'><BsPersonFill size={'1.5em'}/></span>}
+                {email === person.email ? 'Me' : person.username}
+            </span>
                 </span>
             ))}
         </div>

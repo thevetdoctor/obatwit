@@ -109,7 +109,7 @@ export default function Profile() {
                 {followerCount > 0 && <span className={'text-xs text-white bg-blue-500 rounded hover:bg-blue-400 p-2 cursor-pointer'}> 
                         {followerCount} {followerCount  > 1 ? 'followers' : 'follower'}
                 </span>}
-                {followingCount > 0 && <span className={' text-white bg-green-500 rounded hover:bg-blue-400 p-2 cursor-pointer m-3'}> 
+                {followingCount > 0 && <span className={' text-white bg-green-500 rounded hover:bg-green-400 p-2 cursor-pointer m-3'}> 
                         {followingCount} following
                 </span>}
             </span>
