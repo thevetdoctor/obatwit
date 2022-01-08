@@ -155,16 +155,15 @@ useEffect(() => {
                         />
                      </span>}
                 </div>
-                <span className='text-xs mt-4 mb-4'>
+                <span className='mt-4 mb-4'>
                 {signup ? 'Already signed up ?' : 'Not registered ?' }
                      
-                <a 
-                    href='/' 
-                    className='focus:text-md underline'
+                <span 
+                    className='focus:text-md font-bold cursor-pointer'
                     onClick={handleSignupMode}
                 > 
                     {signup ? ' Login here' : ' Signup here!' }
-                </a></span>
+                </span></span>
             </div>
             {!token && <GoogleAuth 
                 error={error}

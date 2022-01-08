@@ -9,9 +9,13 @@ import Moment from 'react-moment';
 import axios from 'axios';
 import { baseUrl } from '../helper';
 import { LoadSpan } from './Twits';
+import TopSearch from './TopSearch';
 
 export default function People() {
+    const [error, setError] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
     const [ userData, setUserData ] = useState({});
+    const [ searchData, setSearchData ] = useState([]);
     const [ peopleData, setPeopleData ] = useState([]);
     const [ isFollower, setIsFollower ] = useState(false);
     const [ isFollowing, setIsFollowing ] = useState(false);
@@ -26,6 +30,21 @@ export default function People() {
 
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
     const token = localStorage.getItem('token');
+
+    const handleChange = (e) => {
+        const target = e.target;
+        const value = target.value;
+        setSearchQuery(value);
+      
+    }
+
+    const handleSearch = () => {
+        const searchResults = peopleData.filter(person => {
+            return person.username.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0;
+        });
+        // console.log(searchQuery, searchData, searchResults);
+        setSearchData(searchResults);
+    }
 
     const apiCallHook = async(method, url, data) => {
         const res = await axios({
@@ -46,6 +65,7 @@ export default function People() {
                     if(method === 'GET') {
                     setUserData(res.data.data.user);
                     setPeopleData(res.data.data.users);
+                    setSearchData(res.data.data.users);
                     // console.log(res.data.data.users);
                     // const followers = res.data.data.user.followers.filter(user => user.follower.isFollowed);
                     // const following = res.data.data.user.following.filter(user => user.follower.isFollowed);
@@ -58,9 +78,12 @@ export default function People() {
                     // setIsFollower(checkIsFollower);
                     // setIsFollowing(checkIsFollowing);
                     // console.log(followers, following, checkIsFollower, checkIsFollowing, isFollower, isFollowing);
+                    setError('');
                 } else{
                     setSync(!sync); 
                 }
+            } else {
+                setError('Please check your network');
             }
     }
 
@@ -78,10 +101,20 @@ export default function People() {
 
     useEffect(() => {
         apiCallHook('GET', `${baseUrl}/auth/users`);
+        setSearchData(peopleData);
+
         return () => {
-            console.log('cleanup people page');
+            console.log('cleanup people page1');
         }
     }, [sync]);
+  
+    useEffect(() => {
+        handleSearch();
+        
+        return () => {
+            console.log('cleanup people page2');
+        }
+    }, [searchQuery]);
     return (
         <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 bg-gray-200 h-full rounded p-5 mb-4'>
         <p className='flex justify-between mb-2'>
@@ -89,10 +122,12 @@ export default function People() {
             <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>People</span>
             <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/twits")}><IoCloseCircle size={35} /></span>
         </p>
+        {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 m-1 rounded'>Please check your network !</div>}
         <span className='text-sm mt-3 mb-5'>
         </span>
+        <TopSearch searchQuery={searchQuery} handleChange={handleChange} setSearchQuery={setSearchQuery}/>
         <div className='flex flex-col text-md'>
-            {peopleData.sort((a, b) => a.email.localeCompare(b.email)).map((person, idx) => (
+            {searchData.sort((a, b) => a.email.localeCompare(b.email)).map((person, idx) => (
                 <span key={idx} 
                     className={'text-white bg-blue-400 rounded hover:bg-blue-400 p-2 mb-2 cursor-pointer'} 
                     onClick= {() => history.push(`/${person.username}`)}
@@ -107,6 +142,9 @@ export default function People() {
             </span>
                 </span>
             ))}
+        </div>
+        <div className='flex'>
+            <span className='m-auto'><IoIosPeople size={300} /></span>
         </div>
     </div>
     )

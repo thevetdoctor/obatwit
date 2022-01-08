@@ -10,6 +10,7 @@ import { baseUrl } from '../helper';
 import { LoadSpan } from './Twits';
 
 export default function Profile() {
+    const [error, setError] = useState('');
     const [ userData, setUserData ] = useState({});
     const [ isFollower, setIsFollower ] = useState(false);
     const [ isFollowing, setIsFollowing ] = useState(false);
@@ -54,9 +55,12 @@ export default function Profile() {
                     setIsFollower(checkIsFollower);
                     setIsFollowing(checkIsFollowing);
                     // console.log(followers, following, checkIsFollower, checkIsFollowing, isFollower, isFollowing);
+                    setError('');
                 } else{
                     setSync(!sync);
                 }
+            } else {
+                setError('Please check your network');
             }
     }
 
@@ -92,6 +96,7 @@ export default function Profile() {
             {<span className='text-left flex cursor-pointer' onClick= {e => history.push('people')}><IoIosPeople size={30}/></span>}
             <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/twits")}><IoCloseCircle size={35} /></span>
         </p>
+        {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 mb-5 rounded'>Please check your network !</div>}
         <span className='text-sm mt-3 mb-5 flex justify-between'>
             <span>Member since : <Moment fromNow>{userData?.createdAt}</Moment></span>
             <span className='flex'>
@@ -122,7 +127,10 @@ export default function Profile() {
         <span>
             {userData?.imageUrl ? 
             <img src={userData?.imageUrl} width='100%' alt='imgurl' className='mt-3 rounded-lg' />
-            :<span className=''><BsPersonFill size={300} /></span>}
+            :
+            <div className='flex'>
+                <span className='m-auto'><BsPersonFill size={300} /></span>
+            </div>}
         </span>
         
         

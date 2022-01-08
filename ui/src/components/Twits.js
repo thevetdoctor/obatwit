@@ -85,6 +85,7 @@ export default function Twits() {
             } else {
                 console.log('Error found'); 
                 setError('Error found');
+                setError('Please check your network');
             }
     }
 
@@ -106,6 +107,7 @@ export default function Twits() {
             } else {
                 console.log('Error found');
                 setError('Error found');
+                setError('Please check your network');
             }
     }
 
@@ -172,6 +174,8 @@ useEffect(() => {
                     <span style={{cursor: 'pointer'}} className='text-right' onClick={logout}><Logout />
                     </span>
                 </div>
+                {error && <div style={{fontFamily: 'Roboto', backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 m-1 rounded'>Please check your network !</div>}
+
                 <div className=''>
                 {
                     twits.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((twit, idx) => 
