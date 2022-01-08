@@ -15,18 +15,18 @@ dotenv.config();
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 export const authenticate = async(google = false, email, password = null, apiUrl, error, setError, setLoading, history, name, imageUrl) => {
-    if(!(email && password)) {
-        if(!email) {
-            setError('Email is required');
-            return;
-        }
-        setError('Password required');
-        return;
-    }
     localStorage.setItem('img', imageUrl);
     setLoading(true);
     let res;
     if(!google) {
+        if(!(email && password)) {
+            if(!email) {
+                setError('Email is required');
+                return;
+            }
+            setError('Password required');
+            return;
+        }
         res = await axios({
             method: 'POST',
             url: `${apiUrl}`,
