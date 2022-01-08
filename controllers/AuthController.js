@@ -75,7 +75,7 @@ exports.getUsers = async(req, res) => {
     // console.log('user email', req.userEmail, Users);
       try {
             const users = await Users.findAll({
-                attributes: ['email', 'username']
+                attributes: ['email', 'username', 'imageUrl']
             });
             // console.log(users);
             response(res, 200, { count: users.length, users }, null, 'List of users');
