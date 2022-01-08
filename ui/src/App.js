@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Posts from "./components/Posts";
 import Twits from './components/Twits';
 import Profile from './components/Profile';
+import People from './components/People';
 
 function App() {
     const [loggedIn, setLoggedIn] = useState(JSON.parse(localStorage.getItem('loggedIn')));
@@ -35,6 +36,7 @@ function App() {
       <Switch>
               <Route exact path="/" component={Posts} />
               <Route exact path="/twits" component={Twits} />
+              <Route exact path="/people" component={People} />
               <Route path="/:user" component={Profile} />
       </Switch>
           {/* </div>ff */}

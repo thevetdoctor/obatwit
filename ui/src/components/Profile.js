@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from "react-router-dom";
 import { IoCloseCircle } from 'react-icons/io5';
 import { BsPersonFill } from 'react-icons/bs';
+import { IoIosPeople } from 'react-icons/io';
 import Moment from 'react-moment';
 import axios from 'axios';
 import { baseUrl } from '../helper';
@@ -88,7 +89,8 @@ export default function Profile() {
             : 
             <span className='text-left'><BsPersonFill size={25} /></span>}
             <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>{userData?.username}</span>
-            <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/")}><IoCloseCircle size={35} /></span>
+            {<span className='text-left flex cursor-pointer' onClick= {e => history.push('people')}><IoIosPeople size={30}/></span>}
+            <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/twits")}><IoCloseCircle size={35} /></span>
         </p>
         <span className='text-sm mt-3 mb-5 flex justify-between'>
             <span>Member since : <Moment fromNow>{userData?.createdAt}</Moment></span>

@@ -16,7 +16,7 @@ import Loader from 'react-loader-spinner';
 
 export default function Twits() {
     const [error, setError] = useState('');
-    const [twits, setTwits] = useState([]);
+    const [twits, setTwits] = useState(JSON.parse(localStorage.getItem('twits')) || []);
     const [formActive, setFormActive] = useState(false);
     const [sync, setSync] = useState(false);
     const [users, setUsers] = useState(0);
@@ -78,6 +78,10 @@ export default function Twits() {
                     x.formActive = false;
                     return x;
                 }));
+                localStorage.setItem('twits', JSON.stringify(res.data.data.map(x => {
+                    x.formActive = false;
+                    return x;
+                })));
             } else {
                 console.log('Error found'); 
                 setError('Error found');
@@ -126,6 +130,10 @@ useEffect(() => {
 }, []);
 
 useEffect(async() => {
+    // if(!twits.length) {
+    //     console.log('no twits');
+    //     getTwits();
+    // }
     getTwits();
 
     return () => {
@@ -155,11 +163,11 @@ useEffect(() => {
                 </p>
                 <div className='py-2 px-2 rounded mb-4 flex justify-between'>
                     {img !== 'null' ? (
-                        <span className= 'cursor-pointer'  onClick= {e => history.push(`/${email.split('@')[0]}`)}>
+                        <span className='cursor-pointer'  onClick= {e => history.push(`/${email.split('@')[0]}`)}>
                             <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />
                         </span>) 
                         : <span className='text-left'><AiFillHome size={25} /></span>}
-                    {users > 0 && <span className='text-left flex'><IoIosPeople size={25}/>{users}</span>}
+                    {users > 0 && <span className='text-left flex cursor-pointer'  onClick= {e => history.push('people')}><IoIosPeople size={25}/>{users}</span>}
                     
                     <span style={{cursor: 'pointer'}} className='text-right' onClick={logout}><Logout />
                     </span>
