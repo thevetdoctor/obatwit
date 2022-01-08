@@ -22,9 +22,11 @@ export const authenticate = async(google = false, email, password = null, apiUrl
         if(!(email && password)) {
             if(!email) {
                 setError('Email is required');
+                setLoading(false);
                 return;
             }
             setError('Password required');
+            setLoading(false);
             return;
         }
         res = await axios({
