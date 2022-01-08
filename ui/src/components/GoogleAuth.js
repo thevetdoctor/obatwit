@@ -10,7 +10,6 @@ import { FiLogOut } from 'react-icons/fi';
 
 dotenv.config();
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-// console.log('id', clientId);
 
 export default function GoogleAuth(props) {
     const { error, setError, loading, setLoading } = props;

@@ -13,7 +13,6 @@ import { CgCopyright } from 'react-icons/cg';
 
 dotenv.config();
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-// console.log('id', clientId, process.env);
 
 export const authenticate = async(google = false, email, password = null, apiUrl, error, setError, setLoading, history, name, imageUrl) => {
     localStorage.setItem('img', imageUrl);
@@ -31,14 +30,8 @@ export const authenticate = async(google = false, email, password = null, apiUrl
         .catch(error => {
             if(error.response) {
                 setError(error.response?.data?.error);
-                // setTimeout(() => {
-                //     setError('');
-                // }, 1000);
             } else {
                 setError('Please check your network');
-                // setTimeout(() => {
-                //     setError('');
-                // }, 1000);
             }
         });
     } else {
@@ -52,9 +45,6 @@ export const authenticate = async(google = false, email, password = null, apiUrl
         })
         .catch(error => {
             setError(error.response.data.error);
-            // setTimeout(() => {
-            //     setError('');
-            // }, 1000);
         });
 
     }
@@ -78,7 +68,6 @@ export default function Posts(props) {
     const [signup, setSignup] = useState(JSON.parse(localStorage.getItem('signup')));
     const token = localStorage.getItem('token');
     const history = useHistory();
-//   console.log(token);
 const apiUrl = `${baseUrl}/auth/${signup ? 'signup' : 'login'}`; 
 
 const handleChange = (e) => {
@@ -101,7 +90,6 @@ const handleSignupMode = () => {
 
 useEffect(() => {
     if(token) {
-        // history.push('/');
         history.push('/twits');
     }
     return () => {
@@ -134,19 +122,18 @@ useEffect(() => {
                 onChange={handleChange}
                 className='px-3 rounded mb-5'
             /><br/>
-            <div style={{flexDirection: 'column'}} className='flex'>
+            <div className='flex flex-col mb-3'>
                 {error && <span className='mb-2 text-red-600'>{error}</span>}
-                <div>
+                <div className='flex justify-center'>
                     {!loading ?
                     <span 
-                        style={{cursor: 'pointer'}}
                         onClick={() => authenticate(false, email, password, apiUrl, error, setError, setLoading, history)}
-                        className='hover:bg-green-900 bg-green-400 font-medium p-2 rounded w-6 h-3 text-white'
+                        className='cursor-pointer mb-3 bg-green-500 hover:bg-green-400 py-1 px-6 rounded text-white'
                     >    
                         {signup ? 'Signup' : 'Login' }
                     </span>
                     :
-                    <span className='m-auto'>
+                    <span className=''>
                         <Loader 
                         type='ThreeDots'
                         color='#00bfff'
@@ -155,24 +142,20 @@ useEffect(() => {
                         />
                      </span>}
                 </div>
-                <span className='mt-4 mb-4'>
-                {signup ? 'Already signed up ?' : 'Not registered ?' }
-                     
-                <span 
-                    className='focus:text-md font-bold cursor-pointer'
-                    onClick={handleSignupMode}
-                > 
-                    {signup ? ' Login here' : ' Signup here!' }
-                </span></span>
             </div>
-            {!token && <GoogleAuth 
+            {!token && <GoogleAuth
                 error={error}
                 setError={setError}
                 loading={loading}
                 setLoading={setLoading}
             />}
             {/* <LinkedinAuth /> */}
-            
+            <div className='mt-7 mb-6'>
+                    {signup ? 'Already signed up ?' : 'Not registered ?' }
+                    <span className='hover:bg-purple-400 bg-purple-500 ml-2 p-1 rounded text-white font-bold cursor-pointer' onClick={handleSignupMode}> 
+                        {signup ? ' Switch to Login' : ' Switch to Signup!' }
+                    </span>
+            </div>
           <img 
             src={chat}
             alt='CHat'

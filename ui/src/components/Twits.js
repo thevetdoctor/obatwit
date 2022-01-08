@@ -169,7 +169,7 @@ useEffect(() => {
                             <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />
                         </span>) 
                         : <span className='text-left'><AiFillHome size={25} /></span>}
-                    {users > 0 && <span className='text-left flex cursor-pointer'  onClick= {e => history.push('people')}><IoIosPeople size={25}/>{users}</span>}
+                    {users > 0 && <span className='text-left flex cursor-pointer'  onClick= {e => history.push('people')}><IoIosPeople size={30}/><span className='pt-1 pl-1'>{users}</span></span>}
                     
                     <span style={{cursor: 'pointer'}} className='text-right' onClick={logout}><Logout />
                     </span>
