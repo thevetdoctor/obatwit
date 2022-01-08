@@ -15,6 +15,14 @@ dotenv.config();
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 export const authenticate = async(google = false, email, password = null, apiUrl, error, setError, setLoading, history, name, imageUrl) => {
+    if(!(email && password)) {
+        if(!email) {
+            setError('Email is required');
+            return;
+        }
+        setError('Password required');
+        return;
+    }
     localStorage.setItem('img', imageUrl);
     setLoading(true);
     let res;
@@ -95,13 +103,12 @@ useEffect(() => {
     return () => {
     }
 }, []);
-
     return (
         <div style={{fontFamily: 'Roboto', fontWeight: '600'}} className='font-Roboto text-center align-items-center'>
              <p style={{fontFamily: 'Architects Daughter', fontWeight: '300'}} className='italic text-center mb-2'>
                 <span style={{fontSize: '1.8em'}} className='text-purple-900 font-bold'>Twitee<br/>
                 </span> 
-                <span style={{fontSize: '1em'}}>.... Feel free, express yourself, network ....</span>
+                <span className='text-md'> Feel free, express yourself & network </span>
             </p>
             <h1 style={{fontSize: 20}} className='font-bold text-md mb-7'>
                 {signup ?  'Signup' : 'Login'}
@@ -131,6 +138,7 @@ useEffect(() => {
                         className='cursor-pointer mb-3 bg-green-500 hover:bg-green-400 py-1 px-6 rounded text-white'
                     >    
                         {signup ? 'Signup' : 'Login' }
+                        {/* {' '}{window.innerWidth} */}
                     </span>
                     :
                     <span className=''>
@@ -149,8 +157,8 @@ useEffect(() => {
                 loading={loading}
                 setLoading={setLoading}
             />}
-            {/* <LinkedinAuth /> */}
-            <div className='mt-7 mb-6'>
+            {/* <LinkedinAuth /> */} 
+            <div className='mt-7 mb-6 text-xs'>
                     {signup ? 'Already signed up ?' : 'Not registered ?' }
                     <span className='hover:bg-purple-400 bg-purple-500 ml-2 p-1 rounded text-white font-bold cursor-pointer' onClick={handleSignupMode}> 
                         {signup ? ' Switch to Login' : ' Switch to Signup!' }

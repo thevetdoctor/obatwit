@@ -161,7 +161,7 @@ useEffect(() => {
                 <p style={{fontFamily: 'Architects Daughter', fontWeight: '300'}} className='italic text-center mb-2'>
                     <span style={{fontSize: '1.8em'}} className='text-purple-900 font-bold'>Twitee<br/>
                     </span> 
-                    <span style={{fontSize: '1em'}}>.... Feel free, express yourself, network ....</span>
+                    <span style={{fontSize: '1em'}}> Feel free, express yourself & network </span>
                 </p>
                 <div className='py-2 px-2 rounded mb-4 flex justify-between'>
                     {img !== 'null' ? (

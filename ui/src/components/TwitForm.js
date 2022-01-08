@@ -63,8 +63,9 @@ export default function TwitForm(props) {
     }
 
     return (
-        <div className='text-center sticky top-0 rounded pb-1 bg-blue-200 mt-3 pt-3 mb-1'>
-             <h1 style={{fontSize: '1.5em'}} className='font-bold text-base mb-3'>
+        <div className='sticky w-full h-full bg-gray-200 p-1 -mb-2'>
+            <div className='text-center bg-blue-200 mt-3 pt-3 mb-1 pb-1 rounded'>
+            <h1 className='font-semibold text-md mb-3'>
                 New twit
             </h1>
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', borderRadius: '20%'}}>
@@ -75,8 +76,8 @@ export default function TwitForm(props) {
                 value={title} 
                 placeholder='title'
                 onChange={handleChange}
-                className='px-3 py-1 rounded mb-2'
-                style={{width: '20em', border: 'none'}}
+                className='px-3 py-1 rounded text-lg mb-2 font-bold'
+                style={{width: '16em', border: 'none'}}
                 required
                 />
             <textarea 
@@ -84,18 +85,18 @@ export default function TwitForm(props) {
                 name='text'
                 rows={4}
                 cols={3}
-                style={{width: '20em', height: `${imageUrl ? '5em' : '13em'}`, border: 'none'}}
+                style={{width: '16em', height: `${imageUrl ? '5em' : '13em'}`, border: 'none'}}
                 maxLength={160}
                 value={text}
                 overflow="hidden"
                 placeholder='Drop in your twit ...' 
                 onChange={handleChange}
-                className='px-3 rounded mb-1 text-md text-gray-600'
+                className='px-3 rounded mb-1 text-lg text-black font-bold'
                 required
             />
-                <span style={{display: 'flex', width: '20em'}} className='justify-between px-3 mt-2 mb-2'>
+                <span style={{display: 'flex', width: '20em'}} className='justify-between px-3 mt-2 mb-2 ml-4 mr-2'>
                     <AttachImage imageUrl={imageUrl} setImageUrl={setImageUrl} />
-                <span>{textArea}</span>
+                <span className='mr-6'>{textArea}</span>
                 </span>
                 </div>
             <div style={{flexDirection: 'column'}} className='flex mb-5'>
@@ -106,7 +107,7 @@ export default function TwitForm(props) {
                     <span 
                         style={{cursor: 'pointer'}}
                         onClick={() => props.showForm()}
-                        className='hover:bg-gray-900 bg-gray-400 font-medium p-1 rounded text-white'
+                        className='hover:bg-gray-900 bg-gray-400 text-lg font-medium p-1 rounded text-white'
                         >    
                         Cancel
                     </span>
@@ -114,7 +115,7 @@ export default function TwitForm(props) {
                     <span 
                     style={{cursor: 'pointer'}}
                     onClick={sendTwit}
-                    className='hover:bg-green-900 bg-green-400 font-medium p-1 rounded text-white mx-2'
+                    className='hover:bg-green-900 bg-green-400 text-lg font-bold p-1 rounded text-white mx-2'
                     >    
                         Send
                     </span>
@@ -129,6 +130,7 @@ export default function TwitForm(props) {
                         />
                      </span>}
                 </div>
+            </div>
             </div>
         </div>
     )

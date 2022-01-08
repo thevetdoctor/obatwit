@@ -51,7 +51,7 @@ export default function CommentForm(props) {
     }
 
     return (
-        <div className='text-center'>
+        <div className='text-center pt-4'>
              <p style={{fontSize: 20}} className='font-bold text-xs mb-3'>
                 New Comment
             </p>

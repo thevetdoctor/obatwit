@@ -30,16 +30,16 @@ export default function AttachImage({imageUrl, setImageUrl}) {
         // console.log(imgUrl);
       }
     return (
-        <div className="flex">
+        <div className="flex p-1 rounded ml-1">
             {imgUrl ? 
                 <img 
                     src={imgUrl} alt='post' style={{width: '20em', height: '9em'}} className='rounded'
                 /> :
                 <>
                 {/* <span className='ml-3 cursor-pointer flex'><FaCamera size={25}  /> */}
-                <label className='ml-3 cursor-pointer flex'><FaCamera size={25}  />{' '} <span className='ml-2'>Add Image</span>
+                <label className='ml-2 cursor-pointer flex'><FaCamera size={25} /> <span className='font-semibold ml-2 text-white pr-2'></span>
 
-                <input
+                <input 
                     type="file"
                     placeholder=""
                     accept="image/*;capture"
