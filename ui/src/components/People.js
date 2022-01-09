@@ -98,7 +98,7 @@ export default function People() {
                 });            
                 dispatch({
                     type: 'SET_SEARCH_DATA',
-                    data: JSON.parse(localStorage.getItem('searchData'))
+                    data: JSON.parse(localStorage.getItem('peopleData'))
                 });            
             }
     }

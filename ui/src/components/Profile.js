@@ -78,7 +78,19 @@ export default function Profile() {
                 dispatch({
                     type: 'SET_USERS_DATA',
                     data: JSON.parse(localStorage.getItem('usersData'))
-                });            
+                });
+                const userTwits = twits.filter(obj => obj.twits.username === user);
+                const userDataInStore = JSON.parse(localStorage.getItem('usersData')).filter(obj => obj.username === user)[0];
+                const followers = userDataInStore.followers.filter(user => user.follower.isFollowed);
+                const following = userDataInStore.following.filter(user => user.follower.isFollowed);
+                const checkIsFollower = followers.filter(user => user.email === email).length > 0;
+                const checkIsFollowing = following.filter(user => user.email === email).length > 0;
+                setUserData(userDataInStore);
+                setFollowerCount(followers.length);
+                setFollowingCount(following.length);
+                setIsFollower(checkIsFollower);
+                setIsFollowing(checkIsFollowing);
+                setTwitCount(userTwits.length);         
             }
     }
 

@@ -116,7 +116,7 @@ export default function UserTwits() {
         <div style={{fontFamily: 'Roboto'}} className='text-md'>
         {
                     searchData.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((twit, idx) => 
-                        <div style={{backgroundColor: 'white', fontWeight: 'bold'}}>
+                        <div  key={idx} style={{backgroundColor: 'white', fontWeight: 'bold'}}>
                             <Twit key={idx} twit={twit} email={email} apiCallHook={apiCallHook} baseUrl={baseUrl} frontendUrl={frontendUrl} sync={sync} setSync={setSync} />
                         </div>
                     )
