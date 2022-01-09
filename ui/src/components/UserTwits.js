@@ -4,11 +4,12 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from "react-router-dom";
 import { IoCloseCircle } from 'react-icons/io5';
 import { BsPersonFill } from 'react-icons/bs';
-import { IoIosPeople } from 'react-icons/io';
+import { IoIosArrowBack, IoIosPeople } from 'react-icons/io';
 import axios from 'axios';
 import { baseUrl, frontendUrl } from '../helper';
 import { LoadSpan, Twit } from './Twits';
 import TopSearch from './TopSearch';
+import { AiFillHome } from 'react-icons/ai';
 
 export default function UserTwits() {
     const [error, setError] = useState('');
@@ -94,27 +95,30 @@ export default function UserTwits() {
     }, []);
     
     return (
-        <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 bg-gray-200 h-full rounded p-5 mb-4'>
-        <p className='flex justify-between mb-2'>
-            <span className='cursor-pointer' onClick= {e => history.push(`/${userData?.username}`)}>
-            {userData?.imageUrl ?
+        <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-5 mb-4'>
+        <p className='flex justify-between mb-6'>
+        <span className='cursor-pointer text-left' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
+            {/* <span className='cursor-pointer' onClick= {e => history.push(`/${userData?.username}`)}> */}
+            {/* {userData?.imageUrl ?
             <span>
                 <img src={userData?.imageUrl} alt='Profile' style={{width: '2.5em', height: '2.5em', borderRadius: '50%'}} />
             </span>
             : 
-            <span className='text-left cursor-pointer'><BsPersonFill size={25} /></span>}
-            </span>
-            <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>User's Twits</span>
-            <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/twits")}><IoCloseCircle size={35} /></span>
+            <span className='text-left cursor-pointer'><BsPersonFill size={25} /></span>} */}
+            {/* </span> */}
+            <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>Twits for {user}</span>
+            <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/twits")}><AiFillHome size={30} /></span>
         </p>
         {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 m-1 rounded'>Please check your network !</div>}
         <span className='text-sm mt-3 mb-5'>
         </span>
         {/* <TopSearch searchQuery={searchQuery} handleChange={handleChange} setSearchQuery={setSearchQuery}/> */}
-        <div className='flex flex-col text-md'>
+        <div style={{fontFamily: 'Roboto'}} className='text-md'>
         {
                     searchData.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((twit, idx) => 
-                        <Twit key={idx} twit={twit} email={email} apiCallHook={apiCallHook} baseUrl={baseUrl} frontendUrl={frontendUrl} sync={sync} setSync={setSync} />
+                        <div style={{backgroundColor: 'white', fontWeight: 'bold'}}>
+                            <Twit key={idx} twit={twit} email={email} apiCallHook={apiCallHook} baseUrl={baseUrl} frontendUrl={frontendUrl} sync={sync} setSync={setSync} />
+                        </div>
                     )
                 }
         </div>

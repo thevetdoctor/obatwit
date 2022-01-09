@@ -23,6 +23,13 @@ export default function reducer(state= initialState, action) {
               ...state,
               searchData: action.data
             }          
+        case actions.setUsersData.type:
+            console.log('Setting users data');
+
+            return {
+              ...state,
+              usersData: action.data
+            }          
         case actions.setUserCount.type:
             console.log('Setting user count');
 
@@ -86,6 +93,7 @@ export const initialState = {
     users: 0,
     peopleData: [],
     searchData: [],
+    usersData: [],
     searchQuery: '',
     networkStatus: false
 };

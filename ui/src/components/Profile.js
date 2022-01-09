@@ -1,13 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from "react-router-dom";
-import { IoCloseCircle } from 'react-icons/io5';
 import { BsPersonFill } from 'react-icons/bs';
-import { IoIosPeople } from 'react-icons/io';
+import { IoIosArrowBack, IoIosPeople } from 'react-icons/io';
 import Moment from 'react-moment';
 import axios from 'axios';
 import { baseUrl } from '../helper';
 import { LoadSpan } from './Twits';
+import store from '../redux/store';
+import { useSelector } from 'react-redux';
+import { AiFillHome } from 'react-icons/ai';
 
 export default function Profile() {
     const [error, setError] = useState('');
@@ -24,7 +26,11 @@ export default function Profile() {
 
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
     const token = localStorage.getItem('token');
-    
+    const {getState, dispatch} = store;
+    const state = getState();
+    const { twits } = useSelector(state => state);
+
+    console.log(state);    
 
     const apiCallHook = async(method, url, data) => {
         const res = await axios({
@@ -45,25 +51,34 @@ export default function Profile() {
             });
             if(res && res.data.success) {
                     if(method === 'GET') {
-                    // setUserData(res.data.data.user);
-                    localStorage.setItem('users', JSON.stringify(res.data.data.users));
-                    // const followers = res.data.data.user.followers.filter(user => user.follower.isFollowed);
-                    // const following = res.data.data.user.following.filter(user => user.follower.isFollowed);
-                    // setFollowerz(followers);
-                    // setFollowingz(following);
-                    // setFollowerCount(followers.length);
-                    // setFollowingCount(following.length);
-                    // const checkIsFollower = followers.filter(user => user.email === email).length > 0;
-                    // const checkIsFollowing = following.filter(user => user.email === email).length > 0;
-                    // setIsFollower(checkIsFollower);
-                    // setIsFollowing(checkIsFollowing);
-                    // console.log(followers, following, checkIsFollower, checkIsFollowing, isFollower, isFollowing);
+                    dispatch({
+                        type: 'SET_USERS_DATA',
+                        data: res.data.data.users
+                    });
+                    localStorage.setItem('usersData', JSON.stringify(res.data.data.users));
+                    const userTwits = twits.filter(obj => obj.twits.username === user);
+                    const userDataInStore = res.data.data.users.filter(obj => obj.username === user)[0];
+                    const followers = userDataInStore.followers.filter(user => user.follower.isFollowed);
+                    const following = userDataInStore.following.filter(user => user.follower.isFollowed);
+                    const checkIsFollower = followers.filter(user => user.email === email).length > 0;
+                    const checkIsFollowing = following.filter(user => user.email === email).length > 0;
+                    setUserData(userDataInStore);
+                    setFollowerCount(followers.length);
+                    setFollowingCount(following.length);
+                    setIsFollower(checkIsFollower);
+                    setIsFollowing(checkIsFollowing);
+                    setTwitCount(userTwits.length);
+
                     setError('');
                 } else{
                     setSync(!sync);
                 }
             } else {
                 setError('Please check your network');
+                dispatch({
+                    type: 'SET_USERS_DATA',
+                    data: JSON.parse(localStorage.getItem('usersData'))
+                });            
             }
     }
 
@@ -80,22 +95,21 @@ export default function Profile() {
     }
 
         
-    useEffect(() => {
-        console.log(user);
-        const userTwits = JSON.parse(localStorage.getItem('twits')).filter(obj => obj.twits.username === user);
-        const userDataInStore = JSON.parse(localStorage.getItem('users')).filter(obj => obj.username === user)[0];
-        console.log(userDataInStore);
-        const followers = userDataInStore.followers.filter(user => user.follower.isFollowed);
-        const following = userDataInStore.following.filter(user => user.follower.isFollowed);
-        const checkIsFollower = followers.filter(user => user.email === email).length > 0;
-        const checkIsFollowing = following.filter(user => user.email === email).length > 0;
-        setUserData(userDataInStore);
-        setFollowerCount(followers.length);
-        setFollowingCount(following.length);
-        setIsFollower(checkIsFollower);
-        setIsFollowing(checkIsFollowing);
-        setTwitCount(userTwits.length);
-    }, []);
+    // useEffect(() => {
+    //     console.log(user);
+    //     const userTwits = twits.filter(obj => obj.twits.username === user);
+    //     const userDataInStore = JSON.parse(localStorage.getItem('userData')).filter(obj => obj.username === user)[0];
+    //     const followers = userDataInStore.followers.filter(user => user.follower.isFollowed);
+    //     const following = userDataInStore.following.filter(user => user.follower.isFollowed);
+    //     const checkIsFollower = followers.filter(user => user.email === email).length > 0;
+    //     const checkIsFollowing = following.filter(user => user.email === email).length > 0;
+    //     setUserData(userDataInStore);
+    //     setFollowerCount(followers.length);
+    //     setFollowingCount(following.length);
+    //     setIsFollower(checkIsFollower);
+    //     setIsFollowing(checkIsFollowing);
+    //     setTwitCount(userTwits.length);
+    // }, []);
 
     useEffect(() => {
         apiCallHook('GET', `${baseUrl}/auth/users`);
@@ -106,17 +120,24 @@ export default function Profile() {
 
 
     return (
-        <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 bg-gray-200 h-full rounded p-5 mb-4'>
-        <p className='flex justify-between mb-2'>
+        <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-5 mb-4'>
+        <p className='flex justify-between mb-6'>
+            <span className='cursor-pointer' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
+            <>
             {userData?.imageUrl ?
-            <span>
-                <img src={userData?.imageUrl} alt='Profile' style={{width: '3em', height: '3em', borderRadius: '50%'}} />
+            <span className='flex'>
+                <img src={userData?.imageUrl} alt='Profile' style={{width: '2em', height: '2em', borderRadius: '50%'}} />
+                <span className='text-2xl font-semibold ml-2 mb-2'>{userData?.username}</span>
             </span>
             : 
-            <span className='text-left'><BsPersonFill size={25} /></span>}
-            <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>{userData?.username}</span>
-            {<span className='text-left flex cursor-pointer' onClick= {e => history.push('people')}><IoIosPeople size={30}/></span>}
-            <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/twits")}><IoCloseCircle size={35} /></span>
+            <span className='flex'>
+                <BsPersonFill size={30} />
+                <span className='text-xl font-semibold ml-2 mb-2'>{userData?.username}</span>
+            </span>}
+            {/* <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-semibold'>{userData?.username}</span> */}
+            </>
+            {<span className='flex cursor-pointer' onClick= {e => history.push('people')}><IoIosPeople size={35}/></span>}
+            <span className='bg-black-400 cursor-pointer' onClick={() => history.push("/twits")}><AiFillHome size={30} /></span>
         </p>
         {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 mb-5 rounded'>{error}</div>}
         <span className='text-sm mt-3 mb-1 flex justify-between'>
@@ -131,7 +152,7 @@ export default function Profile() {
                 <>
                 {!followLoading ? 
                     <span className='flex flex-col'>
-                        <span className={'text-white bg-blue-900 rounded hover:bg-blue-400 p-2 cursor-pointer -mt-2 mr-1'} onClick={() => handleFollow()}> 
+                        <span className={'text-white bg-blue-900 rounded hover:bg-blue-400 p-1 cursor-pointer -mt-2 mr-1'} onClick={() => handleFollow()}> 
                         {!isFollower ? 'Follow' : 'Following'}
                         </span>
                         <span className={'invisible -mt-2 mr-1'}></span>

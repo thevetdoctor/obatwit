@@ -100,7 +100,6 @@ export default function Twits() {
                 })));
             } else {
                 console.log('Error found'); 
-                setError('Error found');
                 setError('Please check your network');
                 dispatch({
                     type: 'SET_TWIT_DATA',

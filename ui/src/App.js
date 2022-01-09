@@ -41,7 +41,7 @@ function App() {
       // console.log(username)
       Notification.requestPermission().then((result) => {
         if (result === 'granted') {
-          randomNotification();
+          // randomNotification();
         }
       });
 

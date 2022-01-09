@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from "react-router-dom";
 import { IoCloseCircle } from 'react-icons/io5';
 import { BsPersonFill } from 'react-icons/bs';
-import { IoIosPeople } from 'react-icons/io';
+import { IoIosArrowBack, IoIosPeople } from 'react-icons/io';
 import Moment from 'react-moment';
 import axios from 'axios';
 import { baseUrl } from '../helper';
@@ -12,6 +12,7 @@ import { LoadSpan } from './Twits';
 import TopSearch from './TopSearch';
 import store from '../redux/store';
 import { useSelector } from 'react-redux';
+import { AiFillHome } from 'react-icons/ai';
 
 export default function People() {
     const [error, setError] = useState('');
@@ -134,11 +135,12 @@ export default function People() {
         }
     }, [searchQuery]);
     return (
-        <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 bg-gray-200 h-full rounded p-5 mb-4'>
-        <p className='flex justify-between mb-2'>
-            <span className='text-left'><IoIosPeople size={25} /></span>
+        <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-5 mb-4'>
+        <p className='flex justify-between mb-6'>
+            <span className='cursor-pointer text-left' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
+            {/* <span className='text-left'><IoIosPeople size={25} /></span> */}
             <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>People</span>
-            <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/twits")}><IoCloseCircle size={35} /></span>
+            <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/twits")}><AiFillHome size={30} /></span>
         </p>
         {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 m-1 rounded'>Please check your network !</div>}
         <span className='text-sm mt-3 mb-5'>
