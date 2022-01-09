@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -13,14 +14,21 @@ import CommentForm from './CommentForm';
 import { baseUrl, frontendUrl } from '../helper';
 import { Logout } from './GoogleAuth';
 import Loader from 'react-loader-spinner';
+import store from '../redux/store';
+import { useSelector } from 'react-redux';
 
 export default function Twits() {
     const [error, setError] = useState('');
-    const [twits, setTwits] = useState(JSON.parse(localStorage.getItem('twits')) || []);
+    // const [twits, setTwits] = useState([]);
     const [formActive, setFormActive] = useState(false);
     const [sync, setSync] = useState(false);
-    const [users, setUsers] = useState(0);
+    // const [users, setUsers] = useState(0);
 
+    const {getState, dispatch} = store;
+    const state = getState();
+    const { twits, users, searchQuery, networkStatus } = useSelector(state => state);
+
+    console.log(state);
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
     const img = localStorage.getItem('img') ? localStorage.getItem('img') : '';
     const history = useHistory();
@@ -49,7 +57,9 @@ export default function Twits() {
             })
             .catch(error => {
                 if(error.isAxiosError) {
-                    console.log(error.isAxiosError);
+                    console.log(error.response?.data?.error)
+                    setError(error.response?.data?.error);
+                    console.log('Error found');
                 }
             });
             setSync(!sync);
@@ -70,14 +80,20 @@ export default function Twits() {
             })
             .catch(error => {
                 if(error.isAxiosError) {
-                    console.log(error.isAxiosError);
+                    console.log(error.response?.data?.error)
+                    setError(error.response?.data?.error);
+                    console.log('Error found');
                 }
             });
             if(res && res.data.success) {
-                setTwits(res.data.data.map(x => {
-                    x.formActive = false;
-                    return x;
-                }));
+                // setTwits(res.data.data.map(x => {
+                //     x.formActive = false;
+                //     return x;
+                // }));
+                dispatch({
+                    type: 'SET_TWIT_DATA',
+                    data: res.data.data
+                });
                 localStorage.setItem('twits', JSON.stringify(res.data.data.map(x => {
                     x.formActive = false;
                     return x;
@@ -86,6 +102,10 @@ export default function Twits() {
                 console.log('Error found'); 
                 setError('Error found');
                 setError('Please check your network');
+                dispatch({
+                    type: 'SET_TWIT_DATA',
+                    data: JSON.parse(localStorage.getItem('twits'))
+                });
             }
     }
 
@@ -99,15 +119,25 @@ export default function Twits() {
             })
             .catch(error => {
                 if(error.isAxiosError) {
-                    console.log(error.isAxiosError);
+                    console.log(error.response?.data?.error)
+                    setError(error.response?.data?.error);
+                    console.log('Error found');
                 }
             });
             if(res && res.data.success) {
-                setUsers(res.data.data.count);
+                dispatch({
+                    type: 'SET_USER_COUNT',
+                    data: res.data.data.count
+                });
+                localStorage.setItem('userCount', res.data.data.count);
             } else {
                 console.log('Error found');
                 setError('Error found');
                 setError('Please check your network');
+                dispatch({
+                    type: 'SET_USER_COUNT',
+                    data: JSON.parse(localStorage.getItem('userCount'))
+                });
             }
     }
 
@@ -117,7 +147,7 @@ export default function Twits() {
             twit.formActive = false;
             return twit;
         });
-        setTwits(closedTwits);
+        // setTwits(closedTwits);
         console.log('closing open forms', twits.filter(twit => twit.formActive));
     }
 
@@ -188,7 +218,7 @@ useEffect(() => {
     )
 }
 
-const Twit = (props) => {
+export const Twit = (props) => {
     const { twit: {id, title, text, imageUrl, twits, likes, comments, createdAt, updatedAt }, email, apiCallHook, baseUrl, frontendUrl, sync, setSync, checkOpenForms } = props;
     const [commentFormActive, setCommentFormActive] = useState(false);
     const [editLoading, setEditLoading] = useState(false);

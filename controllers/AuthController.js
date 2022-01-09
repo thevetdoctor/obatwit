@@ -9,7 +9,6 @@ const randomId = require('oba-random-id');
 
 exports.signUp = async(req, res) => {
     let { email, password, auth, name, imageUrl } = req.body;
-    // console.log('image', imageUrl)
     let username;
     if(!auth) {
         if(!(email && password)) return response(res, 400, null, 'Please supply missing input(s)');
@@ -41,7 +40,6 @@ exports.signUp = async(req, res) => {
 
 exports.logIn = async(req, res) => {
     const { email, password, auth, imageUrl } = req.body;
-    // console.log('image', imageUrl)
     if(!auth) {
         if(!(email && password)) return response(res, 400, null, 'Please supply missing input(s)');
     }
@@ -50,7 +48,6 @@ exports.logIn = async(req, res) => {
                 email
             }, raw: true});
             if(!user) return response(res, 400, null, 'User does not exist');
-            // console.log('user', user)
             if(!user.imageUrl) {
                 await Users.update({imageUrl}, {where: {email}});
             }
@@ -72,12 +69,18 @@ exports.logIn = async(req, res) => {
 }; 
 
 exports.getUsers = async(req, res) => {
-    // console.log('user email', req.userEmail, Users);
       try {
             const users = await Users.findAll({
-                attributes: ['email', 'username', 'imageUrl']
+                attributes: ['id', 'username', 'email', 'imageUrl', 'createdAt'],
+                include: [
+                    {model: Users, as: 'followers',
+                    attributes: ['id', 'username', 'email', 'imageUrl'],
+                    },
+                    {model: Users, as: 'following',
+                    attributes: ['id', 'username', 'email', 'imageUrl'],
+                    }
+                  ]
             });
-            // console.log(users);
             response(res, 200, { count: users.length, users }, null, 'List of users');
         }catch(error) {
             response(res, 500, null, error.message, 'Error in getting users');

@@ -10,17 +10,17 @@ import axios from 'axios';
 import { baseUrl } from '../helper';
 import { LoadSpan } from './Twits';
 import TopSearch from './TopSearch';
+import store from '../redux/store';
+import { useSelector } from 'react-redux';
 
 export default function People() {
     const [error, setError] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const [ userData, setUserData ] = useState({});
-    const [ searchData, setSearchData ] = useState([]);
-    const [ peopleData, setPeopleData ] = useState([]);
+    // const [ searchData, setSearchData ] = useState([]);
+    // const [ peopleData, setPeopleData ] = useState([]);
     const [ isFollower, setIsFollower ] = useState(false);
     const [ isFollowing, setIsFollowing ] = useState(false);
-    // const [ followerz, setFollowerz ] = useState([]);
-    // const [ followingz, setFollowingz ] = useState([]);
     const [ followerCount, setFollowerCount ] = useState(0);
     const [ followingCount, setFollowingCount ] = useState(0);
     const [followLoading, setFollowLoading] = useState(false);
@@ -28,6 +28,11 @@ export default function People() {
     let { user } = useParams();
     const history = useHistory();
 
+    const {getState, dispatch} = store;
+    const state = getState();
+    const { twits, users, peopleData, searchData, networkStatus } = useSelector(state => state);
+
+    console.log(state);
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
     const token = localStorage.getItem('token');
 
@@ -42,8 +47,11 @@ export default function People() {
         const searchResults = peopleData.filter(person => {
             return person.username.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0;
         });
-        // console.log(searchQuery, searchData, searchResults);
-        setSearchData(searchResults);
+        dispatch({
+            type: 'SET_SEARCH_DATA',
+            data: searchResults
+        });
+        localStorage.setItem('searchData', JSON.stringify(searchResults));
     }
 
     const apiCallHook = async(method, url, data) => {
@@ -58,32 +66,39 @@ export default function People() {
             })
             .catch(error => {
                 if(error.isAxiosError) {
-                    console.log(error.isAxiosError);
+                    console.log(error.response?.data?.error)
+                    setError(error.response?.data?.error);
+                    console.log('Error found');
                 }
             });
             if(res && res.data.success) {
                     if(method === 'GET') {
                     setUserData(res.data.data.user);
-                    setPeopleData(res.data.data.users);
-                    setSearchData(res.data.data.users);
-                    // console.log(res.data.data.users);
-                    // const followers = res.data.data.user.followers.filter(user => user.follower.isFollowed);
-                    // const following = res.data.data.user.following.filter(user => user.follower.isFollowed);
-                    // setFollowerz(followers);
-                    // setFollowingz(following);
-                    // setFollowerCount(followers.length);
-                    // setFollowingCount(following.length);
-                    // const checkIsFollower = followers.filter(user => user.email === email).length > 0;
-                    // const checkIsFollowing = following.filter(user => user.email === email).length > 0;
-                    // setIsFollower(checkIsFollower);
-                    // setIsFollowing(checkIsFollowing);
-                    // console.log(followers, following, checkIsFollower, checkIsFollowing, isFollower, isFollowing);
+                    dispatch({
+                        type: 'SET_PEOPLE_DATA',
+                        data: res.data.data.users
+                    });
+                    localStorage.setItem('peopleData', JSON.stringify(res.data.data.users));
+                    dispatch({
+                        type: 'SET_SEARCH_DATA',
+                        data: res.data.data.users
+                    });
+                    localStorage.setItem('searchData', JSON.stringify(res.data.data.users));
+                    localStorage.setItem('users', JSON.stringify(res.data.data.users));
                     setError('');
                 } else{
                     setSync(!sync); 
                 }
             } else {
                 setError('Please check your network');
+                dispatch({
+                    type: 'SET_PEOPLE_DATA',
+                    data: JSON.parse(localStorage.getItem('peopleData'))
+                });            
+                dispatch({
+                    type: 'SET_SEARCH_DATA',
+                    data: JSON.parse(localStorage.getItem('searchData'))
+                });            
             }
     }
 
@@ -101,7 +116,10 @@ export default function People() {
 
     useEffect(() => {
         apiCallHook('GET', `${baseUrl}/auth/users`);
-        setSearchData(peopleData);
+        dispatch({
+            type: 'SET_SEARCH_DATA',
+            data: JSON.parse(localStorage.getItem('peopleData'))
+        });
 
         return () => {
             console.log('cleanup people page1');

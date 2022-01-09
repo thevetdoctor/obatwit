@@ -1,14 +1,42 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Posts from "./components/Posts";
 import Twits from './components/Twits';
 import Profile from './components/Profile';
 import People from './components/People';
+import Follower from './components/Followers';
+import Following from './components/Following';
+import UserTwits from './components/UserTwits';
+import store from './redux/store';
+import { useSelector } from 'react-redux';
 
 function App() {
     const [loggedIn, setLoggedIn] = useState(JSON.parse(localStorage.getItem('loggedIn')));
     const [signup, setSignup] = useState(JSON.parse(localStorage.getItem('signup')) || false);
+    
+    const {getState, dispatch} = store;
+    const state = getState();
+    const { searchQuery, networkStatus } = useSelector(state => state);
+    console.log(state);
+
+    useEffect(() => {
+      if(navigator.onLine) {
+        console.log('online');
+        dispatch({
+          type: 'SET_NETWORK_STATUS',
+          data: true
+        });
+      } else {
+        console.log('offline');
+        dispatch({
+          type: 'SET_NETWORK_STATUS',
+          data: false
+        });
+      } 
+    }, []);
+
       const username = localStorage.getItem('username');
       // console.log(username)
       Notification.requestPermission().then((result) => {
@@ -37,6 +65,9 @@ function App() {
               <Route exact path="/" component={Posts} />
               <Route exact path="/twits" component={Twits} />
               <Route exact path="/people" component={People} />
+              <Route path="/twits/:user" component={UserTwits} />
+              <Route path="/following/:user" component={Following} />
+              <Route path="/follower/:user" component={Follower} />
               <Route path="/:user" component={Profile} />
       </Switch>
           {/* </div>ff */}
