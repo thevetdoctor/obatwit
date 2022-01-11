@@ -56,6 +56,7 @@ export default function Profile() {
                         data: res.data.data.users
                     });
                     localStorage.setItem('usersData', JSON.stringify(res.data.data.users));
+                    localStorage.setItem('users', JSON.stringify(res.data.data.users));
                     const userTwits = twits.filter(obj => obj.twits.username === user);
                     const userDataInStore = res.data.data.users.filter(obj => obj.username === user)[0];
                     const followers = userDataInStore.followers.filter(user => user.follower.isFollowed);
@@ -138,7 +139,8 @@ export default function Profile() {
             <>
             {userData?.imageUrl ?
             <span className='flex'>
-                <img src={userData?.imageUrl} alt='Profile' style={{width: '2em', height: '2em', borderRadius: '50%'}} />
+                    {error ? <BsPersonFill size={'1.7em'} color='black' />:
+                <img src={userData?.imageUrl} alt='Profile' style={{width: '2em', height: '2em', borderRadius: '50%'}} />}
                 <span className='text-2xl font-semibold ml-2 mb-2'>{userData?.username}</span>
             </span>
             : 
@@ -191,7 +193,8 @@ export default function Profile() {
         </div>
         <span>
             {userData?.imageUrl ? 
-            <img src={userData?.imageUrl} width='100%' alt='imgurl' className='mt-3 rounded-lg' />
+            <>{error ? <BsPersonFill size={300} color='black' />:
+            <img src={userData?.imageUrl} width='100%' alt='imgurl' className='mt-3 rounded-lg' />}</>
             :
             <div className='flex'>
                 <span className='m-auto'><BsPersonFill size={300} /></span>

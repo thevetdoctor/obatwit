@@ -122,7 +122,8 @@ export default function Following() {
                 <span className='mx-2 flex cursor-pointer' onClick= {e => history.push(`/${person.username}`)}>
                 {person.imageUrl ? (
                 <span className='mr-2'>
-                    <img src={person.imageUrl} alt='Profile' style={{width: '1.5em', height: '1.5em', borderRadius: '50%'}} />
+                    {!error ? <BsPersonFill size={'1.5em'} color='black' />:
+                    <img src={person.imageUrl} alt='Profile' style={{width: '1.5em', height: '1.5em', borderRadius: '50%'}} />}
                 </span>)
                 : <span className='mr-2 text-black'><BsPersonFill size={'1.5em'}/></span>}
                 {email === person.email ? 'Me' : person.username}

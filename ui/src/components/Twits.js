@@ -195,7 +195,8 @@ useEffect(() => {
                 <div className='py-2 px-2 rounded mb-4 flex justify-between'>
                     {img !== 'null' ? (
                         <span className='cursor-pointer'  onClick= {e => history.push(`/${email.split('@')[0]}`)}>
-                            <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />
+                            {error ? <BsPersonFill size={25} />:
+                            <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
                         </span>) 
                         : <span className='text-left'><AiFillHome size={25} /></span>}
                     {users > 0 && <span className='text-left flex cursor-pointer'  onClick= {e => history.push('people')}><IoIosPeople size={30}/><span className='pt-1 pl-1'>{users}</span></span>}
@@ -208,7 +209,7 @@ useEffect(() => {
                 <div className=''>
                 {
                     twits.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((twit, idx) => 
-                        <Twit key={idx} twit={twit} email={email} apiCallHook={apiCallHook} baseUrl={baseUrl} frontendUrl={frontendUrl} sync={sync} setSync={setSync} showForm={showForm} formActive={formActive} checkOpenForms={checkOpenForms} />
+                        <Twit key={idx} twit={twit} email={email} apiCallHook={apiCallHook} baseUrl={baseUrl} frontendUrl={frontendUrl} sync={sync} setSync={setSync} showForm={showForm} formActive={formActive} checkOpenForms={checkOpenForms} error={error} />
                     )
                 }
                 </div>
@@ -218,7 +219,7 @@ useEffect(() => {
 }
 
 export const Twit = (props) => {
-    const { twit: {id, title, text, imageUrl, twits, likes, comments, createdAt, updatedAt }, email, apiCallHook, baseUrl, frontendUrl, sync, setSync, checkOpenForms } = props;
+    const { twit: {id, title, text, imageUrl, twits, likes, comments, createdAt, updatedAt }, email, apiCallHook, baseUrl, frontendUrl, sync, setSync, checkOpenForms, error } = props;
     const [commentFormActive, setCommentFormActive] = useState(false);
     const [editLoading, setEditLoading] = useState(false);
     const [likeLoading, setLikeLoading] = useState(false);
@@ -226,11 +227,34 @@ export const Twit = (props) => {
     const [storyText, setStoryText] = useState(text);
     const [editForm, setEditForm] = useState(false);
     const [linkCopied, setLinkCopied] = useState(false);
+    const [more, setMore] = useState(false);
+    const [viewComments, setViewComments] = useState(false);
 
     const history = useHistory();
-
+    const filteredComments = comments.filter(comment => !comment.isDeleted);
     const handleStoryChange = (e) => {
         setStoryText(e.target.value);
+    }
+
+    const isLiked = (() => {
+        const liked = likes.filter(like => like.userlikes.email === email && like.isLiked === true);
+       return liked.length ? true : false;
+    })();
+
+    const showMore = () => {
+        if(more) {
+            setMore(false);
+        } else {
+            setMore(true);
+        }
+    }
+
+    const showComments = () => {
+        if(viewComments) {
+            setViewComments(false);
+        } else {
+            setViewComments(true);
+        }
     }
 
     const copyTwitLink = () => {
@@ -287,6 +311,7 @@ export const Twit = (props) => {
             console.log('Link copy is not supported');
         }
       }
+
     return (
     <div id={`${id}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 rounded p-5 mb-4'>
         <p className='flex justify-between mb-2'>
@@ -313,7 +338,7 @@ export const Twit = (props) => {
                     style={{width: '100%'}}
                     cols={3}
                     rows={4}
-                    maxLength={160}
+                    maxLength={550}
                     value={storyText}
                     onChange={handleStoryChange}
                     required={true}
@@ -335,48 +360,81 @@ export const Twit = (props) => {
                     <LoadSpan height={20} width={20} color='#00bfff' />}
                 </div>}
 
-        {!editForm && <div className='p-3 font-semibold'>{text}<br />
+        {!editForm && <div style={{fontSize: '0.9em', lineHeight: 2}} className='p-3'>
+            {text.length > 100 ? text.slice(0, 100) : text}
+            {more ? 
+                <>{text.slice(100, -1)}
+                    <>{text.length > 100 && 
+                        <span style={{color: 'gray', fontWeight: '0.3em'}} className='cursor-pointer' onClick={showMore}>
+                            ...<span className='underline'>See less</span>
+                        </span>
+                        }
+                    </>
+                </> :
+                <>
+                    {text.length > 100 && 
+                        <span style={{color: 'gray', fontWeight: '0.3em'}} className='cursor-pointer' onClick={showMore}>
+                            ...<span className='underline'>See more</span>
+                        </span>
+                    }
+                </>
+            }
+        
+        <br />
         {((new Date(updatedAt).getTime() - new Date(createdAt).getTime()) > 0) && <span className='text-xs'>Updated <Moment fromNow>{updatedAt}</Moment></span>}
         </div>}
         <span>
             {imageUrl && <img src={imageUrl} width='100%' alt='imgurl' className='rounded' />}
         </span>
-        <div style={{fontSize: '0.8em'}} className='text-xs text-gray-800 flex mt-2'>
-            <span className='mx-2 flex cursor-pointer'  onClick= {e => history.push(`/${twits.username}`)}>
+        {/* likes and comments count section */}
+            {(likeCount > 0 || comments.length > 0) && 
+            <div className='flex text-xs p-1 px-5 mt-1 -mx-4 border-b-2 shadow-sm'>
+                {likeCount > 0 && <span className='mr-2'>{likeCount}{' '} {likeCount > 1 ? 'likes' : 'like'} </span>}
+                {filteredComments.length > 0 && <span className=''>{filteredComments.length}{' '} {filteredComments.length > 1 ? 'comments' : 'comment'} </span>}
+            </div>}
+
+        {/*  */}
+        <div style={{fontSize: '0.9em'}} className='text-gray-800 flex mt-3 -mb-3 -ml-2'>
+            <span className='mx-1 flex cursor-pointer'  onClick= {e => history.push(`/${twits.username}`)}>
                 {twits.imageUrl ? (
                 <span className='mr-1'>
-                    <img src={twits.imageUrl} alt='Profile' style={{width: '20px', height: '20px', borderRadius: '50%'}} />
+                    {error ? <BsPersonFill size={18}/>:
+                    <img src={twits.imageUrl} alt='Profile' style={{width: '20px', height: '20px', borderRadius: '50%'}} />}
                 </span>)
-                : <BsPersonFill size={15}/>}
+                : <BsPersonFill size={18}/>}
                 {email === twits.email ? 'Me' : twits.username}
             </span>
             <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => likeTwit()}>
                {!likeLoading ? 
                <>
-               <AiTwotoneLike color={likeCount > 0 ? 'blue' : 'gray'} size={15}/>
-                <span className='text-xs'>{likeCount}</span>
+               <AiTwotoneLike color={isLiked ? 'blue' : 'gray'} size={20}/>{isLiked}
                 </>:
-                <LoadSpan height={20} width={20} color='#00bfff' />}
+                <LoadSpan height={20} width={18} color='#00bfff' />}
             </span>
             <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => commentTwit()}>
-                <BsChatTextFill size={15}/>
+                <BsChatTextFill size={18}/>
             </span>
             {email === twits.email &&
             <span style={{cursor: 'pointer'}} className='mx-2 flex hover:text-red-800' onClick={() => deleteTwit()}>
                 {!deleteLoading ? 
-                <AiTwotoneDelete size={15} color='red'/>:
+                <AiTwotoneDelete size={20} color='red'/>:
                 <LoadSpan height={20} width={20} color='#00bfff' />}
             </span>}
         </div>
         {commentFormActive && <CommentForm twitId={id} showCommentForm={showCommentForm} sync={sync} setSync={setSync}/>}
-
-        {comments.length > 0 && 
-                (<div className='mt-2 rounded'>
-                    {comments.filter(comment => !comment.isDeleted).map((comment, idx) => (
-                        <Comment key={idx} comment={comment} apiCallHook={apiCallHook} email={email} />
-                    )
-                )}
-            </div>)
+        
+        {filteredComments.length > 0 &&
+        <div className='mt-5'><span className='text-xs mt-4 -mb-2 cursor-pointer shadow-sm border-2 p-2' onClick={showComments}>{viewComments ? 'Hide Comments' : 'View Comments'}</span></div>
+        }
+        {viewComments && 
+            <>{comments.length > 0 && 
+                    (<div className='mt-4 rounded'>
+                        {filteredComments.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((comment, idx) => (
+                            <Comment key={idx} comment={comment} apiCallHook={apiCallHook} email={email} />
+                        )
+                    )}
+                </div>)
+            }</>
         }
     </div>
     )
@@ -387,8 +445,16 @@ const Comment = (props) => {
 
     const [likeLoading, setLikeLoading] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
+    const [more, setMore] = useState(false);
     const history = useHistory();
 
+    const showMore = () => {
+        if(more) {
+            setMore(false);
+        } else {
+            setMore(true);
+        }
+    }
     const likeCount = likecomments?.filter(like => like.isLiked).length;
     const likeComment = () => {
         setLikeLoading(true);
@@ -411,7 +477,26 @@ const Comment = (props) => {
             <span className='text-xs mb-2'>
             <Moment fromNow>{createdAt}</Moment>
             </span>
-            <p className='p-3 font-semibold'>{text}</p>
+            <p style={{fontSize: '0.9em', lineHeight: 2}} className='p-3 font-semibold'>
+            {text.length > 100 ? text.slice(0, 100) : text}
+            {more ? 
+                <>{text.slice(100, -1)}
+                    <>{text.length > 100 && 
+                        <span style={{color: 'gray', fontWeight: '0.3em'}} className='cursor-pointer' onClick={showMore}>
+                            ...<span className='underline'>See less</span>
+                        </span>
+                        }
+                    </>
+                </> :
+                <>
+                    {text.length > 100 && 
+                        <span style={{color: 'gray', fontWeight: '0.3em'}} className='cursor-pointer' onClick={showMore}>
+                            ...<span className='underline'>See more</span>
+                        </span>
+                    }
+                </>
+            }
+            </p>
             <span style={{fontSize: '0.8em'}} className='mx-2 flex items-justify text-xs mt-2'>
                 {usercomments.imageUrl ?
                 <span className='mr-1 cursor-pointer' onClick= {e => history.push(`/${usercomments.username}`)}>

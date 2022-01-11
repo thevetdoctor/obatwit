@@ -91,7 +91,7 @@ export default function Follower() {
         setUserData(userDataInStore);
         setSearchData(followers);
         setPeopleData(followers);
-        // console.log(user, userDataInStore, followers);
+        console.log(user, userDataInStore, followers);
     }, []);
     
     return (
@@ -112,6 +112,7 @@ export default function Follower() {
         {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 m-1 rounded'>Please check your network !</div>}
         <span className='text-sm mt-3 mb-5'>
         </span>
+        {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 mb-5 rounded'>{error}</div>}
         <TopSearch searchQuery={searchQuery} handleChange={handleChange} setSearchQuery={setSearchQuery}/>
         <div className='flex flex-col text-md'>
             {searchData.sort((a, b) => a.email.localeCompare(b.email)).map((person, idx) => (
@@ -119,13 +120,14 @@ export default function Follower() {
                     className={'text-white bg-blue-400 rounded hover:bg-blue-400 p-2 mb-2 cursor-pointer'} 
                     onClick= {() => history.push(`/${person.username}`)}
                 > 
-                <span className='mx-2 flex cursor-pointer'  onClick= {e => history.push(`/${person.username}`)}>
+                <span className='mx-2 flex cursor-pointer'  onClick= {e => history.push(`/${person.username}`)}>{error}
                 {person.imageUrl ? (
                 <span className='mr-2'>
-                    <img src={person.imageUrl} alt='Profile' style={{width: '1.5em', height: '1.5em', borderRadius: '50%'}} />
+                    {error ? <BsPersonFill size={'1.5em'} color='black' />:
+                    <img src={person.imageUrl} alt='Profile' style={{width: '1.5em', height: '1.5em', borderRadius: '50%'}} />}
                 </span>)
                 : <span className='mr-2 text-black'><BsPersonFill size={'1.5em'}/></span>}
-                {email === person.email ? 'Me' : person.username}
+                {email === person.email ? 'Me' : person.username}{error}
             </span>
                 </span>
             ))}

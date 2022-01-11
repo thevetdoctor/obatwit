@@ -8,7 +8,7 @@ export default function TwitForm(props) {
     const [title, setTitle] = useState(localStorage.getItem('twitTitle') ? localStorage.getItem('twitTitle') : '');
     const [text, setText] = useState(localStorage.getItem('twitText') ? localStorage.getItem('twitText') : '');
     const [imageUrl, setImageUrl] = useState(localStorage.getItem('twitImage') ? localStorage.getItem('twitImage') : '');
-    const [textArea, setTextArea] = useState(160);
+    const [textArea, setTextArea] = useState(550);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const token = localStorage.getItem('token'); 
@@ -86,7 +86,7 @@ export default function TwitForm(props) {
                 rows={4}
                 cols={3}
                 style={{width: '16em', height: `${imageUrl ? '5em' : '13em'}`, border: 'none'}}
-                maxLength={160}
+                maxLength={550}
                 value={text}
                 overflow="hidden"
                 placeholder='Drop in your twit ...' 
