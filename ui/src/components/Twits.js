@@ -192,7 +192,7 @@ useEffect(() => {
                     </span> 
                     <span style={{fontSize: '1em'}}> Feel free, express yourself & network </span>
                 </p>
-                <div className='py-2 px-2 rounded mb-4 flex justify-between'>
+                <div className='py-2 px-2 rounded mb-4 flex justify-between border-3 border shadow-md'>
                     {img !== 'null' ? (
                         <span className='cursor-pointer'  onClick= {e => history.push(`/${email.split('@')[0]}`)}>
                             {error ? <BsPersonFill size={25} />:
@@ -324,11 +324,11 @@ export const Twit = (props) => {
         <span className='flex'>
         {(email === twits.email) && !editForm && 
             <span className='cursor-pointer mr-3 hover:bg-blue-400 text-black hover:text-white p-2 -mt-2 rounded-full' onClick={() => editStory()}> 
-                <GrEdit size={20} />
+                <GrEdit size={15} />
             </span>
         }
             <span className={linkCopied ? 'flex-col hover:bg-blue-400 rounded-full p-2 text-white bg-blue-900 cursor-pointer -mt-2 mr-3' : 'rounded-full hover:bg-blue-400 p-2 cursor-pointer -mt-2 mr-3'} onClick={() => copyTwitLink()}> 
-                <BsShareFill size={20} />
+                <BsShareFill size={15} />
             </span>
         </span>
         </span>
