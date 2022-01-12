@@ -407,7 +407,7 @@ export const Twit = (props) => {
             <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => likeTwit()}>
                {!likeLoading ? 
                <>
-               <AiTwotoneLike color={isLiked ? 'blue' : 'gray'} size={20}/>{isLiked}
+               <span className='text-blue-500'><AiTwotoneLike size={20}/></span>
                 </>:
                 <LoadSpan height={20} width={18} color='#00bfff' />}
             </span>
