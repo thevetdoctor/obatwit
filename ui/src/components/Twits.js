@@ -334,7 +334,7 @@ export const Twit = (props) => {
         </span>
         {editForm && <div className='mb-5'>
                 <textarea 
-                    className='border-gray-200 border-2 p-2 mb-2 rounded bg-white-300 focus:outline-none'
+                    className='border-gray-200 border-2 p-2 mb-2 rounded bg-white-300 focus:outline-none text-black'
                     style={{width: '100%'}}
                     cols={3}
                     rows={4}
@@ -346,12 +346,12 @@ export const Twit = (props) => {
                 {!editLoading ? 
                  <>
                     <span 
-                        className='cursor-pointer bg-gray-500 p-2 m-2 text-white rounded hover:bg-gray-400' onClick={() => editStory()}
+                        className='text-xs cursor-pointer bg-gray-500 p-2 m-2 text-white rounded hover:bg-gray-400' onClick={() => editStory()}
                     > 
                         Cancel 
                     </span>
                     <span 
-                    className='cursor-pointer bg-green-600 p-2 mb-2 text-white rounded hover:bg-green-400 hover:text-black' onClick={() => updateStory()}
+                    className='text-xs cursor-pointer bg-green-600 p-2 mb-2 text-white rounded hover:bg-green-400 hover:text-black' onClick={() => updateStory()}
                     > 
                         Update Story 
                     </span>
