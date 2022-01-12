@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+/* eslint-disable react/jsx-no-target-blank  */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -28,7 +29,7 @@ export default function Twits() {
     const state = getState();
     const { twits, users, searchQuery, networkStatus } = useSelector(state => state);
 
-    console.log(state);
+    // console.log(state);
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
     const userId = localStorage.getItem('email') ? localStorage.getItem('userId') : '';
     const img = localStorage.getItem('img') ? localStorage.getItem('img') : '';
@@ -220,7 +221,7 @@ useEffect(() => {
 }
 
 export const Twit = (props) => {
-    const { twit: {id, title, text, imageUrl, twits, likes, comments, createdAt, updatedAt }, email, userId, apiCallHook, baseUrl, frontendUrl, sync, setSync, checkOpenForms, error } = props;
+    let { twit: {id, title, text, imageUrl, twits, likes, comments, createdAt, updatedAt }, email, userId, apiCallHook, baseUrl, frontendUrl, sync, setSync, checkOpenForms, error } = props;
     const [commentFormActive, setCommentFormActive] = useState(false);
     const [editLoading, setEditLoading] = useState(false);
     const [likeLoading, setLikeLoading] = useState(false);
@@ -237,6 +238,13 @@ export const Twit = (props) => {
         setStoryText(e.target.value);
     }
 
+    let link;
+    if(text.search('http') >= 0) {
+        const http = text.split(' ').filter(x => x.search('http') >= 0);
+        link = http[0].split('\n').filter(x => x.search('http') >= 0);
+        console.log(link);
+        text = text.replace(link, '')
+    }
     const isLiked = (() => {
         const liked = likes.filter(like => like.userlikes.email === email && like.isLiked === true);
        return liked.length ? true : false;
@@ -362,7 +370,7 @@ export const Twit = (props) => {
                 </div>}
 
         {!editForm && <div style={{fontSize: '0.9em', lineHeight: 2}} className='p-3'>
-            {text.length > 100 ? text.slice(0, 100) : text}
+            {text.length > 100 ? text.slice(0, 100) : text}{link && <a className='underline' href={link} target='_blank'>link</a>}
             {more ? 
                 <>{text.slice(100, -1)}
                     <>{text.length > 100 && 
