@@ -242,7 +242,6 @@ export const Twit = (props) => {
     if(text.search('http') >= 0) {
         const http = text.split(' ').filter(x => x.search('http') >= 0);
         link = http[0].split('\n').filter(x => x.search('http') >= 0);
-        console.log(link);
         text = text.replace(link, '')
     }
     const isLiked = (() => {
@@ -403,7 +402,7 @@ export const Twit = (props) => {
             </div>}
 
         {/*  */}
-        <div style={{fontSize: '0.9em'}} className='text-gray-800 flex mt-1 pt-2 -mb-3 -ml-5 -mr-5 pt-1 border-t-2'>
+        <div style={{fontSize: '0.9em'}} className='justify-between text-gray-800 flex mt-1 pt-2 -mb-3 -ml-5 -mr-5 pt-1 border-t-2'>
             <span className='mx-1 flex cursor-pointer'  onClick= {e => history.push(`/${twits.username}`)}>
                 {twits.imageUrl ? (
                 <span className='mr-1'>
@@ -413,6 +412,7 @@ export const Twit = (props) => {
                 : <BsPersonFill size={18}/>}
                 {email === twits.email ? 'Me' : twits.username}
             </span>
+            <span className='flex'>
             <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => likeTwit()}>
                {!likeLoading ? 
                <>
@@ -429,6 +429,7 @@ export const Twit = (props) => {
                 <AiTwotoneDelete size={20} color='red'/>:
                 <LoadSpan height={20} width={20} color='#00bfff' />}
             </span>}
+            </span>
         </div>
         {commentFormActive && <CommentForm twitId={id} showCommentForm={showCommentForm} sync={sync} setSync={setSync}/>}
         
@@ -526,7 +527,7 @@ const Comment = (props) => {
             </div>}
 
         {/*  */}
-            <div style={{fontSize: '0.9em'}} className='text-gray-800 flex mt-1 mb-1 pt-2 -ml-1 -mr-1 border-t-2 border-blue-200'>
+            <div style={{fontSize: '0.9em'}} className='flex justify-between text-gray-800 flex mt-1 mb-1 pt-2 -ml-1 -mr-1 border-t-2 border-blue-200'>
                 <span className='mx-1 flex cursor-pointer'  onClick= {e => history.push(`/${usercomments.username}`)}>
                     {usercomments.imageUrl ? (
                     <span className='mr-1'>
@@ -536,6 +537,7 @@ const Comment = (props) => {
                     : <BsPersonFill size={20}/>}
                     {email === usercomments.email ? 'Me' : usercomments.username}
                 </span>
+                <span className='flex'>
                 <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => likeComment()}>
                 {!likeLoading ? 
                 <>
@@ -553,6 +555,7 @@ const Comment = (props) => {
                     <AiTwotoneDelete size={20} color='red'/>:
                     <LoadSpan height={20} width={20} color='#00bfff' />}
                 </span>}
+                </span>
             </div>
         </div>
     )
