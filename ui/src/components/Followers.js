@@ -117,7 +117,7 @@ export default function Follower() {
         <div className='flex flex-col text-md'>
             {searchData.sort((a, b) => a.email.localeCompare(b.email)).map((person, idx) => (
                 <span key={idx} 
-                    className={'text-white bg-blue-400 rounded hover:bg-blue-400 p-2 mb-2 cursor-pointer'} 
+                    className={'bg-gray-200 rounded hover:bg-gray-400 p-2 mb-2 cursor-pointer'} 
                     onClick= {() => history.push(`/${person.username}`)}
                 > 
                 <span className='mx-2 flex cursor-pointer'  onClick= {e => history.push(`/${person.username}`)}>{error}
