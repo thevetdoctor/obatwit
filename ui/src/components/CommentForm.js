@@ -52,7 +52,7 @@ export default function CommentForm(props) {
 
     return (
         <div className='text-center pt-4'>
-             <p style={{fontSize: 20}} className='font-bold text-xs mb-3'>
+             <p style={{fontSize: '0.9em'}} className='font-bold text-xs mb-3'>
                 New Comment
             </p>
             <textarea 
@@ -73,7 +73,7 @@ export default function CommentForm(props) {
                 {error && <span className='mb-2 text-red-800 text-xs'>{error}</span>}
                 <div className='justify-items-center'>
                     <span 
-                        style={{cursor: 'pointer'}}
+                        style={{cursor: 'pointer', fontSize: '0.9em'}}
                         onClick={() => props.showCommentForm()}
                         className='hover:bg-gray-900 bg-gray-400 font-medium p-1 rounded text-white'
                     >    
@@ -82,9 +82,9 @@ export default function CommentForm(props) {
 
                     {!loading ?
                     <span 
-                        style={{cursor: 'pointer'}}
+                        style={{cursor: 'pointer', fontSize: '0.9em'}}
                         onClick={sendComment}
-                        className='hover:bg-green-900 bg-green-400 font-medium p-1 rounded text-white mx-2'
+                        className='hover:bg-green-900 text-lg bg-green-400 font-medium p-1 rounded text-white mx-2'
                     >    
                         Send
                     </span>

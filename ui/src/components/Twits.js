@@ -341,17 +341,17 @@ export const Twit = (props) => {
         </p>
         <span className='text-xs mb-5 flex justify-between'>
             <Moment fromNow>{createdAt}</Moment>
-        <span className='flex'>
-        {(email === twits.email) && !editForm && 
-            <span className='cursor-pointer mr-3 hover:bg-blue-400 text-black hover:text-white p-2 -mt-2 rounded-full' onClick={() => editStory()}> 
-                <span className='flex'><GrEdit size={15} /></span>
-                {/* <GrEdit size={15} /> */}
+            <span className='flex'>
+            {(email === twits.email) && !editForm && 
+                // <span className='cursor-pointer mr-2 hover:bg-blue-400 text-black hover:text-white p-2 -mt-2 rounded-full' onClick={() => editStory()}> 
+                <span className='cursor-pointer mr-2 text-black p-2 -mt-2 rounded-full' onClick={() => editStory()}> 
+                    <GrEdit size={15} />
+                </span>
+            }
+                <span className={linkCopied ? 'flex-col rounded-full p-2 text-white bg-blue-900 cursor-pointer -mt-2 mr-1' : 'rounded-full p-2 cursor-pointer -mt-2 mr-1'} onClick={() => copyTwitLink()}> 
+                    <MdContentCopy  size={15} />
+                </span>
             </span>
-        }
-            <span className={linkCopied ? 'flex-col hover:bg-blue-400 rounded-full p-2 text-white bg-blue-900 cursor-pointer -mt-2 mr-3' : 'rounded-full hover:bg-blue-400 p-2 cursor-pointer -mt-2 mr-3'} onClick={() => copyTwitLink()}> 
-                <span className='flex'><MdContentCopy  size={15} /></span>
-            </span>
-        </span>
         </span>
         {editForm && <div className='mb-5'>
                 <textarea 
@@ -433,7 +433,7 @@ export const Twit = (props) => {
                 </>:
                 <LoadSpan height={20} width={18} color='#00bfff' />}
             </span>
-            <span style={{cursor: 'pointer text-gray-500'}} className='mx-2 flex' onClick={() => commentTwit()}>
+            <span style={{cursor: 'pointer'}} className='mx-2 flex text-gray-500' onClick={() => commentTwit()}>
                 <BsChatText size={18}/>
             </span>
             {email === twits.email &&
@@ -482,6 +482,7 @@ const Comment = (props) => {
 
     const isLiked = (() => {
         const liked = likecomments.filter(like => like.userId === userId && like.isLiked === true);
+        // console.log(liked)
        return liked.length ? true : false;
     })();
 
