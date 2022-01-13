@@ -5,9 +5,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import Moment from 'react-moment';
-import { BsPersonFill, BsChatTextFill, BsShareFill } from 'react-icons/bs';
-import { AiTwotoneLike, AiTwotoneDelete, AiFillHome } from 'react-icons/ai';
+import { BsPersonFill, BsChatText } from 'react-icons/bs';
+import { AiTwotoneDelete, AiFillHome } from 'react-icons/ai';
 import { IoIosPeople } from 'react-icons/io';
+import { MdContentCopy } from 'react-icons/md';
+import { BiLike } from 'react-icons/bi';
 import { GrEdit } from 'react-icons/gr';
 import { RiChatNewLine } from 'react-icons/ri';
 import TwitForm from './TwitForm';
@@ -143,14 +145,24 @@ export default function Twits() {
     }
 
     const checkOpenForms = () => {
-        console.log('checking open forms', twits.filter(twit => twit.formActive));
+        // console.log('checking open forms', twits.filter(twit => twit.formActive));
         let closedTwits = twits.map(twit => {
             twit.formActive = false;
             return twit;
         });
         // setTwits(closedTwits);
-        console.log('closing open forms', twits.filter(twit => twit.formActive));
+        // console.log('closing open forms', twits.filter(twit => twit.formActive));
     }
+
+useEffect(() => {
+    if(!token) {
+        history.push('/');
+    }
+    getUsers();
+    return () => {
+        console.log('cleanup twits 1');
+    }
+}, []);
 
 useEffect(() => {
     if(!token) {
@@ -299,7 +311,7 @@ export const Twit = (props) => {
         apiCallHook('POST', `${baseUrl}/likes/like/${id}`);
     }
     const commentTwit = () => {
-        checkOpenForms();
+        // checkOpenForms();
         showCommentForm();
     }
     const deleteTwit = () => {
@@ -332,11 +344,12 @@ export const Twit = (props) => {
         <span className='flex'>
         {(email === twits.email) && !editForm && 
             <span className='cursor-pointer mr-3 hover:bg-blue-400 text-black hover:text-white p-2 -mt-2 rounded-full' onClick={() => editStory()}> 
-                <GrEdit size={15} />
+                <span className='flex'><GrEdit size={15} /></span>
+                {/* <GrEdit size={15} /> */}
             </span>
         }
             <span className={linkCopied ? 'flex-col hover:bg-blue-400 rounded-full p-2 text-white bg-blue-900 cursor-pointer -mt-2 mr-3' : 'rounded-full hover:bg-blue-400 p-2 cursor-pointer -mt-2 mr-3'} onClick={() => copyTwitLink()}> 
-                <BsShareFill size={15} />
+                <span className='flex'><MdContentCopy  size={15} /></span>
             </span>
         </span>
         </span>
@@ -371,7 +384,7 @@ export const Twit = (props) => {
         {!editForm && <div style={{fontSize: '0.9em', lineHeight: 2}} className='p-3'>
             {text.length > 100 ? text.slice(0, 100) : text}{link && <a className='underline' href={link} target='_blank'>link</a>}
             {more ? 
-                <>{text.slice(100, -1)}
+                <>{text.slice(100)}
                     <>{text.length > 100 && 
                         <span style={{color: 'gray', fontWeight: '0.3em'}} className='cursor-pointer' onClick={showMore}>
                             ...<span className='underline'>See less</span>
@@ -416,12 +429,12 @@ export const Twit = (props) => {
             <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => likeTwit()}>
                {!likeLoading ? 
                <>
-               <span className={isLiked ? 'text-blue-500' : 'text-gray-500'}><AiTwotoneLike size={20}/></span>
+               <span className={isLiked ? 'text-blue-500' : 'text-gray-500'}><BiLike size={20}/></span>
                 </>:
                 <LoadSpan height={20} width={18} color='#00bfff' />}
             </span>
             <span style={{cursor: 'pointer text-gray-500'}} className='mx-2 flex' onClick={() => commentTwit()}>
-                <BsChatTextFill size={18}/>
+                <BsChatText size={18}/>
             </span>
             {email === twits.email &&
             <span style={{cursor: 'pointer'}} className='mx-2 flex hover:text-red-800' onClick={() => deleteTwit()}>
@@ -458,7 +471,7 @@ const Comment = (props) => {
     const [more, setMore] = useState(false);
     const history = useHistory();
 
-    console.log(userId, likecomments)
+    // console.log(userId, likecomments)
     const showMore = () => {
         if(more) {
             setMore(false);
@@ -490,14 +503,14 @@ const Comment = (props) => {
     }
 
     return(
-        <div className='bg-blue-300 mb-1 p-1 rounded'>
+        <div className='border border-gray-200 shadow-lg mb-2 p-1 rounded'>
             <span className='text-xs mb-2'>
             <Moment fromNow>{createdAt}</Moment>
             </span>
             <p style={{fontSize: '0.9em', lineHeight: 2}} className='p-3 font-semibold'>
             {text.length > 100 ? text.slice(0, 100) : text}
             {more ? 
-                <>{text.slice(100, -1)}
+                <>{text.slice(100)}
                     <>{text.length > 100 && 
                         <span style={{color: 'gray', fontWeight: '0.3em'}} className='cursor-pointer' onClick={showMore}>
                             ...<span className='underline'>See less</span>
@@ -527,7 +540,7 @@ const Comment = (props) => {
             </div>}
 
         {/*  */}
-            <div style={{fontSize: '0.9em'}} className='flex justify-between text-gray-800 flex mt-1 mb-1 pt-2 -ml-1 -mr-1 border-t-2 border-blue-200'>
+            <div style={{fontSize: '0.9em'}} className='flex justify-between text-gray-800 flex mt-1 mb-1 pt-2 -ml-1 -mr-1 border-t-2 border-gray-200'>
                 <span className='mx-1 flex cursor-pointer'  onClick= {e => history.push(`/${usercomments.username}`)}>
                     {usercomments.imageUrl ? (
                     <span className='mr-1'>
@@ -541,7 +554,7 @@ const Comment = (props) => {
                 <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => likeComment()}>
                 {!likeLoading ? 
                 <>
-                <span className={isLiked ? 'text-blue-500' : 'text-gray-500'}><AiTwotoneLike size={20}/></span>
+                <span className={isLiked ? 'text-blue-500' : 'text-gray-500'}><BiLike size={20}/></span>
                     </>:
                     <LoadSpan height={20} width={18} color='#00bfff' />}
                 </span>

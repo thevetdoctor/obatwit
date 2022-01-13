@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from "react-router-dom";
@@ -30,7 +31,7 @@ export default function Profile() {
     const state = getState();
     const { twits } = useSelector(state => state);
 
-    console.log(state);    
+    // console.log(state);    
 
     const apiCallHook = async(method, url, data) => {
         const res = await axios({
@@ -107,23 +108,6 @@ export default function Profile() {
         }
     }
 
-        
-    // useEffect(() => {
-    //     console.log(user);
-    //     const userTwits = twits.filter(obj => obj.twits.username === user);
-    //     const userDataInStore = JSON.parse(localStorage.getItem('userData')).filter(obj => obj.username === user)[0];
-    //     const followers = userDataInStore.followers.filter(user => user.follower.isFollowed);
-    //     const following = userDataInStore.following.filter(user => user.follower.isFollowed);
-    //     const checkIsFollower = followers.filter(user => user.email === email).length > 0;
-    //     const checkIsFollowing = following.filter(user => user.email === email).length > 0;
-    //     setUserData(userDataInStore);
-    //     setFollowerCount(followers.length);
-    //     setFollowingCount(following.length);
-    //     setIsFollower(checkIsFollower);
-    //     setIsFollowing(checkIsFollowing);
-    //     setTwitCount(userTwits.length);
-    // }, []);
-
     useEffect(() => {
         apiCallHook('GET', `${baseUrl}/auth/users`);
         return () => {
@@ -136,28 +120,29 @@ export default function Profile() {
         <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-5 mb-4'>
         <p className='flex justify-between mb-6'>
             <span className='cursor-pointer' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
-            <>
+            {<span className='flex cursor-pointer' onClick= {e => history.push('people')}><IoIosPeople size={35}/></span>}
+            <span className='bg-black-400 cursor-pointer' onClick={() => history.push("/twits")}><AiFillHome size={28} /></span>
+        </p>
+        <div className='-mt-4 mb-1'>
+        <>
             {userData?.imageUrl ?
             <span className='flex'>
                     {error ? <BsPersonFill size={'1.7em'} color='black' />:
                 <img src={userData?.imageUrl} alt='Profile' style={{width: '2em', height: '2em', borderRadius: '50%'}} />}
-                <span className='text-2xl font-semibold ml-2 mb-2'>{userData?.username}</span>
+                <span className='text-xl font-semibold ml-2 mb-2'>{userData?.username}</span>
             </span>
             : 
             <span className='flex'>
                 <BsPersonFill size={30} />
                 <span className='text-xl font-semibold ml-2 mb-2'>{userData?.username}</span>
             </span>}
-            {/* <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-semibold'>{userData?.username}</span> */}
             </>
-            {<span className='flex cursor-pointer' onClick= {e => history.push('people')}><IoIosPeople size={35}/></span>}
-            <span className='bg-black-400 cursor-pointer' onClick={() => history.push("/twits")}><AiFillHome size={30} /></span>
-        </p>
+        </div>
         {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 mb-5 rounded'>{error}</div>}
         <span className='text-sm mt-3 mb-1 flex justify-between'>
             <span>
-                <span className='ml-2'>Member since : <Moment fromNow>{userData?.createdAt}</Moment></span><br />
-                {isFollowing && <span className='text-xs text-white bg-gray-500 rounded p-1 ml-2 mb-3'> 
+                <span className=''>Member since : <Moment fromNow>{userData?.createdAt}</Moment></span><br />
+                {isFollowing && <span className='text-xs text-white bg-gray-500 rounded p-1 mb-3'> 
                     Follows you
                 </span>}
             </span>

@@ -19,7 +19,7 @@ function App() {
     const {getState, dispatch} = store;
     const state = getState();
     const { searchQuery, networkStatus } = useSelector(state => state);
-    console.log(state);
+    // console.log(state);
 
     useEffect(() => {
       if(navigator.onLine) {

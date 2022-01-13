@@ -39,7 +39,7 @@ export default function CommentForm(props) {
                     console.log(error.response);
                     setError(error.response.data.error);
             });
-            console.log(res);
+            // console.log(res);
             if(res && res.data.success) {
                 setLoading(false);
                 props.setSync(!props.sync);

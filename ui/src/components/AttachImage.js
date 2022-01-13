@@ -9,7 +9,7 @@ export default function AttachImage({imageUrl, setImageUrl}) {
     const [imgUrl, setImgUrl] = useState("");
 
     const handleImage = async(e) => {
-        console.log(e.target)
+        // console.log(e.target)
         setUploading("loading");
         const serviceImage = e.target.files[0];
         const data = new FormData();

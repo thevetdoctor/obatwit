@@ -33,7 +33,7 @@ export default function People() {
     const state = getState();
     const { twits, users, peopleData, searchData, networkStatus } = useSelector(state => state);
 
-    console.log(state);
+    // console.log(state);
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
     const token = localStorage.getItem('token');
 
@@ -140,7 +140,7 @@ export default function People() {
             <span className='cursor-pointer text-left' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
             {/* <span className='text-left'><IoIosPeople size={25} /></span> */}
             <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>People</span>
-            <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/twits")}><AiFillHome size={30} /></span>
+            <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/twits")}><AiFillHome size={28} /></span>
         </p>
         {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 m-1 rounded'>Please check your network !</div>}
         <span className='text-sm mt-3 mb-5'>

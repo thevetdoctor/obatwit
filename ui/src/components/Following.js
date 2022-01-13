@@ -106,12 +106,25 @@ export default function Following() {
             : 
             <span className=''><BsPersonFill size={25} /></span>} */}
             {/* </span> */}
-            <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold'>Following</span>
-            <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/twits")}><AiFillHome size={30} /></span>
+            <span className='text-xl font-bold'>Following</span>
+            <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/twits")}><AiFillHome size={28} /></span>
         </p>
         {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 m-1 rounded'>Please check your network !</div>}
-        <span className='text-sm mt-3 mb-5'>
-        </span>
+        <div className='-mt-4 mb-1'>
+        <>
+            {userData?.imageUrl ?
+            <span className='flex'>
+                    {error ? <BsPersonFill size={'1.7em'} color='black' />:
+                <img src={userData?.imageUrl} alt='Profile' style={{width: '2em', height: '2em', borderRadius: '50%'}} />}
+                <span className='text-xl font-semibold ml-2 mb-2'>{userData?.username}</span>
+            </span>
+            : 
+            <span className='flex'>
+                <BsPersonFill size={30} />
+                <span className='text-xl font-semibold ml-2 mb-2'>{userData?.username}</span>
+            </span>}
+            </>
+        </div>
         <TopSearch searchQuery={searchQuery} handleChange={handleChange} setSearchQuery={setSearchQuery}/>
         <div className='flex flex-col text-md'>
             {searchData.sort((a, b) => a.email.localeCompare(b.email)).map((person, idx) => (
