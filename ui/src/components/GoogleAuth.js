@@ -19,11 +19,10 @@ export default function GoogleAuth(props) {
     const history = useHistory(); 
 
     const onSuccess = (res) => {
-        console.log('login suceeded');
         authenticate(true, res.profileObj.email, null, apiUrl, error, setError, setLoading, history, res.profileObj.name, res.profileObj.imageUrl)
     }
     const onFailure = (res) => {
-        console.log('login failed', res);
+        // console.log('login failed', res);
     }
     return (
         <div>
@@ -43,7 +42,7 @@ export default function GoogleAuth(props) {
 export const Logout = () => {
     
     const onSuccess = (res) => {
-        console.log(res, 'Logout suceeded');
+        // console.log(res, 'Logout suceeded');
     }
     return(
     <div>

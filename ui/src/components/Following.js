@@ -51,7 +51,6 @@ export default function Following() {
             })
             .catch(error => {
                 if(error.isAxiosError) {
-                    console.log('Error found');
                 }
             });
             if(res && res.data.success) {
@@ -81,7 +80,6 @@ export default function Following() {
         handleSearch();
         
         return () => {
-            console.log('cleanup people page2');
         }
     }, [searchQuery]);
     
@@ -91,7 +89,6 @@ export default function Following() {
         setUserData(userDataInStore);
         setSearchData(following);
         setPeopleData(following);
-        // console.log(user, userDataInStore, followers);
     }, []);
     
     return (

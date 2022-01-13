@@ -31,8 +31,6 @@ export default function Profile() {
     const state = getState();
     const { twits } = useSelector(state => state);
 
-    // console.log(state);    
-
     const apiCallHook = async(method, url, data) => {
         const res = await axios({
             method,
@@ -45,9 +43,7 @@ export default function Profile() {
             })
             .catch(error => {
                 if(error.isAxiosError) {
-                    console.log(error.response?.data?.error)
                     setError(error.response?.data?.error);
-                    console.log('Error found');
                 }
             });
             if(res && res.data.success) {
@@ -111,7 +107,6 @@ export default function Profile() {
     useEffect(() => {
         apiCallHook('GET', `${baseUrl}/auth/users`);
         return () => {
-            console.log('cleanup profile page');
         }
     }, [sync]);
 

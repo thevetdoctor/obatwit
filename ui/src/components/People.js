@@ -33,7 +33,6 @@ export default function People() {
     const state = getState();
     const { twits, users, peopleData, searchData, networkStatus } = useSelector(state => state);
 
-    // console.log(state);
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
     const token = localStorage.getItem('token');
 
@@ -67,9 +66,7 @@ export default function People() {
             })
             .catch(error => {
                 if(error.isAxiosError) {
-                    console.log(error.response?.data?.error)
                     setError(error.response?.data?.error);
-                    console.log('Error found');
                 }
             });
             if(res && res.data.success) {
@@ -123,7 +120,6 @@ export default function People() {
         });
 
         return () => {
-            console.log('cleanup people page1');
         }
     }, [sync]);
   
@@ -131,7 +127,6 @@ export default function People() {
         handleSearch();
         
         return () => {
-            console.log('cleanup people page2');
         }
     }, [searchQuery]);
     return (

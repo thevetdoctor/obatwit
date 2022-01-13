@@ -9,7 +9,6 @@ export default function AttachImage({imageUrl, setImageUrl}) {
     const [imgUrl, setImgUrl] = useState("");
 
     const handleImage = async(e) => {
-        // console.log(e.target)
         setUploading("loading");
         const serviceImage = e.target.files[0];
         const data = new FormData();
@@ -23,11 +22,9 @@ export default function AttachImage({imageUrl, setImageUrl}) {
         const imgLink = await res.json();
         setImgUrl(imgLink.secure_url);
         setImageUrl(imgLink.secure_url);
-        // console.log('image uploaded' ,imgLink.secure_url);
         // const images = [imgLink.secure_url, ...serviceImages];
         // setServiceImages(images);
         setUploading("done");
-        // console.log(imgUrl);
       }
     return (
         <div className="flex p-1 rounded ml-1">

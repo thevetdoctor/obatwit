@@ -22,16 +22,13 @@ import { useSelector } from 'react-redux';
 
 export default function Twits() {
     const [error, setError] = useState('');
-    // const [twits, setTwits] = useState([]);
     const [formActive, setFormActive] = useState(false);
     const [sync, setSync] = useState(false);
-    // const [users, setUsers] = useState(0);
 
     const {getState, dispatch} = store;
     const state = getState();
     const { twits, users, searchQuery, networkStatus } = useSelector(state => state);
 
-    // console.log(state);
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
     const userId = localStorage.getItem('email') ? localStorage.getItem('userId') : '';
     const img = localStorage.getItem('img') ? localStorage.getItem('img') : '';
@@ -61,9 +58,7 @@ export default function Twits() {
             })
             .catch(error => {
                 if(error.isAxiosError) {
-                    console.log(error.response?.data?.error)
                     setError(error.response?.data?.error);
-                    console.log('Error found');
                 }
             });
             setSync(!sync);
@@ -71,7 +66,6 @@ export default function Twits() {
 
     const getTwits = async() => {
         if(!token) {
-            console.log('Not loggedin');
             return;
         }
         const res = await axios({
@@ -84,16 +78,10 @@ export default function Twits() {
             })
             .catch(error => {
                 if(error.isAxiosError) {
-                    console.log(error.response?.data?.error)
                     setError(error.response?.data?.error);
-                    console.log('Error found');
                 }
             });
             if(res && res.data.success) {
-                // setTwits(res.data.data.map(x => {
-                //     x.formActive = false;
-                //     return x;
-                // }));
                 dispatch({
                     type: 'SET_TWIT_DATA',
                     data: res.data.data
@@ -103,7 +91,6 @@ export default function Twits() {
                     return x;
                 })));
             } else {
-                console.log('Error found'); 
                 setError('Please check your network');
                 dispatch({
                     type: 'SET_TWIT_DATA',
@@ -122,9 +109,7 @@ export default function Twits() {
             })
             .catch(error => {
                 if(error.isAxiosError) {
-                    console.log(error.response?.data?.error)
                     setError(error.response?.data?.error);
-                    console.log('Error found');
                 }
             });
             if(res && res.data.success) {
@@ -134,7 +119,6 @@ export default function Twits() {
                 });
                 localStorage.setItem('userCount', res.data.data.count);
             } else {
-                console.log('Error found');
                 setError('Error found');
                 setError('Please check your network');
                 dispatch({
@@ -145,13 +129,10 @@ export default function Twits() {
     }
 
     const checkOpenForms = () => {
-        // console.log('checking open forms', twits.filter(twit => twit.formActive));
         let closedTwits = twits.map(twit => {
             twit.formActive = false;
             return twit;
         });
-        // setTwits(closedTwits);
-        // console.log('closing open forms', twits.filter(twit => twit.formActive));
     }
 
 useEffect(() => {
@@ -160,7 +141,6 @@ useEffect(() => {
     }
     getUsers();
     return () => {
-        console.log('cleanup twits 1');
     }
 }, []);
 
@@ -170,19 +150,13 @@ useEffect(() => {
     }
     getUsers();
     return () => {
-        console.log('cleanup twits 1');
     }
 }, []);
 
 useEffect(async() => {
-    // if(!twits.length) {
-    //     console.log('no twits');
-    //     getTwits();
-    // }
     getTwits();
 
     return () => {
-        console.log('cleanup twits 2');
     }
 }, [sync]);
 
@@ -311,7 +285,6 @@ export const Twit = (props) => {
         apiCallHook('POST', `${baseUrl}/likes/like/${id}`);
     }
     const commentTwit = () => {
-        // checkOpenForms();
         showCommentForm();
     }
     const deleteTwit = () => {
@@ -324,11 +297,9 @@ export const Twit = (props) => {
 
     const clipboardCopy = async (text) => {
         if ('clipboard' in navigator) {
-            console.log('Link copied');
             setLinkCopied(true);
           return await navigator.clipboard.writeText(text);
         } else {
-            console.log('Link copy is not supported');
         }
       }
 
@@ -339,11 +310,10 @@ export const Twit = (props) => {
             <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>{title}</span>
             <span className={!linkCopied ? 'mr-2 mb-1 invisible text-xs self-end' : 'mr-2 mb-1 text-xs self-end'}>copied</span>
         </p>
-        <span className='text-xs mb-5 flex justify-between'>
+        <span className='text-xs mb-2 flex justify-between'>
             <Moment fromNow>{createdAt}</Moment>
             <span className='flex'>
             {(email === twits.email) && !editForm && 
-                // <span className='cursor-pointer mr-2 hover:bg-blue-400 text-black hover:text-white p-2 -mt-2 rounded-full' onClick={() => editStory()}> 
                 <span className='cursor-pointer mr-2 text-black p-2 -mt-2 rounded-full' onClick={() => editStory()}> 
                     <GrEdit size={15} />
                 </span>
@@ -381,7 +351,7 @@ export const Twit = (props) => {
                     <LoadSpan height={20} width={20} color='#00bfff' />}
                 </div>}
 
-        {!editForm && <div style={{fontSize: '0.9em', lineHeight: 2}} className='p-3'>
+        {!editForm && <div style={{fontSize: '0.9em', lineHeight: 2}} className='mt-2'>
             {text.length > 100 ? text.slice(0, 100) : text}{link && <a className='underline' href={link} target='_blank'>link</a>}
             {more ? 
                 <>{text.slice(100)}
@@ -471,7 +441,6 @@ const Comment = (props) => {
     const [more, setMore] = useState(false);
     const history = useHistory();
 
-    // console.log(userId, likecomments)
     const showMore = () => {
         if(more) {
             setMore(false);
@@ -482,7 +451,6 @@ const Comment = (props) => {
 
     const isLiked = (() => {
         const liked = likecomments.filter(like => like.userId === userId && like.isLiked === true);
-        // console.log(liked)
        return liked.length ? true : false;
     })();
 
@@ -499,16 +467,15 @@ const Comment = (props) => {
         setTimeout(() => {
             setLikeLoading(false);
         }, 1000);
-        // console.log('delete twit with id: ', id);
         apiCallHook('DELETE', `${baseUrl}/comments/${id}`);
     }
 
     return(
         <div className='border border-gray-200 shadow-lg mb-2 p-1 rounded'>
-            <span className='text-xs mb-2'>
+            <span className='text-xs mb-2 ml-2'>
             <Moment fromNow>{createdAt}</Moment>
             </span>
-            <p style={{fontSize: '0.9em', lineHeight: 2}} className='p-3 font-semibold'>
+            <p style={{fontSize: '0.9em', lineHeight: 2}} className='p-2 font-semibold'>
             {text.length > 100 ? text.slice(0, 100) : text}
             {more ? 
                 <>{text.slice(100)}
@@ -532,12 +499,10 @@ const Comment = (props) => {
         {/* likes and comments count section */}
 
         {/* TODO refactor for replies count */}
-        {/* {(likeCount > 0 || comments.length > 0) &&  */}
         {(likeCount > 0) && 
             <div className='flex text-xs p-1 px-3 mt-1 -mx-1'>
                 {likeCount > 0 && <span className='mr-2'>{likeCount}{' '} {likeCount > 1 ? 'likes' : 'like'} </span>}
                 {/* TODO refactor for replies count */}
-                {/* {filteredComments.length > 0 && <span className=''>{filteredComments.length}{' '} {filteredComments.length > 1 ? 'comments' : 'comment'} </span>} */}
             </div>}
 
         {/*  */}
@@ -560,9 +525,7 @@ const Comment = (props) => {
                     <LoadSpan height={20} width={18} color='#00bfff' />}
                 </span>
                 {/* TODO Implement reply comment component */}
-                {/* <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => commentTwit()}>
-                    <BsChatTextFill size={18}/>
-                </span> */}
+             
                 {email === usercomments.email &&
                 <span style={{cursor: 'pointer'}} className='mx-2 flex hover:text-red-800' onClick={() => deleteComment()}>
                     {!deleteLoading ? 

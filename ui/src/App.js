@@ -23,13 +23,11 @@ function App() {
 
     useEffect(() => {
       if(navigator.onLine) {
-        console.log('online');
         dispatch({
           type: 'SET_NETWORK_STATUS',
           data: true
         });
       } else {
-        console.log('offline');
         dispatch({
           type: 'SET_NETWORK_STATUS',
           data: false
@@ -38,7 +36,6 @@ function App() {
     }, []);
 
       const username = localStorage.getItem('username');
-      // console.log(username)
       Notification.requestPermission().then((result) => {
         if (result === 'granted') {
           // randomNotification();

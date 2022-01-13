@@ -39,13 +39,11 @@ export const authenticate = async(google = false, email, password = null, apiUrl
         })
         .catch(error => {
             if(error.isAxiosError) {
-                console.log(error.response?.data?.error)
                 if(error.response?.data?.error.search('NOTFOUND') >= 0) {
                     setError('Please check your network');
                 } else {
                     setError(error.response?.data?.error);
                 }
-                console.log('Error found');
             }
         });
     } else {

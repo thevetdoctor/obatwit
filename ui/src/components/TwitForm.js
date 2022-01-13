@@ -46,10 +46,8 @@ export default function TwitForm(props) {
                     }
                 })
                 .catch(error => {
-                        console.log(error.response);
                         setError(error.response.data.error);
                 });
-                // console.log(res);
                 if(res && res.data.success) {
                     setLoading(false);
                     localStorage.removeItem('twitTitle');
@@ -58,7 +56,6 @@ export default function TwitForm(props) {
                     props.showForm();
                 } else {
                     setLoading(false);
-                    console.log('Error found'); 
                 }
     }
 

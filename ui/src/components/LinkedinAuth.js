@@ -9,10 +9,10 @@ export default function LinkedinAuth() {
         clientId: process.env.REACT_APP_LINKEDIN_CLIENT_ID,
         redirectUri: `http://localhost:3000/login/callback`,
         onSuccess: (code) => {
-          console.log(code, window.location.origin);
+          // console.log(code, window.location.origin);
         },
         onError: (error) => {
-          console.log(error);
+          // console.log(error);
         },
       });
     return (

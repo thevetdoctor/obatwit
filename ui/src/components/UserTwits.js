@@ -39,7 +39,6 @@ export default function UserTwits() {
             })
             .catch(error => {
                 if(error.isAxiosError) {
-                    console.log('Error found');
                 }
             });
             if(res && res.data.success) {
@@ -58,7 +57,6 @@ export default function UserTwits() {
 
     const getTwits = async() => {
         if(!token) {
-            console.log('Not loggedin');
             return;
         }
         const res = await axios({
@@ -71,9 +69,7 @@ export default function UserTwits() {
             })
             .catch(error => {
                 if(error.isAxiosError) {
-                    console.log(error.response?.data?.error)
                     setError(error.response?.data?.error);
-                    console.log('Error found');
                 }
             });
             if(res && res.data.success) {
@@ -89,7 +85,6 @@ export default function UserTwits() {
                 setUserData(userTwitData[0]?.twits);
                 setTwitData(userTwitData);
             } else {
-                console.log('Error found'); 
                 setError('Please check your network');
                 dispatch({
                     type: 'SET_TWIT_DATA',
@@ -108,7 +103,6 @@ export default function UserTwits() {
         getTwits();
     
         return () => {
-            console.log('cleanup twits 2');
         }
     }, [sync]);
 

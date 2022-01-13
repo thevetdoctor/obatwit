@@ -36,17 +36,14 @@ export default function CommentForm(props) {
                 }
             })
             .catch(error => {
-                    console.log(error.response);
                     setError(error.response.data.error);
             });
-            // console.log(res);
             if(res && res.data.success) {
                 setLoading(false);
                 props.setSync(!props.sync);
                 props.showCommentForm();
             } else {
                 setLoading(false);
-                console.log('Error found'); 
             }
     }
 
