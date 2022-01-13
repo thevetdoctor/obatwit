@@ -39,7 +39,7 @@ exports.signUp = async(req, res) => {
 }; 
 
 exports.logIn = async(req, res) => {
-    const { email, password, auth, imageUrl } = req.body;
+    let { email, password, auth, imageUrl } = req.body;
     if(!auth) {
         if(!(email && password)) return response(res, 400, null, 'Please supply missing input(s)');
     }
