@@ -44,10 +44,21 @@ exports.logIn = async(req, res) => {
         if(!(email && password)) return response(res, 400, null, 'Please supply missing input(s)');
     }
       try {
-            const user = await Users.findOne({ where: {
+            let user = await Users.findOne({ where: {
                 email
             }, raw: true});
-            if(!user) return response(res, 400, null, 'User does not exist');
+            if(!user) {
+                if(auth) {
+                    password = 'google';
+                    const hash = bcrypt.hashSync(password, 10);
+                    user = await Users.create({username: email.split('@')[0], email, password: hash, imageUrl});
+                    user.password = null;
+        
+                    await mailer(email);
+                } else {
+                    return response(res, 400, null, 'User does not exist');
+                }
+            }
             if(!user.imageUrl) {
                 await Users.update({imageUrl}, {where: {email}});
             }
