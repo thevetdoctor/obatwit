@@ -86,13 +86,13 @@ function registerValidSW(swUrl, config) {
   
       console.log('Sending Push');
   
-      await fetch(`${baseUrl}/subscribe`, {
-          method: 'POST',
-          body: JSON.stringify(subscription),
-          headers: {
-              'content-type': 'application/json'
-          }
-      });
+      // await fetch(`${baseUrl}/subscribe`, {
+      //     method: 'POST',
+      //     body: JSON.stringify(subscription),
+      //     headers: {
+      //         'content-type': 'application/json'
+      //     }
+      // });
       console.log('Push Sent');
 
       registration.onupdatefound = () => {
