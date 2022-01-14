@@ -35,7 +35,7 @@ app.post('/subscribe', (req, res) => {
     res.status(201).json({});
 
     const payload = JSON.stringify({ title: `Push Twitee from server @ ${req.protocol}://${req.hostname}:${port}` });
-
+    console.log('server push response')
     webPush.sendNotification(subscription, payload).catch(error => console.log(error));
 });
 
