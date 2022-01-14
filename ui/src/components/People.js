@@ -131,7 +131,7 @@ export default function People() {
     }, [searchQuery]);
     return (
         <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-5 mb-4'>
-        <p className='flex justify-between mb-6'>
+        <p className='flex justify-between p-2 mb-6 border-3 border shadow-md'>
             <span className='cursor-pointer text-left' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
             {/* <span className='text-left'><IoIosPeople size={25} /></span> */}
             <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>People</span>

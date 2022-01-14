@@ -93,7 +93,7 @@ export default function Following() {
     
     return (
         <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-5 mb-4'>
-        <p className='flex justify-between mb-6'>
+        <p className='flex justify-between mb-6 border-3 border shadow-md p-2'>
             <span className='cursor-pointer' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
             {/* <span className='cursor-pointer' onClick= {e => history.push(`/${userData?.username}`)}> */}
             {/* {userData?.imageUrl ?
@@ -107,7 +107,7 @@ export default function Following() {
             <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/twits")}><AiFillHome size={28} /></span>
         </p>
         {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 m-1 rounded'>Please check your network !</div>}
-        <div className='-mt-4 mb-1'>
+        <div className='mb-1'>
         <>
             {userData?.imageUrl ?
             <span className='flex'>

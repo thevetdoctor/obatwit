@@ -93,7 +93,7 @@ export default function Follower() {
     
     return (
         <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-5 mb-4'>
-        <p className='flex justify-between mb-6'>
+        <p className='flex justify-between mb-6 p-2 border-3 border shadow-md'>
             <span className='cursor-pointer' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
             {/* <span className='cursor-pointer' onClick= {e => history.push(`/${userData?.username}`)}> */}
             {/* {userData?.imageUrl ?
@@ -110,7 +110,7 @@ export default function Follower() {
         <span className='text-sm mt-3 mb-5'>
         </span>
         {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 mb-5 rounded'>{error}</div>}
-        <div className='-mt-4 mb-1'>
+        <div className='mb-1'>
         <>
             {userData?.imageUrl ?
             <span className='flex'>

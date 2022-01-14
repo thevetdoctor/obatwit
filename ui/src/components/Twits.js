@@ -375,7 +375,7 @@ export const Twit = (props) => {
         {((new Date(updatedAt).getTime() - new Date(createdAt).getTime()) > 0) && <span className='text-xs'>Updated <Moment fromNow>{updatedAt}</Moment></span>}
         </div>}
         <span>
-            {imageUrl && <img style={{width: "100%", height: 250}} src={imageUrl} alt='imgurl' className='rounded' />}
+            {imageUrl && <img style={{width: "100%"}} src={imageUrl} alt='imgurl' className='rounded h-40 md:h-80' />}
         </span>
         {/* likes and comments count section */}
             {(likeCount > 0 || comments.length > 0) && 

@@ -87,3 +87,41 @@ self.addEventListener('notificationclick', function(event) {
 });
 
 // Any other custom service worker logic can go here.
+
+self.addEventListener('push', e => {
+  // const data = e.data.json()
+  let { data } = e;
+  data = data.json()
+  console.log(data);
+  console.log('Push received...');
+
+  self.registration.showNotification(data.title, {
+      body: 'Notified by Obafemi',
+      icon: 'https://res.cloudinary.com/thevetdoctor/image/upload/v1599332593/g1rozhabxswegvhp59h3.jpg',
+      // body : notifiBody,
+      // icon : imageIcon,
+      data: {
+        dateOfArrival: Date.now(),
+        primaryKey: 1,
+        redirectUrl : 'https://res.cloudinary.com/thevetdoctor/image/upload/v1599332593/g1rozhabxswegvhp59h3.jpg'
+      },
+      timeout : 1000
+  });
+});
+
+self.addEventListener('notificationclick', function(event) {
+  var url = event.notification.data.redirectUrl;
+  event.waitUntil(
+      clients.matchAll({type: 'window'}).then( windowClients => {
+          for (var i = 0; i < windowClients.length; i++) {
+              var client = windowClients[i];
+              if (client.url === url && 'focus' in client) {
+                  return client.focus();
+              }
+          }
+          if (clients.openWindow) {
+              return clients.openWindow(url);
+          }
+      })
+  );
+});

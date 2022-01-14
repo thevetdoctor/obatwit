@@ -10,6 +10,21 @@
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read https://cra.link/PWA
 
+const publicVapid = 'BNjjQs4mQL339-Dk2i5HF5jbv14xHn-jHrPbTa1LJ-HZZXZnArYQfR7ddcdB0oQ0ADQjgx8q_nN_cTW7jOq9k6Y';
+
+const urlBase64ToUint8Array = (base64String) => {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+
+    const rawdata = window.atob(base64);
+    const outputArray = new Uint8Array(rawdata.length);
+
+    for(let i = 0; i < rawdata.length; ++i) {
+        outputArray[i] = rawdata.charCodeAt(i);
+    }
+    return outputArray;
+}
+
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
     // [::1] is the IPv6 localhost address.
@@ -53,9 +68,32 @@ export function register(config) {
 }
 
 function registerValidSW(swUrl, config) {
+  console.log('Registering service worker');
   navigator.serviceWorker
     .register(swUrl)
-    .then((registration) => {
+    .then(async (registration) => {
+
+      console.log('Service worker registered');
+
+      console.log('Registering Push Manager');
+  
+      const subscription = registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(publicVapid)
+      });
+      console.log('Push Manager registered');
+  
+      console.log('Sending Push');
+  
+      await fetch('/subscribe', {
+          method: 'POST',
+          body: JSON.stringify(subscription),
+          headers: {
+              'content-type': 'application/json'
+          }
+      });
+      console.log('Push Sent');
+
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         if (installingWorker == null) {
