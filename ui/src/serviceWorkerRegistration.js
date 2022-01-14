@@ -11,6 +11,7 @@
 // opt-in, read https://cra.link/PWA
 
 const publicVapid = 'BNjjQs4mQL339-Dk2i5HF5jbv14xHn-jHrPbTa1LJ-HZZXZnArYQfR7ddcdB0oQ0ADQjgx8q_nN_cTW7jOq9k6Y';
+const {baseUrl} = require('./helper');
 
 const urlBase64ToUint8Array = (base64String) => {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -85,13 +86,13 @@ function registerValidSW(swUrl, config) {
   
       console.log('Sending Push');
   
-      await fetch('/subscribe', {
-          method: 'POST',
-          body: JSON.stringify(subscription),
-          headers: {
-              'content-type': 'application/json'
-          }
-      });
+      // await fetch(`${baseUrl}/subscribe`, {
+      //     method: 'POST',
+      //     body: JSON.stringify(subscription),
+      //     headers: {
+      //         'content-type': 'application/json'
+      //     }
+      // });
       console.log('Push Sent');
 
       registration.onupdatefound = () => {
