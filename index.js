@@ -23,9 +23,9 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname, './ui/build')));
 // app.use(express.static(path.join(__dirname, 'client')));
 
-const {PUBLIC_VAPID_KEY, PRIVATE_VAPID_KEY} = process.env;
+// const {PUBLIC_VAPID_KEY, PRIVATE_VAPID_KEY} = process.env;
 
-webPush.setVapidDetails('mailto:thevetdoctor@gmail.com', PUBLIC_VAPID_KEY, PRIVATE_VAPID_KEY);
+// webPush.setVapidDetails('mailto:thevetdoctor@gmail.com', PUBLIC_VAPID_KEY, PRIVATE_VAPID_KEY);
 
 routeHandler(app);
 

@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-useless-escape */
 // This optional code is used to register a service worker.
 // register() is not called by default.
 
