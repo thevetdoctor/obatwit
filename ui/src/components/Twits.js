@@ -175,8 +175,8 @@ useEffect(() => {
             
             {!formActive && 
             <div>
-                <p style={{fontFamily: 'Architects Daughter', fontWeight: '300'}} className='italic text-center mb-2'>
-                    <span style={{fontSize: '1.8em'}} className='text-purple-900 font-bold'>Twitee<br/>
+                <p className='text-center mb-2'>
+                    <span style={{fontFamily: 'Architects Daughter', fontSize: '1.8em'}} className='text-purple-900 font-bold italic'>Buzz<br/>
                     </span> 
                     <span style={{fontSize: '1em'}}> Feel free, express yourself & network </span>
                 </p>

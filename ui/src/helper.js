@@ -1,5 +1,5 @@
 export const baseUrl = (() => {
-    if(window.location.host.indexOf('localhost') >= 0){
+    if(window.location.host.indexOf('localhost') < 0){
     return 'http://localhost:4000';
     } else {
     return 'https://oba-twit.herokuapp.com';
