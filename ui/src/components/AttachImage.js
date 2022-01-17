@@ -34,7 +34,7 @@ export default function AttachImage({imageUrl, setImageUrl}) {
                 /> :
                 <>
                 {/* <span className='ml-3 cursor-pointer flex'><FaCamera size={25}  /> */}
-                <label className='ml-2 cursor-pointer flex'><FaCamera size={25} /> <span className='font-semibold ml-2 text-white pr-2'></span>
+                <label className='ml-2 cursor-pointer flex'><FaCamera size={22} /> <span className='font-semibold ml-2 text-white pr-2'></span>
 
                 <input 
                     type="file"

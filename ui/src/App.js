@@ -11,6 +11,7 @@ import Following from './components/Following';
 import UserTwits from './components/UserTwits';
 import store from './redux/store';
 import { useSelector } from 'react-redux';
+import Reset from './components/Reset';
 
 function App() {
     const [loggedIn, setLoggedIn] = useState(JSON.parse(localStorage.getItem('loggedIn')));
@@ -62,6 +63,7 @@ function App() {
               <Route exact path="/" component={Posts} />
               <Route exact path="/twits" component={Twits} />
               <Route exact path="/people" component={People} />
+              <Route exact path="/reset" component={Reset} />
               <Route path="/twits/:user" component={UserTwits} />
               <Route path="/following/:user" component={Following} />
               <Route path="/follower/:user" component={Follower} />

@@ -92,7 +92,7 @@ export default function Following() {
     }, []);
     
     return (
-        <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-5 mb-4'>
+        <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-5 mb-4 md:w-1/2 m-auto'>
         <p className='flex justify-between mb-6 border-3 border shadow-md p-2'>
             <span className='cursor-pointer' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
             {/* <span className='cursor-pointer' onClick= {e => history.push(`/${userData?.username}`)}> */}

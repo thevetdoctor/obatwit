@@ -107,10 +107,10 @@ export default function UserTwits() {
     }, [sync]);
 
     return (
-        <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-5 mb-4'>
+        <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-5 mb-4 md:w-1/2 m-auto'>
         <p className='flex justify-between mb-6 border-3 border shadow-md p-2'>
         <span className='cursor-pointer text-left' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
-            <span className='text-xl font-bold self-center'>Twits</span>
+            <span className='text-xl font-bold self-center'>Posts</span>
             <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/twits")}><AiFillHome size={28} /></span>
         </p>
         {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 m-1 rounded'>Please check your network !</div>}

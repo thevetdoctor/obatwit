@@ -9,6 +9,7 @@ import { baseUrl } from '../helper';
 // import LinkedinAuth from './LinkedinAuth';
 import dotenv from "dotenv";
 import chat from './chat.jpg';
+import bg from './bg.png';
 import { CgCopyright } from 'react-icons/cg';
 
 dotenv.config();
@@ -109,15 +110,15 @@ useEffect(() => {
     }
 }, []);
     return (
-        <div style={{fontFamily: 'Roboto', fontWeight: '600'}} className='font-Roboto text-center align-items-center'>
+        <div style={{fontFamily: 'Roboto', fontWeight: '600'}} className='text-center align-items-center bg-gradient-to-r from-cyan-500 to-blue-500'>
              <p className='text-center mb-2'>
                 <span style={{fontFamily: 'Architects Daughter', fontSize: '1.8em'}} className='text-purple-900 font-bold italic'>Buzz<br/>
                 </span> 
                 <span className='text-md'> Feel free, express yourself & network </span>
             </p>
-            <h1 style={{fontSize: 20}} className='font-bold text-md mb-7'>
+            <h3 style={{fontSize: 20}} className='font-bold text-md mb-4 mt-7'>
                 {signup ?  'Signup' : 'Login'}
-            </h1>
+            </h3>
             <input 
                 type='text'
                 name='email'
@@ -169,13 +170,13 @@ useEffect(() => {
                         {signup ? ' Switch to Login' : ' Switch to Signup!' }
                     </span>
             </div>
-          <img 
-            src={chat}
+          {/* <img 
+            src={bg}
             alt='CHat'
-            className=''
-            style={{borderRadius: '5', width: '100'}}
-          />
-            <p className="text-white-400 bold flex text-center"><CgCopyright /> Twitee</p>         
+            className='invisible'
+            style={{borderRadius: '0.5em'}}
+          /> */}
+            {/* <p className="text-white-400 bold flex text-center"><CgCopyright /> Twitee</p>          */}
         </div>
     )
 }

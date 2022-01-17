@@ -79,16 +79,16 @@ export default function Profile() {
                 });
                 const userTwits = twits.filter(obj => obj.twits.username === user);
                 const userDataInStore = JSON.parse(localStorage.getItem('usersData')).filter(obj => obj.username === user)[0];
-                const followers = userDataInStore.followers.filter(user => user.follower.isFollowed);
-                const following = userDataInStore.following.filter(user => user.follower.isFollowed);
-                const checkIsFollower = followers.filter(user => user.email === email).length > 0;
-                const checkIsFollowing = following.filter(user => user.email === email).length > 0;
+                const followers = userDataInStore?.followers.filter(user => user.follower.isFollowed);
+                const following = userDataInStore?.following.filter(user => user.follower.isFollowed);
+                const checkIsFollower = followers?.filter(user => user.email === email).length > 0;
+                const checkIsFollowing = following?.filter(user => user.email === email).length > 0;
                 setUserData(userDataInStore);
-                setFollowerCount(followers.length);
-                setFollowingCount(following.length);
+                setFollowerCount(followers?.length);
+                setFollowingCount(following?.length);
                 setIsFollower(checkIsFollower);
                 setIsFollowing(checkIsFollowing);
-                setTwitCount(userTwits.length);         
+                setTwitCount(userTwits?.length);         
             }
     }
 
@@ -110,9 +110,9 @@ export default function Profile() {
         }
     }, [sync]);
 
-
+ 
     return (
-        <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-5 mb-4'>
+        <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-5 mb-4 m-auto justify-center md:w-1/2'>
         <p className='flex justify-between mb-6 border-3 border shadow-md p-2'>
             <span className='cursor-pointer' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
             {<span className='flex cursor-pointer' onClick= {e => history.push('people')}><IoIosPeople size={35}/></span>}

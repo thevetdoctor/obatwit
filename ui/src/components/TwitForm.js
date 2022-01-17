@@ -27,11 +27,11 @@ export default function TwitForm(props) {
     }
 
     const sendTwit = async() => {
-            if(!(title && text)) {
-                if(!title) {
-                    setError('Title is required');
-                    return;
-                }
+            if(!text) {
+                // if(!title) {
+                //     setError('Title is required');
+                //     return;
+                // }
                 setError('Inputs required');
                 return;
             }
@@ -39,15 +39,16 @@ export default function TwitForm(props) {
             const res = await axios({
                 method: 'POST',
                 url: `${apiUrl}`,
-                data: {title, text, imageUrl},
+                data: {text, imageUrl},
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                     }
                 })
                 .catch(error => {
-                        setError(error.response.data.error);
-                });
+                        // setError(error.response.data.error);
+                        setError('Please check your network');
+                    });
                 if(res && res.data.success) {
                     setLoading(false);
                     localStorage.removeItem('twitTitle');
@@ -60,14 +61,14 @@ export default function TwitForm(props) {
     }
 
     return (
-        <div className='sticky w-full h-full bg-gray-200 p-1 -mb-2'>
-            <div className='text-center bg-blue-200 mt-3 pt-3 mb-1 pb-1 rounded'>
-            <h1 className='font-semibold text-md mb-3'>
-                New twit
+        <div className='sticky text-center h-full bg-blue-200 p-1 -mb-2 -mt-3 align-self-center'>
+            {/* <div className='text-center bg-blue-200 mt-3 pt-3 mb-1 pb-1 rounded'> */}
+            <h1 className='font-bold text-md mb-3 mt-2'>
+                New Post
             </h1>
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', borderRadius: '20%'}}>
 
-            <input 
+            {/* <input 
                 type='text'
                 name='title'
                 value={title} 
@@ -76,7 +77,7 @@ export default function TwitForm(props) {
                 className='px-3 py-1 rounded text-lg mb-2 font-bold'
                 style={{width: '16em', border: 'none'}}
                 required
-                />
+                /> */}
             <textarea 
                 type='textarea'
                 name='text'
@@ -88,17 +89,17 @@ export default function TwitForm(props) {
                 overflow="hidden"
                 placeholder='Drop in your twit ...' 
                 onChange={handleChange}
-                className='px-3 rounded mb-1 text-lg text-black font-bold'
+                className='px-3 rounded mb-1 text-lg text-black font-bold w-full'
                 required
             />
-                <span style={{display: 'flex', width: '20em'}} className='justify-between px-3 mt-2 mb-2 ml-4 mr-2'>
+                <span style={{display: 'flex', width: '18em'}} className='shadow-md justify-between px-3 mb-2 ml-5 mr-5 bg-blue-300'>
                     <AttachImage imageUrl={imageUrl} setImageUrl={setImageUrl} />
-                <span className='mr-6'>{textArea}</span>
+                    <span className='mr-6'>{textArea}</span>
                 </span>
-                </div>
-            <div style={{flexDirection: 'column'}} className='flex mb-5'>
+            </div>
+            <div style={{flexDirection: 'column'}} className='flex mb-3'>
                 {error && <span className='mb-2 text-red-800 text-md'>{error}</span>}
-                <div className='justify-items-center mt-2'>
+                <div className='flex justify-center mt-2'>
                     {!loading ?
                     <>
                     <span 
@@ -118,7 +119,7 @@ export default function TwitForm(props) {
                     </span>
                     </>
                     :
-                    <span className='m-auto'>
+                    <span className='m-auto self-center'>
                         <Loader 
                         type='ThreeDots'
                         color='#00bfff'
@@ -128,7 +129,7 @@ export default function TwitForm(props) {
                      </span>}
                 </div>
             </div>
-            </div>
+            {/* </div> */}
         </div>
     )
 }
