@@ -7,12 +7,12 @@ const LikeComments = require('../models').likecomment;
 const { response } = require('oba-http-response');
 
 exports.postTwit = async(req, res) => {
-    const { title, text, imageUrl, userId } = req.body;
-    if(!(title && text && userId)) return response(res, 400, null, 'Please supply missing input(s)');
+    const { text, imageUrl, userId } = req.body;
+    if(!(text && userId)) return response(res, 400, null, 'Please supply missing input(s)');
     // console.log(title, text, imageUrl, userId);
       try {
             const twit = await Twits.findOne({ where: {
-                title,
+                text,
                 isDeleted: false
             }});
             if(twit) return response(res, 400, null, 'Twit already sent');
