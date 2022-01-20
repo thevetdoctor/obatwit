@@ -3,6 +3,7 @@ const Users = require('../models').user;
 const Twits = require('../models').twit;
 const Likes = require('../models').like;
 const { response } = require('oba-http-response');
+const mailer = require("../helpers/mailer");
 
 exports.likeTwit = async(req, res) => {
     const { twitId } = req.params;
@@ -25,52 +26,22 @@ exports.likeTwit = async(req, res) => {
             raw: true
         });
         if(like) {
-                // console.log(like ? 'liked' : 'unliked');
-                if(like.isLiked) {
-                    // console.log('about to be unliked');
-                    await Likes.update({
-                        isLiked: false
-                    }, 
-                    { 
-                        where: { twitId, userId }
-                    }); // Fixed bug to only update specific like record of the user
-                    const likedTwit = await Twits.update({
-                        likecount: Sequelize.literal('likecount - 1')
-                    },
-                    { 
-                        where: { id: twitId }
-                    });
-                    const twit = await Twits.findOne({
-                            where: {
-                                id: twitId,
-                                isDeleted: false
-                            },
-                            include: [
-                                { model: Likes, as: 'likes',
-                                    include: [
-                                        { model: Users, as: 'userlikes',
-                                attributes: ['username', 'email']
-                            }
-                                    ]
-                                }
-                            ]
-                        });
-                    return response(res, 200, { twit }, null, 'Twit unliked successfully');
-                } else {
-                    // console.log('about to be liked again');
-                    await Likes.update({
-                        isLiked: true
-                    }, 
-                    { 
-                        where: { twitId, userId }
-                    }); // Fixed bug to only update specific like record of the user
-                    const likedTwit = await Twits.update({
-                        likecount: Sequelize.literal('likecount + 1')
-                    }, 
-                    { 
-                        where: { id: twitId }
-                    });
-                    const twit = await Twits.findOne({
+            // console.log(like ? 'liked' : 'unliked');
+            if(like.isLiked) {
+                // console.log('about to be unliked');
+                await Likes.update({
+                    isLiked: false
+                }, 
+                { 
+                    where: { twitId, userId }
+                }); // Fixed bug to only update specific like record of the user
+                const likedTwit = await Twits.update({
+                    likecount: Sequelize.literal('likecount - 1')
+                },
+                { 
+                    where: { id: twitId }
+                });
+                const twit = await Twits.findOne({
                         where: {
                             id: twitId,
                             isDeleted: false
@@ -79,17 +50,21 @@ exports.likeTwit = async(req, res) => {
                             { model: Likes, as: 'likes',
                                 include: [
                                     { model: Users, as: 'userlikes',
-                                    attributes: ['username', 'email']
-                                }
+                            attributes: ['username', 'email']
+                        }
                                 ]
                             }
                         ]
                     });
-                    return response(res, 200, { twit }, null, 'Twit liked successfully');
-                }
+                return response(res, 200, { twit }, null, 'Twit unliked successfully');
             } else {
-                // console.log('first-time like');
-                const newLike = await Likes.create({ twitId, userId });
+                // console.log('about to be liked again');
+                await Likes.update({
+                    isLiked: true
+                }, 
+                { 
+                    where: { twitId, userId }
+                }); // Fixed bug to only update specific like record of the user
                 const likedTwit = await Twits.update({
                     likecount: Sequelize.literal('likecount + 1')
                 }, 
@@ -102,18 +77,60 @@ exports.likeTwit = async(req, res) => {
                         isDeleted: false
                     },
                     include: [
+                        { model: Users, as: 'twits',
+                            attributes: ['username', 'email', 'verified']
+                        },
                         { model: Likes, as: 'likes',
                             include: [
                                 { model: Users, as: 'userlikes',
-                                attributes: ['username', 'email']
-                             }
+                                attributes: ['username', 'email', 'verified']
+                            }
                             ]
                         }
                     ]
                 });
+                // console.log(twit.twits.verified);
+                if(twit.twits.verified) {
+                    await mailer.like(twit.twits.email, twit.id);
+                }
                 return response(res, 200, { twit }, null, 'Twit liked successfully');
-
             }
+        } else {
+            // console.log('first-time like');
+            const newLike = await Likes.create({ twitId, userId });
+            const likedTwit = await Twits.update({
+                likecount: Sequelize.literal('likecount + 1')
+            }, 
+            { 
+                where: { id: twitId }
+            });
+            const twit = await Twits.findOne({
+                where: {
+                    id: twitId,
+                    isDeleted: false
+                },
+                include: [
+                    { model: Users, as: 'twits',
+                        attributes: ['username', 'email', 'verified']
+                    },
+                    { model: Likes, as: 'likes',
+                        include: [
+                            { model: Users, as: 'userlikes',
+                            attributes: ['username', 'email', 'verified']
+                            }
+                        ]
+                    }
+                ],
+                raw: true,
+                nest:true
+            });
+            // console.log(twit.twits.verified);
+            if(twit.twits.verified) {
+                await mailer.like(twit.twits.email, twit.id);
+            }
+            return response(res, 200, { twit }, null, 'Twit liked successfully');
+
+        }
         }catch(error) {
             response(res, 500, null, error.message, 'Error in liking twit');
         }

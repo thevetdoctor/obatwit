@@ -135,6 +135,68 @@ db.user.belongsToMany(db.user, {
   foreignKey: 'followerId'
 });
 
+db.user.hasMany(db.follower, {
+  as: 'followeduser',
+  foreignKey: 'userId'
+});
+
+db.user.hasMany(db.follower, {
+  as: 'followinguser',
+  foreignKey: 'followerId'
+});
+
+db.follower.belongsTo(db.user, {
+  as: 'followeduser',
+  foreignKey: 'userId'
+});
+
+db.follower.belongsTo(db.user, {
+  as: 'followinguser',
+  foreignKey: 'followerId'
+});
+
+// relations for chats and messages table
+
+db.user.hasMany(db.chat, {
+  as: 'chatSender',
+  foreignKey: 'senderId'
+});
+
+db.chat.belongsTo(db.user, {
+  as: 'chatSender',
+  foreignKey: 'senderId'
+});
+
+db.user.hasMany(db.chat, {
+  as: 'chatReceiver',
+  foreignKey: 'receiverId'
+});
+
+db.chat.belongsTo(db.user, {
+  as: 'chatReceiver',
+  foreignKey: 'receiverId'
+});
+
+db.chat.hasMany(db.message, {
+  as: 'messages',
+  foreignKey: 'chatId'
+});
+
+db.message.belongsTo(db.chat, {
+  as: 'messages',
+  foreignKey: 'chatId'
+});
+
+db.user.hasMany(db.message, {
+  as: 'sender',
+  foreignKey: 'senderId'
+});
+
+db.message.belongsTo(db.user, {
+  as: 'sender',
+  foreignKey: 'senderId'
+});
+
 // db.user.hasMany(db.follower, {
 //   as: 'followers',
 //   // as: 'following',

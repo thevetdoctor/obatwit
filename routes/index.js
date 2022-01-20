@@ -4,6 +4,7 @@ const CommentRoutes = require('./CommentRoutes');
 const LikeRoutes = require('./LikeRoutes');
 const LikeCommentRoutes = require('./LikeCommentRoutes');
 const FollowerRoutes = require('./FollowerRoutes');
+const MessageRoutes = require('./MessageRoutes');
 
 module.exports = (app) => {
     app.use('/auth', AuthRoutes);
@@ -12,4 +13,5 @@ module.exports = (app) => {
     app.use('/likes', LikeRoutes);
     app.use('/likecomments', LikeCommentRoutes);
     app.use('/followers', FollowerRoutes);
+    app.use('/messages', MessageRoutes);
 }

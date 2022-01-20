@@ -3,7 +3,8 @@ require('dotenv').config();
 
 const { MAIL_USER, MAIL_PASS } = process.env;
 
-module.exports = async (receiver) => {
+module.exports = {
+signup: async (receiver) => {
       const twitMailer = nodemailer.createTransport({
         service: "gmail",
         secure: true,
@@ -17,6 +18,7 @@ module.exports = async (receiver) => {
           <p>You just signed up to the next big thing in the social media space in Africa.</p>
           <p>Connect with millions of like-minded individuals and organizations, and enjoy the power of networking.</p>
           <p>Please update your profile on the app to get more personalised information in your feed and email inbox</p>
+          <p><a href='https://peaceful-leakey-ce2e49.netlify.app/verify/${username}'>View your profile to activate your account</a></p>
           <p>Welcome on board</p>
           The <a href='https://peaceful-leakey-ce2e49.netlify.app/twits'>Buzz</a> Team`;
 
@@ -42,4 +44,89 @@ module.exports = async (receiver) => {
           message: `Mail sent to ${receiver}`
         }
       });
-    };
+    },
+
+follow: async (receiver, username, follower) => {
+      const twitMailer = nodemailer.createTransport({
+        service: "gmail",
+        secure: true,
+        port: 465,
+        host: "smtp.gmail.com",
+        auth: { user: MAIL_USER, pass: MAIL_PASS }
+        
+      });
+      const html =  `
+        <h2>Hey! ${follower} just followed you on Buzz</h2>
+          <p>Just like we told you, this is getting exciting and you are getting noticed.</p>
+          <p>The social media space in Africa connects millions of like-minded individuals and organizations with potentially great opportunities.</p>
+          <p>You can post, view and search users, also follow and unfollow users.</p>
+          <p>We promise more features as we build out this great community</p>
+          <p><a href='https://peaceful-leakey-ce2e49.netlify.app/${username}'>View your profile</a></p>
+          The <a href='https://peaceful-leakey-ce2e49.netlify.app/twits'>Buzz</a> Team`;
+
+      const mailOptions = {
+        from: "Oba Buzz <thevetdoctor@gmail.com",
+        to: receiver,
+        subject: 'Hey! Someone just followed you on Buzz!',
+        text: 'You are getting noticed!',
+        html,
+      };
+      await twitMailer.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+          return {
+            success: false,
+            message: "Error found",
+            error: error.message
+          };
+        }
+        console.log(`Mail sent to ${receiver}`);
+        return { 
+          success: true,
+          message: `Mail sent to ${receiver}`
+        }
+      });
+    },
+
+like: async (receiver, twitId) => {
+      const twitMailer = nodemailer.createTransport({
+        service: "gmail",
+        secure: true,
+        port: 465,
+        host: "smtp.gmail.com",
+        auth: { user: MAIL_USER, pass: MAIL_PASS }
+        
+      });
+      const html =  `
+        <h2>Hey! Someone just liked your post on Buzz</h2>
+          <p>Just like we told you, this is getting exciting and you are getting noticed.</p>
+          <p>The social media space in Africa connects millions of like-minded individuals and organizations with potentially great opportunities.</p>
+          <p>You can post, view and search users, also follow and unfollow users.</p>
+          <p>We promise more features as we build out this great community</p>
+          <p><a href='https://peaceful-leakey-ce2e49.netlify.app/twits/#${twitId}'>View your liked post</a></p>
+          The <a href='https://peaceful-leakey-ce2e49.netlify.app/twits'>Buzz</a> Team`;
+
+      const mailOptions = {
+        from: "Oba Buzz <thevetdoctor@gmail.com",
+        to: receiver,
+        subject: 'Hey! Someone just followed you on Buzz!',
+        text: 'You are getting noticed!',
+        html,
+      };
+      await twitMailer.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+          return {
+            success: false,
+            message: "Error found",
+            error: error.message
+          };
+        }
+        console.log(`Mail sent to ${receiver}`);
+        return { 
+          success: true,
+          message: `Mail sent to ${receiver}`
+        }
+      });
+    }
+  }

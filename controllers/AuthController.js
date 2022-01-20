@@ -1,4 +1,4 @@
-const Sequelize = require("sequelize");
+const {Sequelize, Op} = require("sequelize");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const Users = require('../models').user;
@@ -31,7 +31,7 @@ exports.signUp = async(req, res) => {
             newUser.password = null;
             const token = jwt.sign({user: newUser }, process.env.JWT_SECRET);
 
-            await mailer(email);
+            await mailer.signup(email);
             response(res, 201, { token, user: newUser }, null, 'Account created');
         }catch(error) {
             response(res, 500, null, error.message, 'Error in creating user');
@@ -100,7 +100,6 @@ exports.getUsers = async(req, res) => {
 
 exports.getUserProfile = async(req, res) => {
     const { username } = req.params;
-    console.log(username)
     try {
             const user = await Users.findOne({ 
                 where: { 
@@ -120,5 +119,56 @@ exports.getUserProfile = async(req, res) => {
             response(res, 200, { user }, null, 'User data');
         }catch(error) {
             response(res, 500, null, error.message, 'Error in getting users');
+        }
+}; 
+
+exports.verifyUser = async(req, res) => {
+    const { username } = req.params;
+    try {
+            const user = await Users.update({verified: true}, { 
+                where: { 
+                    username 
+                },
+            });
+            if(!user) return response(res, 400, null, 'User not found');
+            response(res, 200, { user }, null, 'User account has been verified');
+        }catch(error) {
+            response(res, 500, null, error.message, 'Error in verifying user');
+        }
+}; 
+
+exports.verifyUsers = async(req, res) => {
+    let { users } = req.body;
+    try {
+            if(!users) return response(res, 400, null, 'At least one email is required');
+            const userss = users.map(x => ({email: x}));
+            const user = await Users.update({verified: true}, { 
+                where: { 
+                    [ Op.or ]: userss
+                },
+            });
+            // console.log(users)
+            // users.forEach(async userEmail => {
+            //     await Users.update({verified: true}, { 
+            //         where: { 
+            //             email: userEmail
+            //         },
+            //     });
+            // });
+            response(res, 200, null, null, 'All user accounts have been verified');
+        }catch(error) {
+            response(res, 500, null, error.message, 'Error in verifying user accounts');
+        }
+}; 
+
+exports.getAllUserEmails = async(req, res) => {
+    try {
+            const users = await Users.findAll({
+                attributes: ['email']
+            });
+            const emails = users.map(x => x.email);
+            response(res, 200, emails, null, 'All user emails');
+        }catch(error) {
+            response(res, 500, null, error.message, 'Error in verifying user accounts');
         }
 }; 

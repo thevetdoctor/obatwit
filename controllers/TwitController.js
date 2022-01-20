@@ -8,8 +8,7 @@ const { response } = require('oba-http-response');
 
 exports.postTwit = async(req, res) => {
     const { text, imageUrl, userId } = req.body;
-    if(!(text && userId)) return response(res, 400, null, 'Please supply missing input(s)');
-    // console.log(title, text, imageUrl, userId);
+    if((!text || !imageUrl) && !userId) return response(res, 400, null, 'Please supply missing input(s)');
       try {
             const twit = await Twits.findOne({ where: {
                 text,
@@ -101,7 +100,6 @@ exports.getTwit = async(req, res) => {
 exports.updateTwit = async(req, res) => {
     const { twitId } = req.params;
     const { text, userId } = req.body;
-    console.log(text, userId, twitId);
     if(!(text && userId && twitId)) return response(res, 400, null, 'Please supply missing input(s)');
 
       try {
