@@ -12,6 +12,8 @@ import UserTwits from './components/UserTwits';
 import store from './redux/store';
 import { useSelector } from 'react-redux';
 import Reset from './components/Reset';
+import Chats from './components/Chats';
+import Verified from './components/Verified';
 
 function App() {
     const [loggedIn, setLoggedIn] = useState(JSON.parse(localStorage.getItem('loggedIn')));
@@ -64,7 +66,9 @@ function App() {
               <Route exact path="/twits" component={Twits} />
               <Route exact path="/people" component={People} />
               <Route exact path="/reset" component={Reset} />
+              <Route exact path="/verify/:user" component={Verified} />
               <Route path="/twits/:user" component={UserTwits} />
+              <Route path="/chats/:user" component={Chats} />
               <Route path="/following/:user" component={Following} />
               <Route path="/follower/:user" component={Follower} />
               <Route path="/:user" component={Profile} />

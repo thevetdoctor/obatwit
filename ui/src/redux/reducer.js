@@ -8,6 +8,12 @@ export default function reducer(state= initialState, action) {
               ...state,
               twits: action.data
             }          
+        case actions.setMessagesData.type:
+
+            return {
+              ...state,
+              messages: action.data
+            }          
         case actions.setPeopleData.type:
 
             return {
@@ -80,6 +86,7 @@ export default function reducer(state= initialState, action) {
  
 export const initialState = {
     twits: [],
+    messages: [],
     users: 0,
     peopleData: [],
     searchData: [],

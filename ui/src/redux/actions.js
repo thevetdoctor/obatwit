@@ -1,5 +1,6 @@
 const actions = {
     setTwitData: { type: 'SET_TWIT_DATA'},
+    setMessagesData: { type: 'SET_MESSAGES_DATA'},
     setUserCount: { type: 'SET_USER_COUNT'},
     setPeopleData: { type: 'SET_PEOPLE_DATA'},
     setSearchData: { type: 'SET_SEARCH_DATA'},

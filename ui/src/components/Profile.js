@@ -47,6 +47,7 @@ export default function Profile() {
                 }
             });
             if(res && res.data.success) {
+                console.log(res.data)
                     if(method === 'GET') {
                     dispatch({
                         type: 'SET_USERS_DATA',
@@ -112,7 +113,7 @@ export default function Profile() {
 
  
     return (
-        <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-5 mb-4 m-auto justify-center md:w-1/2'>
+        <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-2 mb-4 m-auto justify-center md:w-1/2'>
         <p className='flex justify-between mb-6 border-3 border shadow-md p-2'>
             <span className='cursor-pointer' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
             {<span className='flex cursor-pointer' onClick= {e => history.push('people')}><IoIosPeople size={35}/></span>}
@@ -136,7 +137,7 @@ export default function Profile() {
         {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 mb-5 rounded'>{error}</div>}
         <span className='text-sm mt-3 mb-1 flex justify-between'>
             <span>
-                <span className=''>Member since : <Moment fromNow>{userData?.createdAt}</Moment></span><br />
+                <span className=''>Joined: <Moment fromNow>{userData?.createdAt}</Moment></span><br />
                 {isFollowing && <span className='text-xs text-white bg-gray-500 rounded p-1 mb-3'> 
                     Follows you
                 </span>}
@@ -168,6 +169,9 @@ export default function Profile() {
                 {twitCount > 0 && <span className={' text-white bg-yellow-500 rounded hover:bg-yellow-400 p-2 cursor-pointer mr-3'}  onClick= {e => history.push(`/twits/${user}`)}> 
                         {twitCount} {twitCount  > 1 ? 'posts' : 'post'}
                 </span>}
+                {/* <span className={' text-white bg-gray-500 rounded hover:bg-gray-400 p-2 cursor-pointer mr-3'}  onClick= {e => history.push(`/chats/${user}`)}> 
+                        Messages
+                </span> */}
             </span>
            
         </div>

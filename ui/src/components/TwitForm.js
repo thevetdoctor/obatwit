@@ -5,7 +5,7 @@ import { baseUrl } from '../helper';
 import AttachImage from './AttachImage';
 
 export default function TwitForm(props) {
-    const [title, setTitle] = useState(localStorage.getItem('twitTitle') ? localStorage.getItem('twitTitle') : '');
+    // const [title, setTitle] = useState(localStorage.getItem('twitTitle') ? localStorage.getItem('twitTitle') : '');
     const [text, setText] = useState(localStorage.getItem('twitText') ? localStorage.getItem('twitText') : '');
     const [imageUrl, setImageUrl] = useState(localStorage.getItem('twitImage') ? localStorage.getItem('twitImage') : '');
     const [textArea, setTextArea] = useState(550);
@@ -16,22 +16,14 @@ export default function TwitForm(props) {
     const apiUrl = `${baseUrl}/twits/post`; 
 
     const handleChange = (e) => {
-        if(e.target.name === 'title') {
-            setTitle(e.target.value);
-            localStorage.setItem('twitTitle', e.target.value)
-        } else {
-            setText(e.target.value);
-            setTextArea(160 - e.target.value.length)
-            localStorage.setItem('twitText', e.target.value)
-        }
+        setText(e.target.value);
+        setTextArea(550 - e.target.value.length)
+        localStorage.setItem('twitText', e.target.value)
     }
 
     const sendTwit = async() => {
-            if(!text) {
-                // if(!title) {
-                //     setError('Title is required');
-                //     return;
-                // }
+        console.log(text, imageUrl)
+            if(!text && !imageUrl) {
                 setError('Inputs required');
                 return;
             }
@@ -46,7 +38,6 @@ export default function TwitForm(props) {
                     }
                 })
                 .catch(error => {
-                        // setError(error.response.data.error);
                         setError('Please check your network');
                     });
                 if(res && res.data.success) {

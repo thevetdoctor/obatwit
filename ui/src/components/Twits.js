@@ -147,7 +147,9 @@ useEffect(() => {
 
 useEffect(() => {
     if(!token) {
-        history.push('/');
+        localStorage.setItem('hash', window.location.hash.replace('#', ''));
+        console.log(window.location.hash)
+        return history.push('/');
     }
     getUsers();
     return () => {
@@ -163,7 +165,13 @@ useEffect(async() => {
 
 useEffect(() => {
     setTimeout(() => {
-        const id = window.location.hash.replace('#', '');
+        const hash = localStorage.getItem('hash');
+        let id = '';
+        if(hash) {
+            id = hash;
+        } else {
+            id = window.location.hash.replace('#', '');
+        }
         const element = document.getElementById(id);
         if (element) element.scrollIntoView();
       }, 0);
@@ -187,7 +195,7 @@ useEffect(() => {
                             {error ? <BsPersonFill size={25} />:
                             <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
                         </span>) 
-                        : <span className='text-left'><AiFillHome size={25} /></span>}
+                        : <span className='text-left cursor-pointer'><BsPersonFill size={25} onClick={e => history.push(`/${email.split('@')[0]}`)} /></span>}
                     {users > 0 && <span className='text-left flex cursor-pointer'  onClick= {e => history.push('people')}><IoIosPeople size={30}/><span className='pt-1 pl-1'>{users}</span></span>}
                     
                     <span style={{cursor: 'pointer'}} className='text-right' onClick={logout}><Logout />
