@@ -4,7 +4,7 @@ require('dotenv').config();
 const { MAIL_USER, MAIL_PASS } = process.env;
 
 module.exports = {
-signup: async (receiver) => {
+signup: async (receiver, username) => {
       const twitMailer = nodemailer.createTransport({
         service: "gmail",
         secure: true,
