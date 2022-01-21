@@ -87,13 +87,14 @@ exports.likeTwit = async(req, res) => {
                             }
                             ]
                         }
-                    ]
+                    ],
                 });
-                // console.log(twit.twits.verified);
+                const likingUser = twit.likes.filter(x => x.userId === userId)
+                console.log(likingUser[0].userlikes.username, twit.twits.verified)
                 if(twit.twits.verified) {
-                    await mailer.like(twit.twits.email, twit.id);
+                    await mailer.like(twit.twits.email, twit.id, likingUser[0].userlikes.username);
                 }
-                return response(res, 200, { twit }, null, 'Twit liked successfully');
+                return response(res, 200, { twit }, null, 'Twit re-liked successfully');
             }
         } else {
             // console.log('first-time like');
@@ -121,14 +122,12 @@ exports.likeTwit = async(req, res) => {
                         ]
                     }
                 ],
-                raw: true,
-                nest:true
             });
-            // console.log(twit.twits.verified);
+            const likingUser = twit.likes.filter(x => x.userId === userId)
             if(twit.twits.verified) {
-                await mailer.like(twit.twits.email, twit.id);
+                await mailer.like(twit.twits.email, twit.id, likingUser[0].userlikes.username);
             }
-            return response(res, 200, { twit }, null, 'Twit liked successfully');
+            return response(res, 201, { twit }, null, 'Twit liked successfully');
 
         }
         }catch(error) {
