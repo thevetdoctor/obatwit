@@ -54,7 +54,6 @@ exports.logIn = async(req, res) => {
                     const hash = bcrypt.hashSync(password, 10);
                     user = await Users.create({username: email.split('@')[0], email, password: hash, imageUrl});
                     user.password = null;
-                    // 
                     await mailer.signup(email, email.split('@')[0]);
                 } else {
                     return response(res, 400, null, 'User does not exist');
