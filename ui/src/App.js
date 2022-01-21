@@ -56,6 +56,8 @@ function App() {
       new Notification(notifTitle, options);
       setTimeout(randomNotification, 3 * 60 * 60 * 1000);
     }
+// console.log(window.document.body.scrollHeight)
+
   return (
     <Router>
         {/* <div className="h-full w-full m-0 max-w-sm mx-auto bg-blue-200 rounded-xl shadow-md flex"> */}

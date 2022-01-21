@@ -11,7 +11,7 @@ import { IoIosPeople } from 'react-icons/io';
 import { MdContentCopy } from 'react-icons/md';
 import { BiLike } from 'react-icons/bi';
 import { GrEdit } from 'react-icons/gr';
-import { RiChatNewLine } from 'react-icons/ri';
+import { RiArrowDownLine, RiArrowUpLine, RiChatNewLine } from 'react-icons/ri';
 import TwitForm from './TwitForm';
 import CommentForm from './CommentForm';
 import Image from './Image';
@@ -176,10 +176,10 @@ useEffect(() => {
         if (element) element.scrollIntoView();
       }, 0);
 });
-
     return (
         <div style={{fontFamily: 'Roboto', fontWeight: '600', height: '90vh'}} className='mb-5 p-3 m-auto flex justify-center md:w-1/2'>
-            <span style={{cursor: 'pointer', borderRadius: '50%'}} className='fixed bottom-16 right-4 bg-green-500 p-4 text-white'><RiChatNewLine size={25} onClick={showForm} /></span>
+            <span style={{cursor: 'pointer', borderRadius: '50%'}} className='text-xs mb-3 fixed bottom-20 right-4 bg-green-500 px-5 py-3 text-white'><RiChatNewLine size={25} onClick={showForm} />post</span>
+            {/* <span style={{cursor: 'pointer', borderRadius: '50%'}} className='text-xs fixed bottom-5 right-4 bg-purple-500 px-5 py-3 text-white'><RiArrowUpLine size={20} onClick={showForm} />top</span> */}
             {formActive && <TwitForm error={error} showForm={showForm} sync={sync} setSync={setSync}/>}
             
             {!formActive && 

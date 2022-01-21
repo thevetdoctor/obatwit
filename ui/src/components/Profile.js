@@ -47,7 +47,7 @@ export default function Profile() {
                 }
             });
             if(res && res.data.success) {
-                console.log(res.data)
+                // console.log(res.data)
                     if(method === 'GET') {
                     dispatch({
                         type: 'SET_USERS_DATA',
