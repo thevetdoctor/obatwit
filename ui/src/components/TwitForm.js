@@ -78,7 +78,7 @@ export default function TwitForm(props) {
                 maxLength={550}
                 value={text}
                 overflow="hidden"
-                placeholder='Drop in your twit ...' 
+                placeholder='Write and share ...' 
                 onChange={handleChange}
                 className='px-3 rounded mb-1 text-lg text-black font-bold w-full'
                 required

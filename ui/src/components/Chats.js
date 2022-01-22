@@ -14,7 +14,7 @@ import Chat from './Chat';
 
 export default function Chats() {
     const [error, setError] = useState('');
-    const [ userMessages, setUserMessages ] = useState({});
+    // const [ userMessages, setUserMessages ] = useState({});
     const [sync, setSync] = useState(false);
     let { user } = useParams();
     const history = useHistory();
@@ -93,18 +93,15 @@ export default function Chats() {
     }
     
     useEffect(() => {
-        // const userTwitData = twits.filter(obj => obj.twits.username === user);
-        // setUserData(userTwitData[0]?.twits);
-        // setTwitData(userTwitData);
-    }, []);
-    
-    useEffect(async() => {
         getMessages();
      
         return () => {
         }
     }, [sync]);
 
+    const messageLine = messages.map(message => email === message.chatSender.email ? message.chatReceiver : message.chatSender);
+    console.log(messages, messageLine);
+    
     return (
         <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-2 mb-4 md:w-1/2 m-auto'>
         <p className='flex justify-between mb-6 border-3 border shadow-md p-2'>
@@ -114,29 +111,7 @@ export default function Chats() {
         </p>
         {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 m-1 rounded'>Please check your network !</div>}
         <div className='mb-1'>
-        <>
-            {/* {userData?.imageUrl ?
-            <span className='flex'>
-                    {error ? <BsPersonFill size={'1.7em'} color='black' />:
-                <img src={userData?.imageUrl} alt='Profile' style={{width: '2em', height: '2em', borderRadius: '50%'}} />}
-                <span className='text-xl font-semibold ml-2 mb-2'>{userData?.username}</span>
-            </span>
-            : 
-            <span className='flex'>
-                <BsPersonFill size={30} />
-                <span className='text-xl font-semibold ml-2 mb-2'>{userData?.username}</span>
-            </span>} */}
-            </>
             <Chat messages={messages} />
-        </div>
-        <div style={{fontFamily: 'Roboto'}} className='text-md'>
-        {/* {
-                    twitData.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((twit, idx) => 
-                        <div  key={idx} style={{backgroundColor: 'white', fontWeight: 'bold'}}>
-                            <Twit key={idx} twit={twit} email={email} apiCallHook={apiCallHook} baseUrl={baseUrl} frontendUrl={frontendUrl} sync={sync} setSync={setSync} />
-                        </div>
-                    )
-                } */}
         </div>
     </div>
     )

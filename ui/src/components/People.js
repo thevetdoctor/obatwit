@@ -13,6 +13,7 @@ import TopSearch from './TopSearch';
 import store from '../redux/store';
 import { useSelector } from 'react-redux';
 import { AiFillHome } from 'react-icons/ai';
+import Loader from 'react-loader-spinner';
 
 export default function People() {
     const [error, setError] = useState('');
@@ -140,25 +141,36 @@ export default function People() {
         {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 m-1 rounded'>Please check your network !</div>}
         <span className='text-sm mt-3 mb-5'>
         </span>
-        <TopSearch searchQuery={searchQuery} handleChange={handleChange} setSearchQuery={setSearchQuery}/>
-        <div className='flex flex-col text-md'>
-            {searchData.sort((a, b) => a.email.localeCompare(b.email)).map((person, idx) => (
-                <span key={idx} 
-                    className={'bg-gray-200 rounded hover:bg-gray-400 p-2 mb-2 cursor-pointer'} 
-                    onClick= {() => history.push(`/${person.username}`)}
-                > 
-                <span className='mx-2 flex cursor-pointer'  onClick= {e => history.push(`/${person.username}`)}>
-                {person.imageUrl ? (
-                <span className='mr-2'>
-                    {error ? <BsPersonFill size={'1.5em'} color='black' />:
-                    <img src={person.imageUrl} alt='Profile' style={{width: '1.5em', height: '1.5em', borderRadius: '50%'}} />}
-                </span>)
-                : <span className='mr-2 text-black'><BsPersonFill size={'1.5em'}/></span>}
-                {email === person.email ? 'Me' : person.username}
-            </span>
+        {!searchData.length > 0 ? 
+            <div className='flex justify-center items-center pt-8'>
+                <Loader 
+                type='Bars'
+                color='#00bfff'
+                height={80} 
+                width={80} 
+            />
+            </div>:
+            <>
+            <TopSearch searchQuery={searchQuery} handleChange={handleChange} setSearchQuery={setSearchQuery}/>
+            <div className='flex flex-col text-md'>
+                {searchData.sort((a, b) => a.email.localeCompare(b.email)).map((person, idx) => (
+                    <span key={idx} 
+                        className={'bg-gray-200 rounded hover:bg-gray-400 p-2 mb-2 cursor-pointer'} 
+                        onClick= {() => history.push(`/${person.username}`)}
+                    > 
+                    <span className='mx-2 flex cursor-pointer'  onClick= {e => history.push(`/${person.username}`)}>
+                    {person.imageUrl ? (
+                    <span className='mr-2'>
+                        {error ? <BsPersonFill size={'1.5em'} color='black' />:
+                        <img src={person.imageUrl} alt='Profile' style={{width: '1.5em', height: '1.5em', borderRadius: '50%'}} />}
+                    </span>)
+                    : <span className='mr-2 text-black'><BsPersonFill size={'1.5em'}/></span>}
+                    {email === person.email ? 'Me' : person.username}
                 </span>
-            ))}
-        </div>
+                    </span>
+                ))}
+            </div>
+        </>}
         <div className='flex'>
             <span className='m-auto'><IoIosPeople size={300} /></span>
         </div>

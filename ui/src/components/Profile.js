@@ -11,6 +11,7 @@ import { LoadSpan } from './Twits';
 import store from '../redux/store';
 import { useSelector } from 'react-redux';
 import { AiFillHome } from 'react-icons/ai';
+import Loader from 'react-loader-spinner';
 
 export default function Profile() {
     const [error, setError] = useState('');
@@ -119,73 +120,84 @@ export default function Profile() {
             {<span className='flex cursor-pointer' onClick= {e => history.push('people')}><IoIosPeople size={35}/></span>}
             <span className='bg-black-400 cursor-pointer' onClick={() => history.push("/twits")}><AiFillHome size={28} /></span>
         </p>
-        <div className='mb-1'>
-        <>
-            {userData?.imageUrl ?
-            <span className='flex'>
-                    {error ? <BsPersonFill size={'1.7em'} color='black' />:
-                <img src={userData?.imageUrl} alt='Profile' style={{width: '2em', height: '2em', borderRadius: '50%'}} />}
-                <span className='text-xl font-semibold ml-2 mb-2'>{userData?.username}</span>
-            </span>
-            : 
-            <span className='flex'>
-                <BsPersonFill size={30} />
-                <span className='text-xl font-semibold ml-2 mb-2'>{userData?.username}</span>
-            </span>}
-            </>
-        </div>
-        {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 mb-5 rounded'>{error}</div>}
-        <span className='text-sm mt-3 mb-1 flex justify-between'>
-            <span>
-                <span className=''>Joined: <Moment fromNow>{userData?.createdAt}</Moment></span><br />
-                {isFollowing && <span className='text-xs text-white bg-gray-500 rounded p-1 mb-3'> 
-                    Follows you
-                </span>}
-            </span>
-            <span className='flex'>
-            {(email !== userData?.email) && 
+             {!userData.username ? 
+                <div className='flex justify-center items-center pt-8'>
+                    <Loader 
+                    type='Bars'
+                    color='#00bfff'
+                    height={80} 
+                    width={80} 
+                />
+                </div>:
                 <>
-                {!followLoading ? 
-                    <span className='flex flex-col'>
-                        <span className={'text-white bg-blue-900 rounded hover:bg-blue-400 p-1 cursor-pointer -mt-2 mr-1'} onClick={() => handleFollow()}> 
-                        {!isFollower ? 'Follow' : 'Following'}
+                    <div className='mb-1 flex justify-between'>
+                        <>
+                            {userData?.imageUrl ?
+                            <span className='flex'>
+                                    {error ? <BsPersonFill size={'1.7em'} color='black' />:
+                                <img src={userData?.imageUrl} alt='Profile' style={{width: '6em', height: '6em', borderRadius: '10%'}} />}
+                                {/* <span className='text-xl font-semibold ml-2 mb-2'>{userData?.username}</span> */}
+                            </span>
+                            : 
+                            <span className='flex bg-gray-300 p-3 rounded'>
+                                <BsPersonFill size={80} />
+                            </span>}
+                        </>
+                        <div className='ml-2'>
+                            <div>
+                                <span className='text-xl font-semibold ml-2 mb-2'>{userData?.username}</span>
+                            </div>
+                            <div className='flex justify-between mt-3 p-1 rounded bg-gray-200'>
+                                    <span className={'flex-col flex text-center p-2 cursor-pointer mr-3'}  onClick= {e => history.push(`/follower/${user}`)}> 
+                                            <span className='text-lg font-bold'>{followerCount}</span> <span className='text-xs'>{followerCount  > 1 ? 'followers' : 'follower'}</span>
+                                    </span>
+                                    <span className={'flex-col flex text-center p-2 cursor-pointer mr-3'}  onClick= {e => history.push(`/following/${user}`)}> 
+                                            <span className='text-lg font-bold'>{followingCount}</span><span className='text-xs'> following</span>
+                                    </span>
+                                    <span className={'flex-col flex text-center p-2 cursor-pointer mr-3'}  onClick= {e => history.push(`/twits/${user}`)}> 
+                                            <span className='text-lg font-bold'>{twitCount}</span><span className='text-xs'> {twitCount  > 1 ? 'posts' : 'post'}</span>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                    {error && 
+                        <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 mb-5 rounded'>
+                            {error}
+                        </div>
+                    }
+                    <span className='text-sm mt-3 mb-4 flex justify-between'>
+                        <span>
+                            <span className=''>Joined: <Moment fromNow>{userData?.createdAt}</Moment></span><br />
+                            {isFollowing && <span className='text-xs text-white bg-gray-500 rounded p-1 mb-3'> 
+                                Follows you
+                            </span>}
                         </span>
-                        <span className={'invisible -mt-2 mr-1'}></span>
+                        <span className='flex'>
+                        {(email !== userData?.email) && 
+                            <>
+                            {!followLoading ? 
+                                <span className='flex flex-col'>
+                                    <span className={'invisible mt-2 mr-1'}></span>
+                                    <span className={'text-white bg-blue-900 rounded hover:bg-blue-400 p-1 cursor-pointer -mt-2 mr-1'} onClick={() => handleFollow()}> 
+                                    {!isFollower ? 'Follow' : 'Following'}
+                                    </span>
+                                </span>
+                                :
+                                <LoadSpan height={20} width={20} color='' />}
+                            </>
+                        }
+                        </span>
                     </span>
-                    :
-                    <LoadSpan height={20} width={20} color='' />}
-                </>
-            }
-            </span>
-        </span>
-        <div className='flex justify-between text-sm mt-5'>
-            <span>
-                {followerCount > 0 && <span className={'text-white bg-blue-500 rounded hover:bg-blue-400 p-2 cursor-pointer mr-3'}  onClick= {e => history.push(`/follower/${user}`)}> 
-                        {followerCount} {followerCount  > 1 ? 'followers' : 'follower'}
-                </span>}
-                {followingCount > 0 && <span className={' text-white bg-green-500 rounded hover:bg-green-400 p-2 cursor-pointer mr-3'}  onClick= {e => history.push(`/following/${user}`)}> 
-                        {followingCount} following
-                </span>}
-                {twitCount > 0 && <span className={' text-white bg-yellow-500 rounded hover:bg-yellow-400 p-2 cursor-pointer mr-3'}  onClick= {e => history.push(`/twits/${user}`)}> 
-                        {twitCount} {twitCount  > 1 ? 'posts' : 'post'}
-                </span>}
-                {/* <span className={' text-white bg-gray-500 rounded hover:bg-gray-400 p-2 cursor-pointer mr-3'}  onClick= {e => history.push(`/chats/${user}`)}> 
-                        Messages
-                </span> */}
-            </span>
-           
+                    {(email === userData?.email) && 
+                        <span className={'text-sm text-white bg-gray-900 rounded hover:bg-gray-400 p-2 cursor-pointer mr-3 mt-5'}  onClick= {e => history.push(`/chats/${user}`)}> 
+                            Messages
+                        </span>
+                    }
+                    
+        </>}
+        <div className='flex'>
+            <span className='m-auto'><BsPersonFill size={300} /></span>
         </div>
-        <span>
-            {userData?.imageUrl ? 
-            <>{error ? <BsPersonFill size={300} color='black' />:
-            <img src={userData?.imageUrl} width='100%' alt='imgurl' className='mt-3 rounded-lg' />}</>
-            :
-            <div className='flex'>
-                <span className='m-auto'><BsPersonFill size={300} /></span>
-            </div>}
-        </span>
-        
-        
     </div>
     )
 }

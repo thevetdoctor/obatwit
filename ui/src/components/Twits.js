@@ -28,7 +28,7 @@ export default function Twits() {
 
     const {getState, dispatch} = store;
     const state = getState();
-    const { twits, users, searchQuery, networkStatus } = useSelector(state => state);
+    const { twits, users } = useSelector(state => state);
 
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
     const userId = localStorage.getItem('email') ? localStorage.getItem('userId') : '';
@@ -46,6 +46,11 @@ export default function Twits() {
         localStorage.removeItem('token');
         history.push('/');
     }
+
+    // if(!token) {
+    //     console.log(window.location.hash)
+    //     history.push('/');
+    // }
 
     const apiCallHook = async(method, url, data) => {
         await axios({
@@ -137,47 +142,43 @@ export default function Twits() {
     }
 
 useEffect(() => {
+    localStorage.setItem('hash', window.location.hash);
     if(!token) {
-        history.push('/');
-    }
-    getUsers();
-    return () => {
-    }
-}, []);
-
-useEffect(() => {
-    if(!token) {
-        localStorage.setItem('hash', window.location.hash.replace('#', ''));
-        console.log(window.location.hash)
+        // console.log(window.location.hash)
         return history.push('/');
     }
     getUsers();
-    return () => {
-    }
+    return () => {}
 }, []);
 
-useEffect(async() => {
-    getTwits();
-
-    return () => {
+useEffect(() => {
+    if(token) {
+        getTwits();
     }
+
+    return () => {}
 }, [sync]);
 
 useEffect(() => {
-    setTimeout(() => {
-        const hash = localStorage.getItem('hash');
-        let id = '';
-        if(hash) {
-            id = hash;
-        } else {
-            id = window.location.hash.replace('#', '');
-        }
-        const element = document.getElementById(id);
-        if (element) element.scrollIntoView();
-      }, 0);
-});
-    return (
-        <div style={{fontFamily: 'Roboto', fontWeight: '600', height: '90vh'}} className='mb-5 p-3 m-auto flex justify-center md:w-1/2'>
+    if(token) {
+        setTimeout(() => {
+            const hash = localStorage.getItem('hash');
+            let id = '';
+            if(hash) {
+                id = hash.replace('#', '');
+                console.log('hash found', hash)
+            } else {
+                id = window.location.hash.replace('#', '');
+            }
+            const element = document.getElementById(id);
+            if (element) element.scrollIntoView();
+        }, 0);
+    }
+    return () => {}
+}, []);
+
+return (
+    <div style={{fontFamily: 'Roboto', fontWeight: '600', height: '90vh'}} className='mb-5 p-3 m-auto flex justify-center md:w-1/2'>
             <span style={{cursor: 'pointer', borderRadius: '50%'}} className='text-xs mb-3 fixed bottom-20 right-4 bg-green-500 px-5 py-3 text-white'><RiChatNewLine size={25} onClick={showForm} />post</span>
             {/* <span style={{cursor: 'pointer', borderRadius: '50%'}} className='text-xs fixed bottom-5 right-4 bg-purple-500 px-5 py-3 text-white'><RiArrowUpLine size={20} onClick={showForm} />top</span> */}
             {formActive && <TwitForm error={error} showForm={showForm} sync={sync} setSync={setSync}/>}
@@ -198,18 +199,28 @@ useEffect(() => {
                         : <span className='text-left cursor-pointer'><BsPersonFill size={25} onClick={e => history.push(`/${email.split('@')[0]}`)} /></span>}
                     {users > 0 && <span className='text-left flex cursor-pointer'  onClick= {e => history.push('people')}><IoIosPeople size={30}/><span className='pt-1 pl-1'>{users}</span></span>}
                     
-                    <span style={{cursor: 'pointer'}} className='text-right' onClick={logout}><Logout />
+                    <span style={{cursor: 'pointer'}} className='text-right' onClick={() => logout()}><Logout />
                     </span>
                 </div>
                 {error && <div style={{fontFamily: 'Roboto', backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 m-1 rounded'>Please check your network !</div>}
 
+                {/* <Bars color="#00BFFF" height={80} width={80} /> */}
+                {twits.length < 1 ? 
+                <div className='flex justify-center items-center pt-8'>
+                    <Loader 
+                    type='Bars'
+                    color='#00bfff'
+                    height={80} 
+                    width={80} 
+                />
+                </div>:
                 <div className=''>
                 {
                     twits.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((twit, idx) => 
                         <Twit key={idx} twit={twit} email={email} userId={userId} apiCallHook={apiCallHook} baseUrl={baseUrl} frontendUrl={frontendUrl} sync={sync} setSync={setSync} showForm={showForm} formActive={formActive} checkOpenForms={checkOpenForms} error={error} />
                     )
                 }
-                </div>
+                </div>}
             </div>}
         </div>
     )

@@ -3,7 +3,11 @@ import { useHistory } from 'react-router-dom';
 import { BsPersonFill } from 'react-icons/bs';
 
 export default function Chat({messages}) {
-    console.log(messages);
+    // const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
+
+    // const messageLine = messages.map(message => email === message.chatSender.email ? message.chatReceiver : message.chatSender);
+    // console.log(messages, messageLine);
+
     return (
         <div>
             {messages.map((msg, idx) => (

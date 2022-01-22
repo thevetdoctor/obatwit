@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import Reset from './components/Reset';
 import Chats from './components/Chats';
 import Verified from './components/Verified';
+import { useHistory } from 'react-router-dom';
 
 function App() {
     const [loggedIn, setLoggedIn] = useState(JSON.parse(localStorage.getItem('loggedIn')));
@@ -23,7 +24,12 @@ function App() {
     const state = getState();
     const { searchQuery, networkStatus } = useSelector(state => state);
     // console.log(state);
-
+  //   const history = useHistory();
+  //   const token = localStorage.getItem('token');
+  //   if(!token) {
+  //     console.log(window.location.hash)
+  //     history?.push('/');
+  // }
     useEffect(() => {
       if(navigator.onLine) {
         dispatch({
