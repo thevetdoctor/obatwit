@@ -8,6 +8,10 @@ module.exports = {
         unique: true,
         primaryKey: true
       },    
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       username: {
         type: Sequelize.STRING,
         allowNull: false
@@ -33,6 +37,9 @@ module.exports = {
         type: Sequelize.STRING,
       },
       location: {
+        type: Sequelize.STRING,
+      },
+      dob: {
         type: Sequelize.STRING,
       },
       mobile: {

@@ -20,6 +20,9 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       primaryKey: true
     },    
+    name: {
+      type: DataTypes.STRING,
+    },
     username: {
       type: DataTypes.STRING,
       allowNull: false
@@ -45,6 +48,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
     },
     location: {
+      type: DataTypes.STRING,
+    },
+    dob: {
       type: DataTypes.STRING,
     },
     mobile: {

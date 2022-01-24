@@ -82,13 +82,13 @@ exports.logIn = async(req, res) => {
 exports.getUsers = async(req, res) => {
       try {
             const users = await Users.findAll({
-                attributes: ['id', 'username', 'email', 'imageUrl', 'createdAt', 'bio', 'location', 'mobile'],
+                attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'createdAt', 'bio', 'dob', 'location', 'mobile'],
                 include: [
                     {model: Users, as: 'followers',
-                    attributes: ['id', 'username', 'email', 'imageUrl', 'bio', 'location', 'mobile'],
+                    attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'bio', 'dob', 'location', 'mobile'],
                     },
                     {model: Users, as: 'following',
-                    attributes: ['id', 'username', 'email', 'imageUrl', 'bio', 'location', 'mobile'],
+                    attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'bio', 'dob', 'location', 'mobile'],
                     }
                   ]
             });
@@ -105,13 +105,13 @@ exports.getUserProfile = async(req, res) => {
                 where: { 
                     username 
                 },
-                attributes: ['id', 'username', 'email', 'imageUrl', 'createdAt', 'bio', 'location', 'mobile'],
+                attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'createdAt', 'bio', 'dob', 'location', 'mobile'],
                 include: [
                     {model: Users, as: 'followers',
-                    attributes: ['id', 'username', 'email', 'imageUrl', 'bio', 'location', 'mobile'],
+                    attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'bio', 'dob', 'location', 'mobile'],
                     },
                     {model: Users, as: 'following',
-                    attributes: ['id', 'username', 'email', 'imageUrl', 'bio', 'location', 'mobile'],
+                    attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'bio', 'dob', 'location', 'mobile'],
                     }
                   ]
             });
@@ -174,24 +174,24 @@ exports.getAllUserEmails = async(req, res) => {
 }; 
 
 exports.updateUserInfo = async(req, res) => {
-    let { userId, bio, location, mobile } = req.body;
+    let { userId, name, bio, location, dob, mobile } = req.body;
 
     try {
-        if(!(bio || location || mobile)) return response(res, 400, null, 'Please supply missing input(s)');
+        if(!(name || bio || location || dob || mobile)) return response(res, 400, null, 'Please supply missing input(s)');
         const users = await Users.findByPk(userId);
         if(!users) response(res, 400, null, null, 'User not found');
-            await Users.update({bio, location, mobile}, {where: {id: userId}});
+            await Users.update({name, bio, location, dob, mobile}, {where: {id: userId}});
             const user = await Users.findOne({
                 where: {
                     id: userId
                 },
-                attributes: ['id', 'username', 'email', 'imageUrl', 'createdAt', 'bio', 'location', 'mobile'],
+                attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'createdAt', 'bio', 'location', 'dob', 'mobile'],
                 include: [
                     {model: Users, as: 'followers',
-                    attributes: ['id', 'username', 'email', 'imageUrl', 'bio', 'location', 'mobile'],
+                    attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'bio', 'location', 'dob', 'mobile'],
                     },
                     {model: Users, as: 'following',
-                    attributes: ['id', 'username', 'email', 'imageUrl', 'bio', 'location', 'mobile'],
+                    attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'bio', 'location', 'dob', 'mobile'],
                     }
                   ]
             })

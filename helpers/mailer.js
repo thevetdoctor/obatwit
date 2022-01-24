@@ -18,7 +18,7 @@ signup: async (receiver, username ) => {
           <p>You just signed up to the next big thing in the social media space in Africa.</p>
           <p>Connect with millions of like-minded individuals and organizations, and enjoy the power of networking.</p>
           <p>Please update your profile on the app to get more personalised information in your feed and email inbox</p>
-          <p><a href='https://peaceful-leakey-ce2e49.netlify.app/verify/${username}'>Activate your account</a>to receive notifications</p>
+          <p><a href='https://peaceful-leakey-ce2e49.netlify.app/verify/${username}'>Activate your account</a> to receive notifications</p>
           <p>Welcome on board</p>
           The <a href='https://peaceful-leakey-ce2e49.netlify.app/twits'>Buzz</a> Team`;
 
