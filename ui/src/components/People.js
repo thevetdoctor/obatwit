@@ -141,7 +141,7 @@ export default function People() {
         {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 m-1 rounded'>Please check your network !</div>}
         <span className='text-sm mt-3 mb-5'>
         </span>
-        {!searchData.length > 0 ? 
+        {!peopleData.length > 0 ? 
             <div className='flex justify-center items-center pt-8'>
                 <Loader 
                 type='Bars'

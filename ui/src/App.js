@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 import Reset from './components/Reset';
 import Chats from './components/Chats';
 import Verified from './components/Verified';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 
 function App() {
     const [loggedIn, setLoggedIn] = useState(JSON.parse(localStorage.getItem('loggedIn')));
@@ -44,24 +44,24 @@ function App() {
       } 
     }, []);
 
-      const username = localStorage.getItem('username');
-      Notification.requestPermission().then((result) => {
-        if (result === 'granted') {
-          // randomNotification();
-        }
-      });
+    //   const username = localStorage.getItem('username');
+    //   Notification.requestPermission().then((result) => {
+    //     if (result === 'granted') {
+    //       // randomNotification();
+    //     }
+    //   });
 
-    function randomNotification() {
-      const notifTitle = username ? `Hello, ${username}` : 'Hello !';
-      const notifBody = `Have you checked Twitee today?`;
-      const notifImg = `https://res.cloudinary.com/thevetdoctor/image/upload/v1599332593/g1rozhabxswegvhp59h3.jpg`;
-      const options = {
-        body: notifBody,
-        icon: notifImg,
-      };
-      new Notification(notifTitle, options);
-      setTimeout(randomNotification, 3 * 60 * 60 * 1000);
-    }
+    // function randomNotification() {
+    //   const notifTitle = username ? `Hello, ${username}` : 'Hello !';
+    //   const notifBody = `Have you checked Twitee today?`;
+    //   const notifImg = `https://res.cloudinary.com/thevetdoctor/image/upload/v1599332593/g1rozhabxswegvhp59h3.jpg`;
+    //   const options = {
+    //     body: notifBody,
+    //     icon: notifImg,
+    //   };
+    //   new Notification(notifTitle, options);
+    //   setTimeout(randomNotification, 3 * 60 * 60 * 1000);
+    // }
 // console.log(window.document.body.scrollHeight)
 
   return (

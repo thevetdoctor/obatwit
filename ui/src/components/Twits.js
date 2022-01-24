@@ -179,7 +179,7 @@ useEffect(() => {
 
 return (
     <div style={{fontFamily: 'Roboto', fontWeight: '600', height: '90vh'}} className='mb-5 p-3 m-auto flex justify-center md:w-1/2'>
-            <span style={{cursor: 'pointer', borderRadius: '50%'}} className='text-xs mb-3 fixed bottom-20 right-4 bg-green-500 px-5 py-3 text-white'><RiChatNewLine size={25} onClick={showForm} />post</span>
+            <span style={{cursor: 'pointer', borderRadius: '50%'}} className='text-xs mb-3 fixed bottom-7 right-2 bg-green-500 px-5 py-3 text-white'><RiChatNewLine size={25} onClick={showForm} />post</span>
             {/* <span style={{cursor: 'pointer', borderRadius: '50%'}} className='text-xs fixed bottom-5 right-4 bg-purple-500 px-5 py-3 text-white'><RiArrowUpLine size={20} onClick={showForm} />top</span> */}
             {formActive && <TwitForm error={error} showForm={showForm} sync={sync} setSync={setSync}/>}
             
@@ -404,7 +404,7 @@ export const Twit = (props) => {
         </div>}
         <span>
             {/* {imageUrl && <img style={{width: "100%"}} src={imageUrl} onClick={() => handleShow()} alt='imgurl' className='rounded max-h-72 cursor-pointer' />} */}
-            {imageUrl && <img style={{width: "100%", maxHeight: '15em'}} src={imageUrl} alt='imgurl' className='rounded max-h-72 cursor-pointer' />}
+            {imageUrl && <img style={{width: "100%", maxHeight: '18em'}} src={imageUrl} alt='imgurl' className='rounded max-h-72 cursor-pointer' />}
         </span> 
         <Image show={show} handleShow={handleShow} sourceData={sourceData} />
         {/* likes and comments count section */}
