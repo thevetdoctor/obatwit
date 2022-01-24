@@ -29,6 +29,15 @@ module.exports = {
       imageUrl: {
         type: Sequelize.STRING,
       },
+      bio: {
+        type: Sequelize.STRING,
+      },
+      location: {
+        type: Sequelize.STRING,
+      },
+      mobile: {
+        type: Sequelize.STRING,
+      },
       verified: {
         type: Sequelize.BOOLEAN,
         defaultValue: false

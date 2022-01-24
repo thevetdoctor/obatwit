@@ -82,13 +82,13 @@ exports.logIn = async(req, res) => {
 exports.getUsers = async(req, res) => {
       try {
             const users = await Users.findAll({
-                attributes: ['id', 'username', 'email', 'imageUrl', 'createdAt'],
+                attributes: ['id', 'username', 'email', 'imageUrl', 'createdAt', 'bio', 'location', 'mobile'],
                 include: [
                     {model: Users, as: 'followers',
-                    attributes: ['id', 'username', 'email', 'imageUrl'],
+                    attributes: ['id', 'username', 'email', 'imageUrl', 'bio', 'location', 'mobile'],
                     },
                     {model: Users, as: 'following',
-                    attributes: ['id', 'username', 'email', 'imageUrl'],
+                    attributes: ['id', 'username', 'email', 'imageUrl', 'bio', 'location', 'mobile'],
                     }
                   ]
             });
@@ -105,13 +105,13 @@ exports.getUserProfile = async(req, res) => {
                 where: { 
                     username 
                 },
-                attributes: ['id', 'username', 'email', 'imageUrl', 'createdAt'],
+                attributes: ['id', 'username', 'email', 'imageUrl', 'createdAt', 'bio', 'location', 'mobile'],
                 include: [
                     {model: Users, as: 'followers',
-                    attributes: ['id', 'username', 'email', 'imageUrl'],
+                    attributes: ['id', 'username', 'email', 'imageUrl', 'bio', 'location', 'mobile'],
                     },
                     {model: Users, as: 'following',
-                    attributes: ['id', 'username', 'email', 'imageUrl'],
+                    attributes: ['id', 'username', 'email', 'imageUrl', 'bio', 'location', 'mobile'],
                     }
                   ]
             });
@@ -168,6 +168,34 @@ exports.getAllUserEmails = async(req, res) => {
             });
             const emails = users.map(x => x.email);
             response(res, 200, emails, null, 'All user emails');
+        }catch(error) {
+            response(res, 500, null, error.message, 'Error in verifying user accounts');
+        }
+}; 
+
+exports.updateUserInfo = async(req, res) => {
+    let { userId, bio, location, mobile } = req.body;
+
+    try {
+        if(!(bio || location || mobile)) return response(res, 400, null, 'Please supply missing input(s)');
+        const users = await Users.findByPk(userId);
+        if(!users) response(res, 400, null, null, 'User not found');
+            await Users.update({bio, location, mobile}, {where: {id: userId}});
+            const user = await Users.findOne({
+                where: {
+                    id: userId
+                },
+                attributes: ['id', 'username', 'email', 'imageUrl', 'createdAt', 'bio', 'location', 'mobile'],
+                include: [
+                    {model: Users, as: 'followers',
+                    attributes: ['id', 'username', 'email', 'imageUrl', 'bio', 'location', 'mobile'],
+                    },
+                    {model: Users, as: 'following',
+                    attributes: ['id', 'username', 'email', 'imageUrl', 'bio', 'location', 'mobile'],
+                    }
+                  ]
+            })
+            response(res, 200, user, null, 'User information updated successfully');
         }catch(error) {
             response(res, 500, null, error.message, 'Error in verifying user accounts');
         }

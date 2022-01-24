@@ -41,6 +41,15 @@ module.exports = (sequelize, DataTypes) => {
     imageUrl: {
       type: DataTypes.STRING,
     },
+    bio: {
+      type: DataTypes.STRING,
+    },
+    location: {
+      type: DataTypes.STRING,
+    },
+    mobile: {
+      type: DataTypes.STRING,
+    },
     verified: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
