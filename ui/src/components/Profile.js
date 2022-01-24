@@ -254,27 +254,31 @@ export default function Profile() {
 
 
 const UserProfile = ({userData, email, apiCallHook}) => {
-    const [editForm, setEditForm] = useState(false);
-    const [lbio, setBio] = useState('');
-    const [llocation, setLocation] = useState('');
-    const [lmobile, setMobile] = useState('');
+    const {name, bio, location, mobile, dob} = userData;
 
-    // console.log(userData);
-    const {bio, location, mobile} = userData;
-    // const {username} = userData;
+    const [editForm, setEditForm] = useState(false);
+    const [lname, setName] = useState(name);
+    const [lbio, setBio] = useState(bio);
+    const [llocation, setLocation] = useState(location);
+    const [ldob, setDob] = useState(dob);
+    const [lmobile, setMobile] = useState(mobile);
 
     const editProfile = () => {
         setEditForm(!editForm);
         if(editForm) {
-            apiCallHook('PATCH', `${baseUrl}/auth/update`, {bio: lbio, location: llocation, lmobile: mobile});
+            apiCallHook('PATCH', `${baseUrl}/auth/update`, {name: lname, bio: lbio, location: llocation, dob: ldob, mobile: lmobile});
         }
     }
 
     const handleProfileInfo = (e) => {
-        if(e.target.name === 'bio') {
+        if(e.target.name === 'name') {
+            setName(e.target.value);
+        } else if(e.target.name === 'bio') {
             setBio(e.target.value);
         } else if(e.target.name === 'location') {
             setLocation(e.target.value);
+        } else if(e.target.name === 'date-of-birth'){
+            setDob(e.target.value);
         } else {
             setMobile(e.target.value);
         }
@@ -282,16 +286,31 @@ const UserProfile = ({userData, email, apiCallHook}) => {
 
     return (
         <div className='text-md border border-t-1 shadow-md rounded mt-2'>
-        {(email === userData?.email) &&
         <div className='flex mt-2 justify-between'>
             <span className='ml-2 underline'>Profile Information</span>
-            {!editForm && <span className=' flex cursor-pointer text-black p-2 rounded-full justify-items-end' onClick={() => editProfile()}> 
-                <GrEdit size={18} /> <span className='text-sm ml-1'>Edit</span>
-            </span>}
-            {editForm && <span className='flex cursor-pointer text-black p-2 rounded-full' onClick={() => editProfile()}> 
-                <GrUploadOption size={18} /><span className='text-sm ml-1'>Update</span>
-            </span>}
-        </div>}
+            {(email === userData?.email) &&
+            <>
+                {!editForm && <span className=' flex cursor-pointer text-black p-2 rounded-full justify-items-end' onClick={() => editProfile()}> 
+                    <GrEdit size={18} /> <span className='text-sm ml-1'>Edit</span>
+                </span>}
+                {editForm && <span className='flex cursor-pointer text-black p-2 rounded-full' onClick={() => editProfile()}> 
+                    <GrUploadOption size={18} /><span className='text-sm ml-1'>Update</span>
+                </span>}
+            </>
+            }
+        </div>
+        <label htmlFor="Name" className='px-2 font-bold'> Name</label><br />
+        {editForm && <input
+          type="text"
+          name="name"
+          value={lname ? lname : name}
+          style={{width: '16em'}}
+          onChange={handleProfileInfo}
+          placeholder="Your name"
+          className='p-1 my-1 rounded'
+          />}
+        {!editForm && <div className='px-2'>{lname ? lname : name ? name : 'Not available'}</div>}
+          <br />
         <label htmlFor="Bio" className='px-2 font-bold'>Bio</label><br />
         {editForm && <textarea
           type="textarea"
@@ -316,7 +335,19 @@ const UserProfile = ({userData, email, apiCallHook}) => {
           placeholder="Share your location"
           className='p-1 my-1 rounded'
           />}
-        {!editForm && <div className='px-2'>{llocation ? llocation : location? location : 'Not available'}</div>}
+        {!editForm && <div className='px-2'>{llocation ? llocation : location ? location : 'Not available'}</div>}
+          <br />
+          <label htmlFor="Date of Birth" className='px-2 font-bold'> Date of Birth</label><br />
+        {editForm && <input
+          type="date"
+          name="date-of-birth"
+          value={ldob ? ldob : dob}
+          style={{width: '16em'}}
+          onChange={handleProfileInfo}
+          placeholder="Date of Birth"
+          className='p-1 my-1 rounded'
+          />}
+        {!editForm && <div className='px-2'>{ldob ? ldob : dob ? dob : 'Not available'}</div>}
           <br />
         <label htmlFor="Phone Number" className='px-2 font-bold'> Phone Number</label><br />
         {editForm && <input

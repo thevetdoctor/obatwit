@@ -164,12 +164,12 @@ useEffect(() => {
         setTimeout(() => {
             const hash = localStorage.getItem('hash');
             let id = '';
-            if(hash) {
-                id = hash.replace('#', '');
-                console.log('hash found', hash)
-            } else {
+            // if(hash) {
+            //     id = hash.replace('#', '');
+            //     console.log('hash found', hash)
+            // } else {
                 id = window.location.hash.replace('#', '');
-            }
+            // }
             const element = document.getElementById(id);
             if (element) element.scrollIntoView();
         }, 0);
