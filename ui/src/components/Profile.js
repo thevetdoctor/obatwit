@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from "react-router-dom";
-import { BsPersonFill } from 'react-icons/bs';
+import { BsPersonFill, BsToggleOff, BsToggleOn } from 'react-icons/bs';
 import { IoIosArrowBack, IoIosPeople, IoMdCloudUpload } from 'react-icons/io';
 import { GrEdit, GrUploadOption } from 'react-icons/gr';
 import Moment from 'react-moment';
@@ -258,25 +258,35 @@ export default function Profile() {
 
 
 const UserProfile = ({userData, email, apiCallHook}) => {
-    const {name, bio, location, mobile, dob} = userData;
+    const {name, username, bio, location, mobile, dob} = userData;
 
     const [editForm, setEditForm] = useState(false);
     const [lname, setName] = useState(name);
+    const [lusername, setUserName] = useState(username);
     const [lbio, setBio] = useState(bio);
     const [llocation, setLocation] = useState(location);
     const [ldob, setDob] = useState(dob);
     const [lmobile, setMobile] = useState(mobile);
 
+    const [nameHidden, setNameHidden] = useState(false);
+    const [usernameHidden, setUsernameHidden] = useState(false);
+    const [bioHidden, setBioHidden] = useState(false);
+    const [locationHidden, setLocationHidden] = useState(false);
+    const [dobHidden, setDobHidden] = useState(false);
+    const [mobileHidden, setMobileHidden] = useState(false);
+
     const editProfile = () => {
         setEditForm(!editForm);
         if(editForm) {
-            apiCallHook('PATCH', `${baseUrl}/auth/update`, {name: lname, bio: lbio, location: llocation, dob: ldob, mobile: lmobile});
+            apiCallHook('PATCH', `${baseUrl}/auth/update`, {name: lname, username: lusername, bio: lbio, location: llocation, dob: ldob, mobile: lmobile});
         }
     }
 
     const handleProfileInfo = (e) => {
         if(e.target.name === 'name') {
             setName(e.target.value);
+        } else if(e.target.name === 'username') {
+            setUserName(e.target.value);
         } else if(e.target.name === 'bio') {
             setBio(e.target.value);
         } else if(e.target.name === 'location') {
@@ -303,68 +313,141 @@ const UserProfile = ({userData, email, apiCallHook}) => {
             </>
             }
         </div>
-        <label htmlFor="Name" className='px-2 font-bold'> Name</label><br />
-        {editForm && <input
-          type="text"
-          name="name"
-          value={lname ? lname : name}
-          style={{width: '16em'}}
-          onChange={handleProfileInfo}
-          placeholder="Your name"
-          className='p-1 my-1 rounded'
-          />}
-        {!editForm && <div className='px-2'>{lname ? lname : name ? name : 'Not available'}</div>}
-          <br />
-        <label htmlFor="Bio" className='px-2 font-bold'>Bio</label><br />
-        {editForm && <textarea
-          type="textarea"
-          name="bio"
-          value={lbio ? lbio : bio}
-          rows={4}
-          cols={3}
-          style={{width: '18em', height: '8em'}}
-          onChange={handleProfileInfo} 
-          placeholder="Tell the world briefly about yourself"
-          className='text-sm p-1 my-1 rounded'
-          />}
-        {!editForm && <div className='px-2'>{lbio ? lbio : bio  ? bio : 'Not available'}</div>}
-          <br />
-        <label htmlFor="Location" className='px-2 font-bold'> Location</label><br />
-        {editForm && <input
-          type="text"
-          name="location"
-          value={llocation ? llocation : location}
-          style={{width: '16em'}}
-          onChange={handleProfileInfo}
-          placeholder="Share your location"
-          className='p-1 my-1 rounded'
-          />}
-        {!editForm && <div className='px-2'>{llocation ? llocation : location ? location : 'Not available'}</div>}
-          <br />
-          <label htmlFor="Date of Birth" className='px-2 font-bold'> Date of Birth</label><br />
-        {editForm && <input
-          type="date"
-          name="date-of-birth"
-          value={ldob ? ldob : dob}
-          style={{width: '16em'}}
-          onChange={handleProfileInfo}
-          placeholder="Date of Birth"
-          className='p-1 my-1 rounded'
-          />}
-        {!editForm && <div className='px-2'>{ldob ? ldob : dob ? dob : 'Not available'}</div>}
-          <br />
-        <label htmlFor="Phone Number" className='px-2 font-bold'> Phone Number</label><br />
-        {editForm && <input
-          name="mobile"
-          value={lmobile ? lmobile : mobile}
-          type="tel"
-          pattern="/^[0]\d{10, 12}$/"
-          style={{width: '16em'}}
-          onChange={handleProfileInfo}
-          placeholder="Drop your mobile number "
-          className='p-1 my-1 rounded'
-        />}
-        {!editForm && <div className='px-2'>{lmobile ? lmobile : mobile ? mobile : 'Not available'}</div>}
+        <div className='mb-2'>
+            <div className='flex justify-between'>
+                <label htmlFor="Name" className='px-2 font-bold'> Name</label>
+                {(email === userData?.email) &&
+                <span className='cursor-pointer mr-4'>
+                    {nameHidden ? 
+                    <span onClick={() => setNameHidden(false)}><BsToggleOff size={30} /></span> 
+                    : 
+                    <span onClick={() => setNameHidden(true)}><BsToggleOn size={30} /></span>}
+                </span>}
+            </div>
+            {editForm && <input
+            type="text"
+            name="name"
+            value={lname ? lname : name}
+            style={{width: '16em'}}
+            onChange={handleProfileInfo}
+            placeholder="Your name"
+            className='p-1 my-1 rounded'
+            />}
+            {!editForm && <div className={`${nameHidden && 'hidden'} px-2`}>{lname ? lname : name ? name : 'Not available'}</div>}
+        </div>
+        <div className='mb-2'>
+            <div className='flex justify-between'>
+                <label htmlFor="Username" className='px-2 font-bold'> Username</label>
+                {(email === userData?.email) &&
+                <span className='cursor-pointer mr-4'>
+                    {usernameHidden ? 
+                    <span onClick={() => setUsernameHidden(false)}><BsToggleOff size={30} /></span> 
+                    : 
+                    <span onClick={() => setUsernameHidden(true)}><BsToggleOn size={30} /></span>}
+                </span>}
+            </div>
+            {editForm && <input
+            type="text"
+            name="username"
+            value={lusername ? lusername : username}
+            style={{width: '16em'}}
+            onChange={handleProfileInfo}
+            placeholder="Update your username"
+            className='p-1 my-1 rounded'
+            />}
+            {!editForm && <div className={`${usernameHidden && 'hidden'} px-2`}>{lusername ? lusername : username ? username : 'Not available'}</div>}
+        </div>
+        <div className='mb-2'>
+            <div className='flex justify-between'>
+                <label htmlFor="Bio" className='px-2 font-bold'> Bio</label>
+                {(email === userData?.email) &&
+                <span className='cursor-pointer mr-4'>
+                    {bioHidden ? 
+                    <span onClick={() => setBioHidden(false)}><BsToggleOff size={30} /></span> 
+                    : 
+                    <span onClick={() => setBioHidden(true)}><BsToggleOn size={30} /></span>}
+                </span>}
+            </div>
+            {editForm && <textarea
+            type="textarea"
+            name="bio"
+            value={lbio ? lbio : bio}
+            rows={4}
+            cols={3}
+            style={{width: '18em', height: '8em'}}
+            onChange={handleProfileInfo} 
+            placeholder="Tell the world briefly about yourself"
+            className='text-sm p-1 my-1 rounded'
+            />}
+            {!editForm && <div className={`${bioHidden && 'hidden'} px-2`}>{lbio ? lbio : bio  ? bio : 'Not available'}</div>}
+        </div>
+        <div className='mb-2'>
+            <div className='flex justify-between'>
+                <label htmlFor="Location" className='px-2 font-bold'> Location</label>
+                {(email === userData?.email) &&
+                <span className='cursor-pointer mr-4'>
+                    {locationHidden ? 
+                    <span onClick={() => setLocationHidden(false)}><BsToggleOff size={30} /></span> 
+                    : 
+                    <span onClick={() => setLocationHidden(true)}><BsToggleOn size={30} /></span>}
+                </span>}
+            </div>
+            {editForm && <input
+            type="text"
+            name="location"
+            value={llocation ? llocation : location}
+            style={{width: '16em'}}
+            onChange={handleProfileInfo}
+            placeholder="Share your location"
+            className='p-1 my-1 rounded'
+            />}
+            {!editForm && <div className={`${locationHidden && 'hidden'} px-2`}>{llocation ? llocation : location ? location : 'Not available'}</div>}
+        </div>
+        <div className='mb-2'>
+            <div className='flex justify-between'>
+                <label htmlFor="Date of Birth" className='px-2 font-bold'> Date of Birth</label>
+                {(email === userData?.email) &&
+                <span className='cursor-pointer mr-4'>
+                    {dobHidden ? 
+                    <span onClick={() => setDobHidden(false)}><BsToggleOff size={30} /></span> 
+                    : 
+                    <span onClick={() => setDobHidden(true)}><BsToggleOn size={30} /></span>}
+                </span>}
+            </div>
+            {editForm && <input
+            type="date"
+            name="date-of-birth"
+            value={ldob ? ldob : dob}
+            style={{width: '16em'}}
+            onChange={handleProfileInfo}
+            placeholder="Date of Birth"
+            className='p-1 my-1 rounded'
+            />}
+            {!editForm && <div className={`${dobHidden && 'hidden'} px-2`}>{ldob ? ldob : dob ? dob : 'Not available'}</div>}
+        </div>
+        <div className='mb-2'>
+            <div className='flex justify-between'>
+                <label htmlFor="Phone Number" className='px-2 font-bold'> Phone Number</label>
+                {(email === userData?.email) &&
+                <span className='cursor-pointer mr-4'>
+                    {mobileHidden ? 
+                    <span onClick={() => setMobileHidden(false)}><BsToggleOff size={30} /></span> 
+                    : 
+                    <span onClick={() => setMobileHidden(true)}><BsToggleOn size={30} /></span>}
+                </span>}
+            </div>
+            {editForm && <input
+            name="mobile"
+            value={lmobile ? lmobile : mobile}
+            type="tel"
+            pattern="/^[0]\d{10, 12}$/"
+            style={{width: '16em'}}
+            onChange={handleProfileInfo}
+            placeholder="Drop your mobile number "
+            className='p-1 my-1 rounded'
+            />}
+            {!editForm && <div className={`${mobileHidden && 'hidden'} px-2`}>{lmobile ? lmobile : mobile ? mobile : 'Not available'}</div>}
+        </div>
       </div>
     )
 }
