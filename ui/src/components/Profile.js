@@ -352,6 +352,7 @@ const UserProfile = ({userData, email, apiCallHook}) => {
             value={lusername ? lusername : username}
             style={{width: '16em'}}
             onChange={handleProfileInfo}
+            disabled
             placeholder="Update your username"
             className='p-1 my-1 rounded'
             />}
