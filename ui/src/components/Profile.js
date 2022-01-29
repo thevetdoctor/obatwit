@@ -72,6 +72,10 @@ export default function Profile() {
                     setIsFollowing(checkIsFollowing);
                     setTwitCount(userTwits.length);
 
+                    if(userDataInStore.imageUrl) {
+                        localStorage.setItem('img', userDataInStore.imageUrl);
+                    }
+                    
                     setError('');
                 } else{
                     toast("updated successfully!");
@@ -179,7 +183,7 @@ export default function Profile() {
         <>
             <div className='mb-1 flex justify-between'>
                 <>
-                    <AttachProfileImage imgUrl={userData?.imageUrl} setImgUrl error={error} email={email} userData={userData} />
+                    <AttachProfileImage imgUrl={userData?.imageUrl} error={error} email={email} userData={userData} apiCallHook={apiCallHook} />
                     {/* {userData?.imageUrl ?
                     <span className='flex'>
                         {error ? <span className='flex bg-gray-300 p-3 rounded'>
@@ -365,35 +369,32 @@ const UserProfile = ({userData, email, apiCallHook}) => {
     )
 }
 
-function AttachProfileImage({imgUrl, imageUrl, setImgUrl, error, email, userData}) {
+function AttachProfileImage({imgUrl, error, email, userData, apiCallHook}) {
     
-    const [uploading, setUploading] = useState("");
+    const [limgUrl, setlImgUrl] = useState("");
 
-    console.log(imgUrl, email, userData)
     const handleImage = async(e) => {
-        setUploading("loading");
         const serviceImage = e.target.files[0];
         const data = new FormData();
         const url = "https://api.cloudinary.com/v1_1/thevetdoctor/image/upload";
         data.append("file", serviceImage);
         data.append("upload_preset", "zunt8yrw");
-        // const res = await fetch(url, {
-        //   method: "POST",
-        //   body: data
-        // });
-        // const imgLink = await res.json();
-        // setImgUrl(imgLink.secure_url);
-        // setImgUrl(imgUrl);
-        console.log('imgLink.secure_url');
-        setUploading("done");
+        const res = await fetch(url, {
+          method: "POST",
+          body: data
+        });
+        const imgLink = await res.json();
+        setlImgUrl(imgLink.secure_url);
+        apiCallHook('PATCH', `${baseUrl}/auth/imageurl/update`, {imageUrl: imgLink.secure_url});
       }
+
     return (
         <div className="flex p-1 rounded ml-1">
             <label className={`${(email === userData?.email) && 'cursor-pointer'} -ml-2 -mr-5  flex`}>
-            {imgUrl ?
+            {(limgUrl || imgUrl) ?
                 <>
                 {!error ? 
-                    <img src={imgUrl} alt='avatar' style={{width: '6em', height: '6em', borderRadius: '10%'}} className='rounded -mr-2'
+                    <img src={limgUrl ? limgUrl : imgUrl} alt='avatar' style={{width: '6em', height: '6em', borderRadius: '10%'}} className='rounded -mr-2'
                     />:
                     <span className='flex bg-gray-300 p-3 rounded'>
                         <BsPersonFill size={80} />
