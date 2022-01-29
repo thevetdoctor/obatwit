@@ -31,7 +31,8 @@ export default function Twits() {
     const { twits, users } = useSelector(state => state);
 
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
-    const userId = localStorage.getItem('email') ? localStorage.getItem('userId') : '';
+    const username = localStorage.getItem('username') ? localStorage.getItem('username') : '';
+    const userId = localStorage.getItem('userId') ? localStorage.getItem('userId') : '';
     const img = localStorage.getItem('img') ? localStorage.getItem('img') : '';
     const history = useHistory();
     const token = localStorage.getItem('token');
@@ -192,7 +193,7 @@ return (
                 </p>
                 <div className='py-2 px-2 rounded mb-4 flex justify-between border-3 border shadow-md'>
                     {img !== 'null' ? (
-                        <span className='cursor-pointer'  onClick= {e => history.push(`/${email.split('@')[0]}`)}>
+                        <span className='cursor-pointer'  onClick= {e => history.push(`/${username}`)}>
                             {error ? <BsPersonFill size={25} />:
                             <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
                         </span>) 
