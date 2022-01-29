@@ -179,7 +179,7 @@ export default function Profile() {
         <>
             <div className='mb-1 flex justify-between'>
                 <>
-                    <AttachProfileImage imgUrl={userData?.imageUrl} setImgUrl error={error} />
+                    <AttachProfileImage imgUrl={userData?.imageUrl} setImgUrl error={error} email={email} userData={userData} />
                     {/* {userData?.imageUrl ?
                     <span className='flex'>
                         {error ? <span className='flex bg-gray-300 p-3 rounded'>
@@ -365,11 +365,11 @@ const UserProfile = ({userData, email, apiCallHook}) => {
     )
 }
 
-function AttachProfileImage({imgUrl, imageUrl, setImgUrl, error}) {
+function AttachProfileImage({imgUrl, imageUrl, setImgUrl, error, email, userData}) {
     
     const [uploading, setUploading] = useState("");
 
-    // console.log(imgUrl)
+    console.log(imgUrl, email, userData)
     const handleImage = async(e) => {
         setUploading("loading");
         const serviceImage = e.target.files[0];
@@ -389,7 +389,7 @@ function AttachProfileImage({imgUrl, imageUrl, setImgUrl, error}) {
       }
     return (
         <div className="flex p-1 rounded ml-1">
-            <label className='-ml-2 -mr-5 cursor-pointer flex'>
+            <label className={`${(email === userData?.email) && 'cursor-pointer'} -ml-2 -mr-5  flex`}>
             {imgUrl ?
                 <>
                 {!error ? 
@@ -413,13 +413,15 @@ function AttachProfileImage({imgUrl, imageUrl, setImgUrl, error}) {
             //       width={20} 
             //   />}
             }
+            {(email === userData?.email) &&
+
             <input 
                 type="file"
                 placeholder=""
                 accept="image/*;capture"
                 className="hidden"
                 onChange={e => handleImage(e)}
-            />
+            />}
         </label>
         </div>
     )
