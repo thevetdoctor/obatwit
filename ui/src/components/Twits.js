@@ -186,28 +186,30 @@ return (
             
             {!formActive && 
             <div>
-                <p className='text-center mb-2'>
+                <div className='flex justify-center m-auto -mt-3 p-2 md:w-1/2 flex-col fixed right-0 left-0 bg-white'>
+                    <p className='text-center mb-2 grow'>
                     <span style={{fontFamily: 'Architects Daughter', fontSize: '1.8em'}} className='text-purple-900 font-bold italic'>Buzz<br/>
                     </span> 
                     <span style={{fontSize: '1em'}}> Feel free, express yourself & network </span>
-                </p>
-                <div className='py-2 px-2 rounded mb-4 flex justify-between border-3 border shadow-md'>
-                    {img !== 'null' ? (
-                        <span className='cursor-pointer'  onClick= {e => history.push(`/${username}`)}>
-                            {error ? <BsPersonFill size={25} />:
-                            <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
-                        </span>) 
-                        : <span className='text-left cursor-pointer'><BsPersonFill size={25} onClick={e => history.push(`/${email.split('@')[0]}`)} /></span>}
-                    {users > 0 && <span className='text-left flex cursor-pointer'  onClick= {e => history.push('people')}><IoIosPeople size={30}/><span className='pt-1 pl-1'>{users}</span></span>}
-                    
-                    <span style={{cursor: 'pointer'}} className='text-right' onClick={() => logout()}><Logout />
-                    </span>
+                    </p>
+                    <div className='static py-2 px-2 rounded mb-2 flex justify-between border-3 border shadow-md'>
+                        {img !== 'null' ? (
+                            <span className='cursor-pointer'  onClick= {e => history.push(`/${username}`)}>
+                                {error ? <BsPersonFill size={25} />:
+                                <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
+                            </span>) 
+                            : <span className='text-left cursor-pointer'><BsPersonFill size={25} onClick={e => history.push(`/${email.split('@')[0]}`)} /></span>}
+                        {users > 0 && <span className='text-left flex cursor-pointer'  onClick= {e => history.push('people')}><IoIosPeople size={30}/><span className='pt-1 pl-1'>{users}</span></span>}
+                        
+                        <span style={{cursor: 'pointer'}} className='text-right' onClick={() => logout()}><Logout />
+                        </span>
+                    </div>
+                    {error && <div style={{fontFamily: 'Roboto', backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-1 m-0 rounded border-3 border shadow-md'>Please check your network !</div>}
                 </div>
-                {error && <div style={{fontFamily: 'Roboto', backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 m-1 rounded'>Please check your network !</div>}
 
                 {/* <Bars color="#00BFFF" height={80} width={80} /> */}
                 {twits.length < 1 ? 
-                <div className='flex justify-center items-center pt-8'>
+                <div style={{marginTop: `${error ? '12em' : '9em'}`}} className='flex align-center items-center pt-8'>
                     <Loader 
                     type='Bars'
                     color='#00bfff'
@@ -215,7 +217,7 @@ return (
                     width={80} 
                 />
                 </div>:
-                <div className=''>
+                <div style={{marginTop: `${error ? '12em' : '9em'}`}} className=''>
                 {
                     twits.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((twit, idx) => 
                         <Twit key={idx} twit={twit} email={email} userId={userId} apiCallHook={apiCallHook} baseUrl={baseUrl} frontendUrl={frontendUrl} sync={sync} setSync={setSync} showForm={showForm} formActive={formActive} checkOpenForms={checkOpenForms} error={error} />
@@ -405,7 +407,7 @@ export const Twit = (props) => {
         </div>}
         <span>
             {/* {imageUrl && <img style={{width: "100%"}} src={imageUrl} onClick={() => handleShow()} alt='imgurl' className='rounded max-h-72 cursor-pointer' />} */}
-            {imageUrl && <img style={{width: "100%", maxHeight: '18em'}} src={imageUrl} alt='imgurl' className='rounded max-h-72 cursor-pointer' />}
+            {imageUrl && <img style={{width: "100%"}} src={imageUrl} alt='imgurl' className='rounded max-h-100 cursor-pointer' />}
         </span> 
         <Image show={show} handleShow={handleShow} sourceData={sourceData} />
         {/* likes and comments count section */}

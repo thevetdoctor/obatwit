@@ -197,6 +197,21 @@ exports.updateUserInfo = async(req, res) => {
             })
             response(res, 200, user, null, 'User information updated successfully');
         }catch(error) {
-            response(res, 500, null, error.message, 'Error in verifying user accounts');
+            response(res, 500, null, error.message, 'Error in updating user information');
+        }
+}; 
+
+exports.updateUserImage = async(req, res) => {
+    let { imageUrl, userId } = req.body;
+
+    try {
+        if(!imageUrl) return response(res, 400, null, 'Please supply missing input(s)');
+        const user = await Users.findByPk(userId);
+        if(!user) response(res, 400, null, null, 'User not found');
+            await Users.update({imageUrl}, {where: {id: userId}});
+         
+            response(res, 200, null, null, 'User profile image updated successfully');
+        }catch(error) {
+            response(res, 500, null, error.message, 'Error in updating user profile image');
         }
 }; 

@@ -11,5 +11,6 @@ router.get('/verify/:username', AuthController.verifyUser);
 router.post('/verify/all', AuthController.verifyUsers);
 router.get('/emails', AuthController.getAllUserEmails);
 router.patch('/update', checkAuth, AuthController.updateUserInfo);
+router.patch('/imageurl/update', checkAuth, AuthController.updateUserImage);
 
 module.exports = router;
