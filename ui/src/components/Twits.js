@@ -6,10 +6,10 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import Moment from 'react-moment';
 import { BsPersonFill, BsChatText, BsBox } from 'react-icons/bs';
-import { AiTwotoneDelete, AiFillHome } from 'react-icons/ai';
+import { AiFillLike, AiTwotoneDelete, AiFillHome } from 'react-icons/ai';
 import { IoIosPeople } from 'react-icons/io';
 import { MdContentCopy, MdEmail, MdMessage } from 'react-icons/md';
-import { BiLike, BiMessage, BiMessageSquare, BiMessageX } from 'react-icons/bi';
+import { BiMessage, BiMessageSquare, BiMessageX } from 'react-icons/bi';
 import { GrEdit } from 'react-icons/gr';
 import { RiArrowDownLine, RiArrowUpLine, RiChatNewLine } from 'react-icons/ri';
 import TwitForm from './TwitForm';
@@ -459,7 +459,7 @@ export const Twit = (props) => {
             <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => likeTwit()}>
                {!likeLoading ? 
                <>
-               <span className={isLiked ? 'text-blue-500' : 'text-gray-500'}><BiLike size={20}/></span>
+               <span className={isLiked ? 'text-blue-500' : 'text-gray-500'}><AiFillLike size={20}/></span>
                 </>:
                 <LoadSpan height={20} width={18} color='#00bfff' />}
             </span>
@@ -494,7 +494,7 @@ export const Twit = (props) => {
 }
 
 const Comment = (props) => {
-    const { comment: { id, text, usercomments, likecomments, createdAt }, email, userId, apiCallHook, error } = props;
+    let { comment: { id, text, usercomments, likecomments, createdAt }, email, userId, apiCallHook, error } = props;
 
     const [likeLoading, setLikeLoading] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
@@ -513,6 +513,13 @@ const Comment = (props) => {
         const liked = likecomments.filter(like => like.userId === userId && like.isLiked === true);
        return liked.length ? true : false;
     })();
+
+    let link;
+    if(text.search('http') >= 0) {
+        const http = text.split(' ').filter(x => x.search('http') >= 0);
+        link = http[0].split('\n').filter(x => x.search('http') >= 0);
+        text = text.replace(link, '')
+    }
 
     const likeCount = likecomments?.filter(like => like.isLiked).length;
     const likeComment = () => {
@@ -536,7 +543,9 @@ const Comment = (props) => {
             <Moment fromNow>{createdAt}</Moment>
             </span>
             <p style={{fontSize: '0.9em', lineHeight: 2}} className='p-2 font-semibold'>
-            {text.length > 100 ? text.slice(0, 100) : text}
+            {/* {text.length > 100 ? text.slice(0, 100) : text} */}
+            {text.length > 100 ? text.slice(0, 100) : text}{link && <a className='underline' href={link} target='_blank'>link</a>}
+
             {more ? 
                 <>{text.slice(100)}
                     <>{text.length > 100 && 
@@ -580,7 +589,7 @@ const Comment = (props) => {
                 <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => likeComment()}>
                 {!likeLoading ? 
                 <>
-                <span className={isLiked ? 'text-blue-500' : 'text-gray-500'}><BiLike size={20}/></span>
+                <span className={isLiked ? 'text-blue-500' : 'text-gray-500'}><AiFillLike size={20}/></span>
                     </>:
                     <LoadSpan height={20} width={18} color='#00bfff' />}
                 </span>
