@@ -38,6 +38,12 @@ export default function reducer(state= initialState, action) {
               ...state,
               users: action.data
             }          
+        case actions.setFormActive.type:
+
+            return {
+              ...state,
+              formActive: action.data
+            }          
         case actions.setNewsType.type:
             const newsByType = state.newsData.filter(type => (type.type === action.data));
 
@@ -92,5 +98,6 @@ export const initialState = {
     searchData: [],
     usersData: [],
     searchQuery: '',
-    networkStatus: false
+    networkStatus: false,
+    formActive: false
 };

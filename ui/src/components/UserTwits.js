@@ -108,7 +108,7 @@ export default function UserTwits() {
 
     return (
         <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-2 mb-4 md:w-1/2 m-auto'>
-        <p className='flex justify-between mb-6 border-3 border shadow-md p-2'>
+        <p className='flex justify-between mb-6 border-3 border shadow-md p-2 -mt-2 -mx-2 '>
         <span className='cursor-pointer text-left' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
             <span className='text-xl font-bold self-center'>Posts</span>
             <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/twits")}><AiFillHome size={28} /></span>

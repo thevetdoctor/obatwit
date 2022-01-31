@@ -165,7 +165,7 @@ useEffect(() => {
             />}
             {/* <LinkedinAuth /> */} 
             <div className='mt-7 mb-6 text-xs'>
-                    {signup ? 'Already signed up ?' : 'Not registered ?' }
+                    {signup ? 'Already registered ?' : 'Not registered ?' }
                     <span className='hover:bg-purple-400 bg-purple-500 ml-2 p-1 rounded text-white font-bold cursor-pointer' onClick={handleSignupMode}> 
                         {signup ? ' Switch to Login' : ' Switch to Signup!' }
                     </span>

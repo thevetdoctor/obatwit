@@ -5,11 +5,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import Moment from 'react-moment';
-import { BsPersonFill, BsChatText } from 'react-icons/bs';
+import { BsPersonFill, BsChatText, BsBox } from 'react-icons/bs';
 import { AiTwotoneDelete, AiFillHome } from 'react-icons/ai';
 import { IoIosPeople } from 'react-icons/io';
-import { MdContentCopy } from 'react-icons/md';
-import { BiLike } from 'react-icons/bi';
+import { MdContentCopy, MdEmail, MdMessage } from 'react-icons/md';
+import { BiLike, BiMessage, BiMessageSquare, BiMessageX } from 'react-icons/bi';
 import { GrEdit } from 'react-icons/gr';
 import { RiArrowDownLine, RiArrowUpLine, RiChatNewLine } from 'react-icons/ri';
 import TwitForm from './TwitForm';
@@ -23,12 +23,12 @@ import { useSelector } from 'react-redux';
 
 export default function Twits() {
     const [error, setError] = useState('');
-    const [formActive, setFormActive] = useState(false);
+    // const [formActive, setFormActive] = useState(false);
     const [sync, setSync] = useState(false);
 
     const {getState, dispatch} = store;
     const state = getState();
-    const { twits, users } = useSelector(state => state);
+    const { twits, users, formActive } = useSelector(state => state);
 
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
     const username = localStorage.getItem('username') ? localStorage.getItem('username') : '';
@@ -40,7 +40,11 @@ export default function Twits() {
     const apiUrl = `${baseUrl}/twits`;
 
     const showForm = () => {
-        setFormActive(!formActive);
+        dispatch({
+            type: 'SET_FORM_ACTIVE',
+            data: !formActive
+        });
+        // setFormActive(!formActive);
     }
 
     const logout = () => {
@@ -180,52 +184,75 @@ useEffect(() => {
 
 return (
     <div style={{fontFamily: 'Roboto', fontWeight: '600', height: '90vh'}} className='mb-5 p-3 m-auto flex justify-center md:w-1/2'>
-            <span style={{cursor: 'pointer', borderRadius: '50%'}} className='text-xs mb-3 fixed bottom-7 right-2 bg-green-500 px-5 py-3 text-white'><RiChatNewLine size={25} onClick={showForm} />post</span>
-            {/* <span style={{cursor: 'pointer', borderRadius: '50%'}} className='text-xs fixed bottom-5 right-4 bg-purple-500 px-5 py-3 text-white'><RiArrowUpLine size={20} onClick={showForm} />top</span> */}
-            {formActive && <TwitForm error={error} showForm={showForm} sync={sync} setSync={setSync}/>}
-            
-            {!formActive && 
-            <div>
-                <div className='flex justify-center m-auto -mt-3 p-2 md:w-1/2 flex-col fixed right-0 left-0 bg-white'>
-                    <p className='text-center mb-2 grow'>
-                    <span style={{fontFamily: 'Architects Daughter', fontSize: '1.8em'}} className='text-purple-900 font-bold italic'>Buzz<br/>
-                    </span> 
-                    <span style={{fontSize: '1em'}}> Feel free, express yourself & network </span>
-                    </p>
-                    <div className='static py-2 px-2 rounded mb-2 flex justify-between border-3 border shadow-md'>
-                        {img !== 'null' ? (
-                            <span className='cursor-pointer'  onClick= {e => history.push(`/${username}`)}>
-                                {error ? <BsPersonFill size={25} />:
-                                <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
-                            </span>) 
-                            : <span className='text-left cursor-pointer'><BsPersonFill size={25} onClick={e => history.push(`/${email.split('@')[0]}`)} /></span>}
-                        {users > 0 && <span className='text-left flex cursor-pointer'  onClick= {e => history.push('people')}><IoIosPeople size={30}/><span className='pt-1 pl-1'>{users}</span></span>}
-                        
-                        <span style={{cursor: 'pointer'}} className='text-right' onClick={() => logout()}><Logout />
-                        </span>
-                    </div>
-                    {error && <div style={{fontFamily: 'Roboto', backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-1 m-0 rounded border-3 border shadow-md'>Please check your network !</div>}
+        <span style={{cursor: 'pointer', borderRadius: '50%'}} className='text-xs mb-3 fixed bottom-9 right-2 bg-green-500 px-5 py-3 text-white'><RiChatNewLine size={25} onClick={showForm} />post</span>
+        {/* <span style={{cursor: 'pointer', borderRadius: '50%'}} className='text-xs fixed bottom-5 right-4 bg-purple-500 px-5 py-3 text-white'><RiArrowUpLine size={20} onClick={showForm} />top</span> */}
+        {formActive && <TwitForm error={error} showForm={showForm} sync={sync} setSync={setSync}/>}
+        
+        {!formActive && 
+        <div>
+            <div className='flex justify-center m-auto -mt-3 p-2 md:w-1/2 flex-col'>
+                <p style={{marginTop: '3em'}} className='text-center mb-2 grow'>
+                <span style={{fontFamily: 'Architects Daughter', fontSize: '1.8em'}} className='text-purple-900 font-bold italic'>Buzz<br/>
+                </span> 
+                <span style={{fontSize: '1em'}}> Feel free, express yourself & network </span>
+                </p>
+
+                <div style={{top: '0em', margin: 'auto'}} className='p-2 rounded mb-2 flex justify-between border-3 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
+                    {img !== 'null' ? (
+                        <span className='cursor-pointer'  onClick= {e => history.push(`/${username}`)}>
+                            {error ? <BsPersonFill size={25} />:
+                            <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
+                        </span>) 
+                        : <span className='text-left cursor-pointer'><BsPersonFill size={25} onClick={e => history.push(`/${username}`)} /></span>}
+                    <span className='text-left flex cursor-pointer'  onClick= {e => history.push('people')}><IoIosPeople size={30}/><span className='pt-1 pl-1'>{users > 0 && users}</span></span>
+                    
+                    <span style={{cursor: 'pointer'}} className='text-right' onClick={() => logout()}><Logout />
+                    </span>
                 </div>
 
-                {/* <Bars color="#00BFFF" height={80} width={80} /> */}
-                {twits.length < 1 ? 
-                <div style={{marginTop: `${error ? '12em' : '9em'}`}} className='flex align-center items-center pt-8'>
-                    <Loader 
-                    type='Bars'
-                    color='#00bfff'
-                    height={80} 
-                    width={80} 
-                />
-                </div>:
-                <div style={{marginTop: `${error ? '12em' : '9em'}`}} className=''>
-                {
-                    twits.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((twit, idx) => 
-                        <Twit key={idx} twit={twit} email={email} userId={userId} apiCallHook={apiCallHook} baseUrl={baseUrl} frontendUrl={frontendUrl} sync={sync} setSync={setSync} showForm={showForm} formActive={formActive} checkOpenForms={checkOpenForms} error={error} />
-                    )
-                }
-                </div>}
+                <div style={{bottom: '0em', margin: 'auto'}} className='p-2 rounded flex justify-between border-3 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
+                    <span className='cursor-pointer' onClick={() => history.push("/twits")}>
+                        <AiFillHome size={25} color='black' />
+                    </span>
+                    <span className='cursor-pointer' onClick={e => history.push(`/${username}`)}>
+                        {(img !== 'null' || error) ? 
+                            <BsPersonFill size={25} color='gray' />:
+                            <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />
+                        }
+                    </span>
+                    <span className='cursor-pointer' onClick= {e => history.push('people')}>
+                        <IoIosPeople size={30} color='gray'/>
+                    </span>
+                    <span className='text-xs cursor-pointer'>
+                        <RiChatNewLine size={25} color='gray' onClick={showForm} />
+                    </span>
+
+                    <span className='cursor-pointer'  onClick= {e => history.push(`/chats/${username}`)}><MdEmail size={25} color='gray' />
+                    </span>
+                </div>
+
+                {error && <div style={{fontFamily: 'Roboto', backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-1 m-0 rounded border-3 -mx-2 border shadow-md md:w-100'>Please check your network !</div>}
+            </div>
+
+            {/* <Bars color="#00BFFF" height={80} width={80} /> */}
+            {twits.length < 1 ? 
+            <div className='flex justify-center items-center pt-8 m-auto'>
+                <Loader 
+                type='Bars'
+                color='#00bfff'
+                height={80} 
+                width={80} 
+            />
+            </div>:
+            <div className=''>
+            {
+                twits.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((twit, idx) => 
+                    <Twit key={idx} twit={twit} email={email} userId={userId} apiCallHook={apiCallHook} baseUrl={baseUrl} frontendUrl={frontendUrl} sync={sync} setSync={setSync} showForm={showForm} formActive={formActive} checkOpenForms={checkOpenForms} error={error} />
+                )
+            }
             </div>}
-        </div>
+        </div>}
+    </div>
     )
 }
 
@@ -422,9 +449,9 @@ export const Twit = (props) => {
             <span className='mx-1 flex cursor-pointer'  onClick= {e => history.push(`/${twits.username}`)}>
                 {twits.imageUrl ? (
                 <span className='mr-1'>
-                    {error ? <BsPersonFill size={18}/>:
+                    {(error || twits.imageUrl === 'null') ? <BsPersonFill size={18}/>:
                     <img src={twits.imageUrl} alt='Profile' style={{width: '20px', height: '20px', borderRadius: '50%'}} />}
-                </span>)
+                </span>) 
                 : <BsPersonFill size={18}/>}
                 {email === twits.email ? 'Me' : twits.username}
             </span>

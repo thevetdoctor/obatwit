@@ -14,6 +14,8 @@ import store from '../redux/store';
 import { useSelector } from 'react-redux';
 import { AiFillHome } from 'react-icons/ai';
 import Loader from 'react-loader-spinner';
+import { RiChatNewLine } from 'react-icons/ri';
+import { MdEmail } from 'react-icons/md';
 
 export default function People() {
     const [error, setError] = useState('');
@@ -32,9 +34,11 @@ export default function People() {
 
     const {getState, dispatch} = store;
     const state = getState();
-    const { twits, users, peopleData, searchData, networkStatus } = useSelector(state => state);
+    const { twits, users, peopleData, searchData, networkStatus, formActive } = useSelector(state => state);
 
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
+    const username = localStorage.getItem('username') ? localStorage.getItem('username') : '';    
+    const img = localStorage.getItem('img') ? localStorage.getItem('img') : '';    
     const token = localStorage.getItem('token');
 
     const handleChange = (e) => {
@@ -42,6 +46,13 @@ export default function People() {
         const value = target.value;
         setSearchQuery(value);
       
+    }
+
+    const showForm = () => {
+        dispatch({
+            type: 'SET_FORM_ACTIVE',
+            data: !formActive
+        });
     }
 
     const handleSearch = () => {
@@ -132,17 +143,40 @@ export default function People() {
     }, [searchQuery]);
     return (
         <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-2 mb-4 m-auto md:w-1/2'>
-        <p className='flex justify-between p-2 mb-6 border-3 border shadow-md'>
+        <div className='flex justify-between p-2 mb-2 border-3 border shadow-md -mt-2 -mx-2 fixed right-0 left-0'>
             <span className='cursor-pointer text-left' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
             {/* <span className='text-left'><IoIosPeople size={25} /></span> */}
             <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>People</span>
             <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/twits")}><AiFillHome size={28} /></span>
-        </p>
-        {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 m-1 rounded'>Please check your network !</div>}
-        <span className='text-sm mt-3 mb-5'>
-        </span>
+        </div>
+
+        <div style={{bottom: '0em', margin: 'auto'}} className='p-2 rounded flex justify-between border-3 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
+            <span className='cursor-pointer' onClick={() => history.push("/twits")}>
+                <AiFillHome size={25} color='gray' />
+            </span>
+            <span className='cursor-pointer' onClick={e => history.push(`/${username}`)}>
+                {(img !== 'null' || error) ? 
+                    <BsPersonFill size={25} color='gray' />:
+                    <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />
+                }
+            </span>
+            <span className='cursor-pointer' onClick= {e => history.push('people')}>
+                <IoIosPeople size={30} color='black'/>
+            </span>
+            <span className='text-xs cursor-pointer'>
+                <RiChatNewLine size={25} color='gray' onClick={showForm} />
+            </span>
+
+            <span className='cursor-pointer'  onClick= {e => history.push(`/chats/${username}`)}><MdEmail size={25} color='gray' />
+            </span>
+        </div>
+
+
+        {error && <div style={{backgroundColor: 'white', fontWeight: 'bold', marginTop: '2.5em'}} className='text-red-500 text-center py-1 -mb-9 m-1 rounded'>Please check your network !</div>}
+        {/* <span className='text-sm mt-3 mb-2'>
+        </span> */}
         {!peopleData.length > 0 ? 
-            <div className='flex justify-center items-center pt-8'>
+            <div className='flex mt-9 justify-center items-center pt-8'>
                 <Loader 
                 type='Bars'
                 color='#00bfff'
@@ -151,7 +185,7 @@ export default function People() {
             />
             </div>:
             <>
-            <TopSearch searchQuery={searchQuery} handleChange={handleChange} setSearchQuery={setSearchQuery}/>
+            <TopSearch searchQuery={searchQuery} handleChange={handleChange} setSearchQuery={setSearchQuery} error={error} />
             <div className='flex flex-col text-md'>
                 {searchData.sort((a, b) => a.email.localeCompare(b.email)).map((person, idx) => (
                     <span key={idx} 

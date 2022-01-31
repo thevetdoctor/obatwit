@@ -28,7 +28,7 @@ export default function GoogleAuth(props) {
         <div>
             <GoogleLogin 
                 clientId={clientId}
-                buttonText={signup ? 'Signup with Google' : 'Login with Google'}
+                buttonText={'Use Google'}
                 onSuccess={onSuccess}
                 onFailure={onFailure}
                 // isSignedIn={true}
