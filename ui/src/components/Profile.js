@@ -20,6 +20,7 @@ import { RiChatNewLine } from 'react-icons/ri';
 
 export default function Profile() {
     const [error, setError] = useState('');
+    const [profileImg, setProfileImg] = useState('');
     const [ userData, setUserData ] = useState({});
     const [ isFollower, setIsFollower ] = useState(false);
     const [ isFollowing, setIsFollowing ] = useState(false);
@@ -77,7 +78,8 @@ export default function Profile() {
                     setTwitCount(userTwits.length);
 
                     if(userDataInStore.imageUrl) {
-                        localStorage.setItem('img', userDataInStore.imageUrl);
+                        localStorage.setItem('profileImg', userDataInStore.imageUrl);
+                        setProfileImg(userDataInStore.imageUrl);
                     }
                     
                     setError('');
@@ -187,9 +189,9 @@ export default function Profile() {
                         <AiFillHome size={25} color='gray' />
                     </span>
                     <span className='cursor-pointer border-t-2 pt-1 border-black' onClick={e => history.push(`/${username}`)}>
-                        {(img !== 'null' || error) ? 
+                        {(profileImg !== 'null' || error) ? 
                             <BsPersonFill size={25} color='black' />:
-                            <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />
+                            <img src={profileImg} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />
                         }
                     </span>
                     <span className='cursor-pointer pt-1' onClick= {e => history.push('people')}>

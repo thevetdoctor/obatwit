@@ -171,7 +171,7 @@ useEffect(() => {
             let id = '';
             // if(hash) {
             //     id = hash.replace('#', '');
-            //     console.log('hash found', hash)
+                // console.log('hash found', hash)
             // } else {
                 id = window.location.hash.replace('#', '');
             // }
@@ -180,7 +180,7 @@ useEffect(() => {
         }, 0);
     }
     return () => {}
-}, []);
+}, [twits]);
 
 return (
     <div style={{fontFamily: 'Roboto', fontWeight: '600', height: '90vh'}} className='mb-5 p-3 m-auto flex justify-center md:w-1/2'>
