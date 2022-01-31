@@ -223,7 +223,7 @@ return (
                     <span className='cursor-pointer' onClick= {e => history.push('people')}>
                         <IoIosPeople size={30} color='gray'/>
                     </span>
-                    <span className='text-xs cursor-pointer'>
+                    <span className='cursor-pointer'>
                         <RiChatNewLine size={25} color='gray' onClick={showForm} />
                     </span>
 
@@ -231,7 +231,7 @@ return (
                     </span>
                 </div>
 
-                {error && <div style={{fontFamily: 'Roboto', backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-1 m-0 rounded border-3 -mx-2 border shadow-md md:w-100'>Please check your network !</div>}
+                {error && <div style={{fontFamily: 'Roboto', backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-1 m-0 rounded border-3 -mx-2 md:w-300'>Please check your network !</div>}
             </div>
 
             {/* <Bars color="#00BFFF" height={80} width={80} /> */}

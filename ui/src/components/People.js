@@ -143,7 +143,7 @@ export default function People() {
     }, [searchQuery]);
     return (
         <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-2 mb-4 m-auto md:w-1/2'>
-        <div className='flex justify-between p-2 mb-2 border-3 border shadow-md -mt-2 -mx-2 fixed right-0 left-0'>
+        <div style={{margin: 'auto', top: '0em'}} className='bg-white flex justify-between p-2 mb-2 border-3 border shadow-md -mt-2 -mx-2 fixed right-0 left-0 md:w-1/2'>
             <span className='cursor-pointer text-left' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
             {/* <span className='text-left'><IoIosPeople size={25} /></span> */}
             <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>People</span>
@@ -163,7 +163,7 @@ export default function People() {
             <span className='cursor-pointer' onClick= {e => history.push('people')}>
                 <IoIosPeople size={30} color='black'/>
             </span>
-            <span className='text-xs cursor-pointer'>
+            <span className='cursor-pointer'>
                 <RiChatNewLine size={25} color='gray' onClick={showForm} />
             </span>
 
