@@ -80,10 +80,10 @@ function registerValidSW(swUrl, config) {
 
       console.log('Registering Push Manager');
   
-      const subscription = registration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(publicVapid)
-      });
+      // const subscription = registration.pushManager.subscribe({
+      //     userVisibleOnly: true,
+      //     applicationServerKey: urlBase64ToUint8Array(publicVapid)
+      // });
       console.log('Push Manager registered');
   
       console.log('Sending Push');

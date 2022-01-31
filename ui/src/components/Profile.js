@@ -176,30 +176,30 @@ export default function Profile() {
  
     return (
         <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 rounded p-2 mb-4 m-auto justify-center md:w-1/2'>
-        <p className='flex justify-between mb-6 border-3 border -mt-2 -mx-2 shadow-md p-2 bg-white fixed right-0 left-0'>
+        <div style={{margin: 'auto', top: '0em'}} className='flex justify-between mb-6 border-3 border -mt-2 -mx-2 shadow-md p-2 bg-white fixed right-0 left-0 md:w-1/2'>
             <span className='cursor-pointer' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
             {<span className='flex cursor-pointer' onClick= {e => history.push('people')}><IoIosPeople size={35}/></span>}
             <span className='bg-black-400 cursor-pointer' onClick={() => history.push("/twits")}><AiFillHome size={28} /></span>
-        </p>
+        </div>
 
-        <div style={{bottom: '0em', margin: 'auto'}} className='p-2 rounded flex justify-between border-3 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
-                    <span className='cursor-pointer' onClick={() => history.push("/twits")}>
+        <div style={{bottom: '0em', margin: 'auto'}} className='p-2 rounded flex justify-around border-3 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
+                    <span className='cursor-pointer pt-1' onClick={() => history.push("/twits")}>
                         <AiFillHome size={25} color='gray' />
                     </span>
-                    <span className='cursor-pointer' onClick={e => history.push(`/${username}`)}>
+                    <span className='cursor-pointer border-t-2 pt-1 border-black' onClick={e => history.push(`/${username}`)}>
                         {(img !== 'null' || error) ? 
                             <BsPersonFill size={25} color='black' />:
                             <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />
                         }
                     </span>
-                    <span className='cursor-pointer' onClick= {e => history.push('people')}>
-                        <IoIosPeople size={30} color='gray'/>
+                    <span className='cursor-pointer pt-1' onClick= {e => history.push('people')}>
+                        <IoIosPeople size={25} color='gray'/>
                     </span>
-                    <span className='cursor-pointer'>
+                    {/* <span className='cursor-pointer pt-1'>
                         <RiChatNewLine size={25} color='gray' onClick={showForm} />
-                    </span>
+                    </span> */}
 
-                    <span className='cursor-pointer'  onClick= {e => history.push(`/chats/${username}`)}><MdEmail size={25} color='gray' />
+                    <span className='cursor-pointer pt-1'  onClick= {e => history.push(`/chats/${username}`)}><MdEmail size={25} color='gray' />
                     </span>
                 </div>
 
