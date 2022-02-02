@@ -3,29 +3,29 @@
   "name": "Buzz",
   "icons": [
     {
-      "src": "fruits-120.png",
+      "src": "Buzz-logo-120.png",
       "sizes": "120x120",
       "type": "image/png"
     },
     {
-      "src": "fruits-144.png",
+      "src": "Buzz-logo-144.png",
       "type": "image/png",
       "sizes": "144x144"
     },
     {
-      "src": "fruits-152.png",
+      "src": "Buzz-logo-152.png",
       "type": "image/png",
       "sizes": "152x152"
     },
     {
-      "src": "fruits-167.png",
+      "src": "Buzz-logo-167.png",
       "type": "image/png",
-      "sizes": "168x168"
+      "sizes": "167x167"
     },
     {
-      "src": "fruits-180.png",
+      "src": "Buzz-logo-180.png",
       "type": "image/png",
-      "sizes": "180x168"
+      "sizes": "180x180"
     }
   ],
   "start_url": ".",

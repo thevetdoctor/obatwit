@@ -202,7 +202,7 @@ return (
                 </p>
 
                 <div style={{top: '0em', margin: 'auto'}} className='p-2 rounded mb-2 flex justify-between border-3 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
-                    {img !== null ? (
+                    {img !== 'null' ? (
                         <span className='cursor-pointer'  onClick= {e => history.push(`/${username}`)}>
                             {error ? <BsPersonFill size={25} />:
                             <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
@@ -215,15 +215,15 @@ return (
                 </div>
 
                 <div style={{bottom: '0em', margin: 'auto'}} className='p-2 rounded flex justify-around border-3 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
-            <span className='cursor-pointer pt-1 border-t-2 border-black' onClick={() => history.push("/twits")}>
+            <span className='cursor-pointer pt-2 border-t-2 border-black' onClick={() => history.push("/twits")}>
                 <AiFillHome size={25} color='black' />
             </span>
-            {img !== null ? (
+            {img !== 'null' ? (
                         <span className='cursor-pointer pt-1'  onClick= {e => history.push(`/${username}`)}>
                             {error ? <BsPersonFill size={25} />:
                             <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
                         </span>) 
-                        : <span className='pt-1 cursor-pointer'><BsPersonFill size={25} onClick={e => history.push(`/${username}`)} /></span>}
+                        : <span className='pt-2 cursor-pointer'><BsPersonFill size={25} onClick={e => history.push(`/${username}`)} /></span>}
             <span className='cursor-pointer pt-1' onClick= {e => history.push('/people')}>
                 <IoIosPeople size={30} color='gray'/>
             </span>

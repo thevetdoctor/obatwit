@@ -125,7 +125,7 @@ export default function UserTwits() {
             {img !== null ? (
                         <span className='cursor-pointer'  onClick= {e => history.push(`/${username}`)}>
                             {error ? <BsPersonFill size={25} />:
-                            <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
+                            <img src={img} alt='Profile' className='mt-2' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
                         </span>) 
                         : <span className='text-left cursor-pointer'><BsPersonFill size={25} onClick={e => history.push(`/${username}`)} /></span>}
             <span className='cursor-pointer pt-1' onClick= {e => history.push('/people')}>
