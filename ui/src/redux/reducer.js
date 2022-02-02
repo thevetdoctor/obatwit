@@ -26,6 +26,24 @@ export default function reducer(state= initialState, action) {
               ...state,
               searchData: action.data
             }          
+        case actions.setUser.type:
+
+            // console.log('user is set as', action.data);
+            const user = action.data.user;
+            const email = action.data.email;
+            const userData = state.peopleData.filter(obj => obj.username === user)[0];
+            const userTwits = state.twits?.filter(obj => obj.twits.username === user);
+
+            const {followers, following} = userData; 
+            const followerCount = followers?.filter(user => user.follower.isFollowed).length;
+            const followingCount = following?.filter(user => user.follower.isFollowed).length;
+            const isFollower = followers.filter(user => user.follower.isFollowed).filter(user => user.email === email).length > 0;
+            const isFollowing = following.filter(user => user.follower.isFollowed).filter(user => user.email === email).length > 0;
+
+            return {
+              ...state,
+              user, userData, followers, following, followerCount, followingCount, isFollower, isFollowing, userTwits
+            }          
         case actions.setUsersData.type:
 
             return {
@@ -94,10 +112,17 @@ export const initialState = {
     twits: [],
     messages: [],
     users: 0,
-    peopleData: [],
+    peopleData: JSON.parse(localStorage.getItem('peopleData')) || [],
     searchData: [],
     usersData: [],
     searchQuery: '',
     networkStatus: false,
-    formActive: false
+    formActive: false,
+    user: '',
+    followers: [], 
+    following: [], 
+    followerCount: 0, 
+    followingCount: 0, 
+    userTwits: [],
+    isFollower: false
 };

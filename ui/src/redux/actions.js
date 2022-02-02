@@ -10,7 +10,8 @@ const actions = {
     setTotalPages: { type: 'SET_TOTAL_PAGES'},
     setSearchQuery: { type: 'SET_SEARCH_QUERY'},
     setNetworkStatus: { type: 'SET_NETWORK_STATUS'},
-    setFormActive: { type: 'SET_FORM_ACTIVE'}
+    setFormActive: { type: 'SET_FORM_ACTIVE'},
+    setUser: { type: 'SET_USER'}
   }
   
   export default actions;

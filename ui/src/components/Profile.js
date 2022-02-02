@@ -21,24 +21,27 @@ import { RiChatNewLine } from 'react-icons/ri';
 export default function Profile() {
     const [error, setError] = useState('');
     const [profileImg, setProfileImg] = useState('');
-    const [ userData, setUserData ] = useState({});
-    const [ isFollower, setIsFollower ] = useState(false);
-    const [ isFollowing, setIsFollowing ] = useState(false);
-    const [ followerCount, setFollowerCount ] = useState(0);
-    const [ followingCount, setFollowingCount ] = useState(0);
-    const [ twitCount, setTwitCount ] = useState(0);
     const [followLoading, setFollowLoading] = useState(false);
     const [sync, setSync] = useState(false);
     let { user } = useParams();
     const history = useHistory();
-
+    
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
-    const username = localStorage.getItem('username') ? localStorage.getItem('username') : '';    
+    const defaultUsername = localStorage.getItem('username') ? localStorage.getItem('username') : '';    
     const img = localStorage.getItem('img') ? localStorage.getItem('img') : '';
     const token = localStorage.getItem('token');
     const {getState, dispatch} = store;
     const state = getState();
-    const { twits, formActive } = useSelector(state => state);
+    const { twits, formActive, userData, followers, following, followerCount, isFollower, isFollowing, followingCount, userTwits } = useSelector(state => state);
+    // console.log(userData, followers, following, followerCount, followingCount, isFollower, isFollowing, userTwits);
+
+    useEffect(() => {
+        dispatch({
+            type: 'SET_USER',
+            data: {user, email}
+        });
+        return () => {}
+    }, []);
 
     const apiCallHook = async(method, url, data) => {
         const res = await axios({
@@ -62,25 +65,37 @@ export default function Profile() {
                         type: 'SET_USERS_DATA',
                         data: res.data.data.users
                     });
+                    dispatch({
+                        type: 'SET_PEOPLE_DATA',
+                        data: res.data.data.users
+                    });
+                    dispatch({
+                        type: 'SET_USER',
+                        data: {user, email} 
+                    });
+                    localStorage.setItem('peopleData', JSON.stringify(res.data.data.users));
                     localStorage.setItem('usersData', JSON.stringify(res.data.data.users));
                     localStorage.setItem('users', JSON.stringify(res.data.data.users));
-                    const userTwits = twits.filter(obj => obj.twits.username === user);
-                    const userDataInStore = res.data.data.users.filter(obj => obj.username === user)[0];
-                    const followers = userDataInStore.followers.filter(user => user.follower.isFollowed);
-                    const following = userDataInStore.following.filter(user => user.follower.isFollowed);
-                    const checkIsFollower = followers.filter(user => user.email === email).length > 0;
-                    const checkIsFollowing = following.filter(user => user.email === email).length > 0;
-                    setUserData(userDataInStore);
-                    setFollowerCount(followers.length);
-                    setFollowingCount(following.length);
-                    setIsFollower(checkIsFollower);
-                    setIsFollowing(checkIsFollowing);
-                    setTwitCount(userTwits.length);
+                    // const userTwits = twits.filter(obj => obj.twits.username === user);
+                    // const userDataInStore = res.data.data.users.filter(obj => obj.username === user)[0];
+                    // const followers = userDataInStore.followers.filter(user => user.follower.isFollowed);
+                    // const following = userDataInStore.following.filter(user => user.follower.isFollowed);
+                    // const checkIsFollower = followers.filter(user => user.email === email).length > 0;
+                    // const checkIsFollowing = following.filter(user => user.email === email).length > 0;
+                    // dispatch({
+                    //     type: 'SET_USER_DATA',
+                    //     data: userDataInStore
+                    // });
+                    // setFollowerCount(followers.length);
+                    // setFollowingCount(following.length);
+                    // setIsFollower(checkIsFollower);
+                    // setIsFollowing(checkIsFollowing);
+                    // setTwitCount(userTwits.length);
 
-                    if(userDataInStore.imageUrl) {
-                        localStorage.setItem('profileImg', userDataInStore.imageUrl);
-                        setProfileImg(userDataInStore.imageUrl);
-                    }
+                    // if(userDataInStore.imageUrl) {
+                    //     localStorage.setItem('profileImg', userDataInStore.imageUrl);
+                    //     setProfileImg(userDataInStore.imageUrl);
+                    // }
                     
                     setError('');
                 } else{
@@ -93,18 +108,29 @@ export default function Profile() {
                     type: 'SET_USERS_DATA',
                     data: JSON.parse(localStorage.getItem('usersData'))
                 });
-                const userTwits = twits.filter(obj => obj.twits.username === user);
-                const userDataInStore = JSON.parse(localStorage.getItem('usersData')).filter(obj => obj.username === user)[0];
-                const followers = userDataInStore?.followers.filter(user => user.follower.isFollowed);
-                const following = userDataInStore?.following.filter(user => user.follower.isFollowed);
-                const checkIsFollower = followers?.filter(user => user.email === email).length > 0;
-                const checkIsFollowing = following?.filter(user => user.email === email).length > 0;
-                setUserData(userDataInStore);
-                setFollowerCount(followers?.length);
-                setFollowingCount(following?.length);
-                setIsFollower(checkIsFollower);
-                setIsFollowing(checkIsFollowing);
-                setTwitCount(userTwits?.length);         
+                dispatch({
+                    type: 'SET_PEOPLE_DATA',
+                    data: JSON.parse(localStorage.getItem('usersData'))
+                });
+                dispatch({
+                    type: 'SET_USER',
+                    data: {user, email} 
+                });
+                // const userTwits = twits.filter(obj => obj.twits.username === user);
+                // const userDataInStore = JSON.parse(localStorage.getItem('usersData')).filter(obj => obj.username === user)[0];
+                // const followers = userDataInStore?.followers.filter(user => user.follower.isFollowed);
+                // const following = userDataInStore?.following.filter(user => user.follower.isFollowed);
+                // const checkIsFollower = followers?.filter(user => user.email === email).length > 0;
+                // const checkIsFollowing = following?.filter(user => user.email === email).length > 0;
+                // dispatch({
+                //     type: 'SET_USER_DATA',
+                //     data: userDataInStore
+                // });
+                // setFollowerCount(followers?.length);
+                // setFollowingCount(following?.length);
+                // setIsFollower(checkIsFollower);
+                // setIsFollowing(checkIsFollowing);
+                // setTwitCount(userTwits?.length);         
             }
     }
 
@@ -113,41 +139,6 @@ export default function Profile() {
             type: 'SET_FORM_ACTIVE',
             data: !formActive
         });
-    }
-
-    const getTwits = async() => {
-        if(!token) {
-            return;
-        }
-        const res = await axios({
-            method: 'GET',
-            url: `${baseUrl}/twits`,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-            })
-            .catch(error => {
-                if(error.isAxiosError) {
-                    setError(error.response?.data?.error);
-                }
-            });
-            if(res && res.data.success) {
-                dispatch({
-                    type: 'SET_TWIT_DATA',
-                    data: res.data.data
-                });
-                localStorage.setItem('twits', JSON.stringify(res.data.data.map(x => {
-                    x.formActive = false;
-                    return x;
-                })));
-            } else {
-                setError('Please check your network');
-                dispatch({
-                    type: 'SET_TWIT_DATA',
-                    data: JSON.parse(localStorage.getItem('twits'))
-                });
-            }
     }
 
     const handleFollow = () => {
@@ -163,50 +154,52 @@ export default function Profile() {
     }
 
     useEffect(() => {
-        apiCallHook('GET', `${baseUrl}/auth/users`);
+        if(token) {
+            apiCallHook('GET', `${baseUrl}/auth/users`);
+        }
         return () => {
         }
     }, [sync]);
    
-    useEffect(() => {
-        if(token) {
-            getTwits();
-        }
+    // useEffect(() => {
+    //     if(token) {
+    //         getTwits();
+    //     }
     
-        return () => {}
-    }, []);
+    //     return () => {}
+    // }, []);
  
     return (
         <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 rounded p-2 mb-4 m-auto justify-center md:w-1/2'>
-        <div style={{margin: 'auto', top: '0em'}} className='flex justify-between mb-6 border-3 border -mt-2 -mx-2 shadow-md p-2 bg-white fixed right-0 left-0 md:w-1/2'>
-            <span className='cursor-pointer' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
-            {<span className='flex cursor-pointer' onClick= {e => history.push('people')}><IoIosPeople size={35}/></span>}
-            <span className='bg-black-400 cursor-pointer' onClick={() => history.push("/twits")}><AiFillHome size={28} /></span>
-        </div>
+            <div style={{margin: 'auto', top: '0em'}} className='flex justify-between mb-6 border-3 border -mt-2 -mx-2 shadow-md p-2 bg-white fixed right-0 left-0 md:w-1/2'>
+                <span className='cursor-pointer' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
+                <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>Profile</span>
+                <span></span>
+            </div>
+    
+            <div style={{bottom: '0em', margin: 'auto'}} className='p-2 rounded flex justify-around border-3 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
+                <span className='cursor-pointer pt-1' onClick={() => history.push("/twits")}>
+                    <AiFillHome size={25} color='gray' />
+                </span>
+                {img !== null ? (
+                            <span className='cursor-pointer pt-1 border-t-2 border-black'  onClick= {e => history.push(`/${defaultUsername}`)}>
+                                {error ? <BsPersonFill size={25} color='black' />:
+                                <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
+                            </span>) 
+                            : <span className='cursor-pointer pt-1'><BsPersonFill size={25} color='black' onClick={e => history.push(`/${defaultUsername}`)} /></span>}
+                <span className='cursor-pointer pt-1' onClick= {e => history.push('/people')}>
+                    <IoIosPeople size={30} color='gray'/>
+                </span>
+                {/* <span className='cursor-pointer pt-1'>
+                    <RiChatNewLine size={25} color='gray' onClick={showForm} />
+                </span> */}
 
-        <div style={{bottom: '0em', margin: 'auto'}} className='p-2 rounded flex justify-around border-3 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
-                    <span className='cursor-pointer pt-1' onClick={() => history.push("/twits")}>
-                        <AiFillHome size={25} color='gray' />
-                    </span>
-                    <span className='cursor-pointer border-t-2 pt-1 border-black' onClick={e => history.push(`/${username}`)}>
-                        {(profileImg !== 'null' || error) ? 
-                            <BsPersonFill size={25} color='black' />:
-                            <img src={profileImg} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />
-                        }
-                    </span>
-                    <span className='cursor-pointer pt-1' onClick= {e => history.push('people')}>
-                        <IoIosPeople size={25} color='gray'/>
-                    </span>
-                    {/* <span className='cursor-pointer pt-1'>
-                        <RiChatNewLine size={25} color='gray' onClick={showForm} />
-                    </span> */}
+                <span className='cursor-pointer pt-1'  onClick= {e => history.push(`/chats/${defaultUsername}`)}><MdEmail size={25} color='gray' />
+                </span>
+            </div>
 
-                    <span className='cursor-pointer pt-1'  onClick= {e => history.push(`/chats/${username}`)}><MdEmail size={25} color='gray' />
-                    </span>
-                </div>
-
-        <ToastContainer />
-        {!userData.username ? 
+            <ToastContainer />
+        {!userData ? 
         <div style={{marginTop: '3.5em'}} className='flex justify-center items-center pt-8'>
             <Loader 
             type='Bars'
@@ -219,40 +212,54 @@ export default function Profile() {
             <div style={{marginTop: '3.5em'}} className='mb-1 flex justify-between'>
                 <>
                     <AttachProfileImage imgUrl={userData?.imageUrl} error={error} email={email} userData={userData} apiCallHook={apiCallHook} />
-                    {/* {userData?.imageUrl ?
-                    <span className='flex'>
-                        {error ? <span className='flex bg-gray-300 p-3 rounded'>
-                        <BsPersonFill size={80} />
-                        </span>:
-                        <img src={userData?.imageUrl} alt='Profile' style={{width: '6em', height: '6em', borderRadius: '10%'}} />}
-                    </span>
-                    : 
-                    <span className='flex bg-gray-300 p-3 rounded'>
-                        <BsPersonFill size={80} />
-                    </span>} */}
                 </>
                 <div className='ml-2'>
                     <div>
                         <span className='text-xl font-semibold ml-2 mb-2'>{userData?.username}</span>
                     </div>
                     <div className='flex justify-between mt-3 p-1 rounded bg-gray-200'>
-                            <span className={'flex-col flex text-center p-2 cursor-pointer mr-3'}  onClick= {e => history.push(`/follower/${user}`)}> 
-                                    <span className='text-lg font-bold'>{followerCount}</span> <span className='text-xs'>{followerCount  > 1 ? 'followers' : 'follower'}</span>
+                            <span className={'flex-col flex text-center p-2 cursor-pointer mr-3'} onClick= {e => history.push(`/follower/${user}`)}> 
+                                <span className='text-lg font-bold'>
+                                    {followerCount}
+                                     {/* !== null ?
+                                    followerCount
+                                    :
+                                    <LoadSpan height={20} width={20} color='#000' className='-mb-3' />} */}
+                                </span> 
+                                <span className='text-xs'>
+                                        {followerCount  > 1 ? 'followers' : 'follower'}
+                                </span>
                             </span>
                             <span className={'flex-col flex text-center p-2 cursor-pointer mr-3'}  onClick= {e => history.push(`/following/${user}`)}> 
-                                    <span className='text-lg font-bold'>{followingCount}</span><span className='text-xs'> following</span>
+                                <span className='text-lg font-bold'>
+                                {followingCount}
+                                 {/* !== null ?
+                                    followingCount
+                                    :
+                                    <LoadSpan height={20} width={20} color='#000' className='-mb-3' />} */}
+                                </span>
+                                <span className='text-xs'> following</span>
                             </span>
-                            <span className={'flex-col flex text-center p-2 cursor-pointer mr-3'}  onClick= {e => history.push(`/twits/${user}`)}> 
-                                    <span className='text-lg font-bold'>{twitCount}</span><span className='text-xs'> {twitCount  > 1 ? 'posts' : 'post'}</span>
+                            <span className={'flex-col flex text-center p-2 cursor-pointer mr-3'} onClick= {e => history.push(`/twits/${user}`)}> 
+                                <span className='text-lg font-bold'>
+                                {userTwits.length}
+                                 {/* !== null ?
+                                    twitCount
+                                    :
+                                    <LoadSpan height={20} width={20} color='#000' className='-mb-3' />} */}
+                                </span>
+                                <span className='text-xs'> {userTwits.length  > 1 ? 'posts' : 'post'}</span>
                             </span>
                     </div>
                 </div>
             </div>
+            <>
             {error && 
                 <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-1 mb-0 rounded'>
                     {error}
                 </div>
             }
+            </>
             <span className='text-sm mt-3 mb-4 flex justify-between'>
                 <span>
                     <span className=''>Joined: <Moment fromNow>{userData?.createdAt}</Moment></span><br />
@@ -276,14 +283,17 @@ export default function Profile() {
                 }
                 </span>
             </span>
+            <>
             {(email === userData?.email) && 
                 <span className={'text-sm text-white bg-gray-900 rounded hover:bg-gray-400 p-2 cursor-pointer mr-3 mt-5'}  onClick= {e => history.push(`/chats/${user}`)}> 
                     Messages
                 </span>
             }
-                <UserProfile email={email} userData={userData} apiCallHook={apiCallHook} />
+            </>
+            <UserProfile email={email} userData={userData} apiCallHook={apiCallHook} defaultUsername={defaultUsername} />
                     
-        </>}
+        </>
+        }
         {!userData?.username &&
         <div className='flex'>
             <span className='m-auto'><BsPersonFill size={300} /></span>
@@ -293,10 +303,11 @@ export default function Profile() {
 }
 
 
-const UserProfile = ({userData, email, apiCallHook}) => {
+const UserProfile = ({userData, email, apiCallHook, defaultUsername}) => {
     const {name, username, bio, location, mobile, dob} = userData;
+    // console.log(userData, username, defaultUsername);
 
-    const [editForm, setEditForm] = useState(false);
+    const [editForm, setEditForm] = useState(false); 
     const [lname, setName] = useState(name);
     const [lusername, setUserName] = useState(username);
     const [lbio, setBio] = useState(bio);
@@ -369,7 +380,7 @@ const UserProfile = ({userData, email, apiCallHook}) => {
             placeholder="Your name"
             className='p-1 my-1 rounded'
             />}
-            {!editForm && <div className={`${nameHidden && 'hidden'} px-2`}>{lname ? lname : name ? name : 'Not available'}</div>}
+            {!editForm && <div className={`${nameHidden && 'hidden'} px-2`}>{name ? name : 'Not available'}</div>}
         </div>
         <div className='mb-2'>
             <div className='flex justify-between'>
@@ -392,7 +403,7 @@ const UserProfile = ({userData, email, apiCallHook}) => {
             placeholder="Update your username"
             className='p-1 my-1 rounded'
             />}
-            {!editForm && <div className={`${usernameHidden && 'hidden'} px-2`}>{lusername ? lusername : username ? username : 'Not available'}</div>}
+            {!editForm && <div className={`${usernameHidden && 'hidden'} px-2`}>{username ? username : 'Not available'}</div>}
         </div>
         <div className='mb-2'>
             <div className='flex justify-between'>
@@ -416,7 +427,7 @@ const UserProfile = ({userData, email, apiCallHook}) => {
             placeholder="Tell the world briefly about yourself"
             className='text-sm p-1 my-1 rounded'
             />}
-            {!editForm && <div className={`${bioHidden && 'hidden'} px-2`}>{lbio ? lbio : bio  ? bio : 'Not available'}</div>}
+            {!editForm && <div className={`${bioHidden && 'hidden'} px-2`}>{bio  ? bio : 'Not available'}</div>}
         </div>
         <div className='mb-2'>
             <div className='flex justify-between'>
@@ -438,7 +449,7 @@ const UserProfile = ({userData, email, apiCallHook}) => {
             placeholder="Share your location"
             className='p-1 my-1 rounded'
             />}
-            {!editForm && <div className={`${locationHidden && 'hidden'} px-2`}>{llocation ? llocation : location ? location : 'Not available'}</div>}
+            {!editForm && <div className={`${locationHidden && 'hidden'} px-2`}>{location ? location : 'Not available'}</div>}
         </div>
         <div className='mb-2'>
             <div className='flex justify-between'>
@@ -460,7 +471,7 @@ const UserProfile = ({userData, email, apiCallHook}) => {
             placeholder="Date of Birth"
             className='p-1 my-1 rounded'
             />}
-            {!editForm && <div className={`${dobHidden && 'hidden'} px-2`}>{ldob ? ldob : dob ? dob : 'Not available'}</div>}
+            {!editForm && <div className={`${dobHidden && 'hidden'} px-2`}>{dob ? dob : 'Not available'}</div>}
         </div>
         <div className='mb-2'>
             <div className='flex justify-between'>
@@ -483,7 +494,7 @@ const UserProfile = ({userData, email, apiCallHook}) => {
             placeholder="Drop your mobile number "
             className='p-1 my-1 rounded'
             />}
-            {!editForm && <div className={`${mobileHidden && 'hidden'} px-2`}>{lmobile ? lmobile : mobile ? mobile : 'Not available'}</div>}
+            {!editForm && <div className={`${mobileHidden && 'hidden'} px-2`}>{mobile ? mobile : 'Not available'}</div>}
         </div>
       </div>
     )

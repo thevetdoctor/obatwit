@@ -10,6 +10,7 @@ import { baseUrl } from '../helper';
 import { LoadSpan } from './Twits';
 import TopSearch from './TopSearch';
 import { AiFillHome } from 'react-icons/ai';
+import { MdEmail } from 'react-icons/md';
 
 export default function Following() {
     const [error, setError] = useState('');
@@ -23,6 +24,8 @@ export default function Following() {
     const history = useHistory();
 
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
+    const username = localStorage.getItem('username') ? localStorage.getItem('username') : '';    
+    const img = localStorage.getItem('img') ? localStorage.getItem('img') : '';    
     const token = localStorage.getItem('token');
 
 
@@ -89,26 +92,40 @@ export default function Following() {
         setUserData(userDataInStore);
         setSearchData(following);
         setPeopleData(following);
+
+        return () => {}
     }, []);
     
     return (
         <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-2 mb-4 md:w-1/2 m-auto'>
         <p className='flex justify-between mb-6 border-3 border shadow-md p-2 -mt-2 -mx-2 '>
             <span className='cursor-pointer' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
-            {/* <span className='cursor-pointer' onClick= {e => history.push(`/${userData?.username}`)}> */}
-            {/* {userData?.imageUrl ?
-            <span>
-                <img src={userData?.imageUrl} alt='Profile' style={{width: '2em', height: '2em', borderRadius: '50%'}} />
-            </span>
-            : 
-            <span className=''><BsPersonFill size={25} /></span>} */}
-            {/* </span> */}
-            <span className='text-xl font-bold'>Following</span>
-            <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/twits")}><AiFillHome size={28} /></span>
+            <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>Following</span>
+            <span></span>
         </p>
+        <div style={{bottom: '0em', margin: 'auto'}} className='p-2 rounded flex justify-around border-3 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
+            <span className='cursor-pointer pt-1' onClick={() => history.push("/twits")}>
+                <AiFillHome size={25} color='gray' />
+            </span>
+            {img !== null ? (
+                        <span className='cursor-pointer'  onClick= {e => history.push(`/${username}`)}>
+                            {error ? <BsPersonFill size={25} />:
+                            <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
+                        </span>) 
+                        : <span className='text-left cursor-pointer'><BsPersonFill size={25} onClick={e => history.push(`/${username}`)} /></span>}
+            <span className='cursor-pointer pt-1' onClick= {e => history.push('/people')}>
+                <IoIosPeople size={30} color='gray'/>
+            </span>
+            {/* <span className='cursor-pointer pt-1'>
+                <RiChatNewLine size={25} color='gray' onClick={showForm} />
+            </span> */}
+
+            <span className='cursor-pointer pt-1 border-t-2 border-black'  onClick= {e => history.push(`/chats/${username}`)}><MdEmail size={25} color='black' />
+            </span>
+        </div>
+
         {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-2 m-1 rounded'>Please check your network !</div>}
-        <div className='mb-1'>
-        <>
+        <div className='-mb-9'>
             {userData?.imageUrl ?
             <span className='flex'>
                     {error ? <BsPersonFill size={'1.7em'} color='black' />:
@@ -120,7 +137,6 @@ export default function Following() {
                 <BsPersonFill size={30} />
                 <span className='text-xl font-semibold ml-2 mb-2'>{userData?.username}</span>
             </span>}
-            </>
         </div>
         <TopSearch searchQuery={searchQuery} handleChange={handleChange} setSearchQuery={setSearchQuery}/>
         <div className='flex flex-col text-md'>

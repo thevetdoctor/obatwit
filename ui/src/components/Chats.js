@@ -24,7 +24,7 @@ export default function Chats() {
     const {getState, dispatch} = store;
     const state = getState();
     const { messages, formActive } = useSelector(state => state);
-    console.log(messages)
+    // console.log(messages)
 
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
     const username = localStorage.getItem('username') ? localStorage.getItem('username') : '';    
@@ -111,26 +111,26 @@ export default function Chats() {
     }, [sync]);
 
     const messageLine = messages.map(message => email === message.chatSender.email ? message.chatReceiver : message.chatSender);
-    console.log(messages, messageLine);
+    // console.log(messages, messageLine);
     
     return (
         <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-2 mb-4 md:w-1/2 m-auto'>
         <p className='flex justify-between mb-4 border-3 border shadow-md p-2'>
             <span className='cursor-pointer text-left' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
-            <span className='text-xl font-bold self-center'>Messages</span>
-            <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/twits")}><AiFillHome size={28} /></span>
+            <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>Messages</span>
+            <span></span>
         </p>
         
         <div style={{bottom: '0em', margin: 'auto'}} className='p-2 rounded flex justify-around border-3 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
             <span className='cursor-pointer pt-1' onClick={() => history.push("/twits")}>
                 <AiFillHome size={25} color='gray' />
             </span>
-            <span className='cursor-pointer pt-1' onClick={e => history.push(`/${username}`)}>
-                {(img !== 'null' || error) ? 
-                    <BsPersonFill size={25} color='gray' />:
-                    <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />
-                }
-            </span>
+            {img !== null ? (
+                        <span className='cursor-pointer pt-1'  onClick= {e => history.push(`/${username}`)}>
+                            {error ? <BsPersonFill size={25} color='gray' />:
+                            <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
+                        </span>) 
+                        : <span className='pt-1 cursor-pointer'><BsPersonFill size={25} color='gray' onClick={e => history.push(`/${username}`)} /></span>}
             <span className='cursor-pointer pt-1' onClick= {e => history.push('/people')}>
                 <IoIosPeople size={30} color='gray'/>
             </span>
@@ -141,6 +141,7 @@ export default function Chats() {
             <span className='cursor-pointer pt-1 border-t-2 border-black'  onClick= {e => history.push(`/chats/${username}`)}><MdEmail size={25} color='black' />
             </span>
         </div>
+        
         {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-1 m-1 rounded'>Please check your network !</div>}
         <div className='mb-1'>
             {messages.length ? 

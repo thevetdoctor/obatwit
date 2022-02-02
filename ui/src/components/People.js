@@ -149,19 +149,18 @@ export default function People() {
             <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>People</span>
             <span className='text-left bg-black-400 cursor-pointer hover:invisible' onClick={() => history.push("/twits")}><AiFillHome size={28} /></span>
         </div>
-
         <div style={{bottom: '0em', margin: 'auto'}} className='p-2 rounded flex justify-around border-3 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
             <span className='cursor-pointer pt-1' onClick={() => history.push("/twits")}>
                 <AiFillHome size={25} color='gray' />
             </span>
-            <span className='cursor-pointer pt-1' onClick={e => history.push(`/${username}`)}>
-                {(img !== 'null' || error) ? 
-                    <BsPersonFill size={25} color='gray' />:
-                    <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />
-                }
-            </span>
-            <span className='cursor-pointer border-t-2 border-black pt-1' onClick= {e => history.push('people')}>
-                <IoIosPeople size={25} color='black'/>
+            {img !== null ? (
+                        <span className='cursor-pointer pt-1'  onClick= {e => history.push(`/${username}`)}>
+                            {error ? <BsPersonFill size={25} color='gray' />:
+                            <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
+                        </span>) 
+                        : <span className='pt-1 cursor-pointer'><BsPersonFill size={25} color='gray' onClick={e => history.push(`/${username}`)} /></span>}
+            <span className='cursor-pointer pt-1 border-t-2 border-black' onClick= {e => history.push('/people')}>
+                <IoIosPeople size={30} color='black'/>
             </span>
             {/* <span className='cursor-pointer pt-1'>
                 <RiChatNewLine size={25} color='gray' onClick={showForm} />

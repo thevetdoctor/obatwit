@@ -128,6 +128,10 @@ export default function Twits() {
                     type: 'SET_USER_COUNT',
                     data: res.data.data.count
                 });
+                dispatch({
+                    type: 'SET_PEOPL_DATA',
+                    data: res.data.data.users
+                });
                 localStorage.setItem('userCount', res.data.data.count);
             } else {
                 setError('Error found');
@@ -198,7 +202,7 @@ return (
                 </p>
 
                 <div style={{top: '0em', margin: 'auto'}} className='p-2 rounded mb-2 flex justify-between border-3 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
-                    {img !== 'null' ? (
+                    {img !== null ? (
                         <span className='cursor-pointer'  onClick= {e => history.push(`/${username}`)}>
                             {error ? <BsPersonFill size={25} />:
                             <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
@@ -211,25 +215,25 @@ return (
                 </div>
 
                 <div style={{bottom: '0em', margin: 'auto'}} className='p-2 rounded flex justify-around border-3 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
-                    <span className='cursor-pointer border-black border-t-2 pt-1' onClick={() => history.push("/twits")}>
-                        <AiFillHome size={25} color='black' />
-                    </span>
-                    <span className='cursor-pointer pt-1' onClick={e => history.push(`/${username}`)}>
-                        {(img !== 'null' || error) ? 
-                            <BsPersonFill size={25} color='gray' />:
-                            <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />
-                        }
-                    </span>
-                    <span className='cursor-pointer pt-1' onClick= {e => history.push('people')}>
-                        <IoIosPeople size={25} color='gray'/>
-                    </span>
-                    {/* <span className='cursor-pointer pt-1'> */}
-                        {/* <RiChatNewLine size={25} color='gray' onClick={showForm} /> */}
-                    {/* </span> */}
+            <span className='cursor-pointer pt-1 border-t-2 border-black' onClick={() => history.push("/twits")}>
+                <AiFillHome size={25} color='black' />
+            </span>
+            {img !== null ? (
+                        <span className='cursor-pointer pt-1'  onClick= {e => history.push(`/${username}`)}>
+                            {error ? <BsPersonFill size={25} />:
+                            <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
+                        </span>) 
+                        : <span className='pt-1 cursor-pointer'><BsPersonFill size={25} onClick={e => history.push(`/${username}`)} /></span>}
+            <span className='cursor-pointer pt-1' onClick= {e => history.push('/people')}>
+                <IoIosPeople size={30} color='gray'/>
+            </span>
+            {/* <span className='cursor-pointer pt-1'>
+                <RiChatNewLine size={25} color='gray' onClick={showForm} />
+            </span> */}
 
-                    <span className='cursor-pointer border-t-2 pt-1'  onClick= {e => history.push(`/chats/${username}`)}><MdEmail size={25} color='gray' />
-                    </span>
-                </div>
+            <span className='cursor-pointer pt-1'  onClick= {e => history.push(`/chats/${username}`)}><MdEmail size={25} color='gray' />
+            </span>
+        </div>
 
                 {error && <div style={{fontFamily: 'Roboto', backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-1 m-0 rounded border-3 -mx-2 md:w-300'>Please check your network !</div>}
             </div>
@@ -257,10 +261,10 @@ return (
 }
 
 export const Twit = (props) => {
-    let { twit: {id, title, text, imageUrl, twits, likes, comments, createdAt, updatedAt }, email, userId, apiCallHook, baseUrl, frontendUrl, sync, setSync, checkOpenForms, error } = props;
+    let { twit: {id, text, imageUrl, twits, likes, comments, createdAt, updatedAt }, email, userId, apiCallHook, baseUrl, frontendUrl, sync, setSync, checkOpenForms, error } = props;
     const [commentFormActive, setCommentFormActive] = useState(false);
     const [editLoading, setEditLoading] = useState(false);
-    const [likeLoading, setLikeLoading] = useState(false);
+    // const [likeLoading, setLikeLoading] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [storyText, setStoryText] = useState(text);
     const [editForm, setEditForm] = useState(false);
@@ -269,9 +273,20 @@ export const Twit = (props) => {
     const [viewComments, setViewComments] = useState(false);
     const [show, setShow] = useState(false);
     const [sourceData, setSourceData] = useState({});
-
+    
+    
     const history = useHistory();
+    const likeCount = likes.filter(like => like.isLiked).length;
     const filteredComments = comments.filter(comment => !comment.isDeleted);
+    const isLiked = (() => {
+        const liked = likes.filter(like => like.userlikes.email === email && like.isLiked === true);
+       return liked.length ? true : false;
+    })();
+
+    const [llikeCount, setLikeCount] = useState(likeCount);
+    const [lfilteredComents, setFilteredComments] = useState(filteredComments);
+    const [lisLiked, setIsLiked] = useState(isLiked);
+
     const handleStoryChange = (e) => {
         setStoryText(e.target.value);
     }
@@ -282,10 +297,6 @@ export const Twit = (props) => {
         link = http[0].split('\n').filter(x => x.search('http') >= 0);
         text = text.replace(link, '')
     }
-    const isLiked = (() => {
-        const liked = likes.filter(like => like.userlikes.email === email && like.isLiked === true);
-       return liked.length ? true : false;
-    })();
 
     const showMore = () => {
         if(more) {
@@ -323,17 +334,24 @@ export const Twit = (props) => {
             setEditForm(false);
         }, 1000);
     }
-    const likeCount = likes.filter(like => like.isLiked).length;
     const showCommentForm = () => {
         setCommentFormActive(!commentFormActive);
         props.twit.formActive = !commentFormActive;
     }
     
     const likeTwit = () => {
-        setLikeLoading(true);
-        setTimeout(() => {
-            setLikeLoading(false);
-        }, 1000);
+        // setLikeLoading(true);
+        // setTimeout(() => {
+        //     setLikeLoading(false);
+        // }, 1000);
+        if(lisLiked) {
+            setIsLiked(!lisLiked);
+            setLikeCount(likeCount - 1);
+        } else {
+            setIsLiked(!lisLiked);
+            setLikeCount(likeCount + 1);
+        }
+
         apiCallHook('POST', `${baseUrl}/likes/like/${id}`);
     }
     const commentTwit = () => {
@@ -410,19 +428,24 @@ export const Twit = (props) => {
                 </div>}
 
         {!editForm && <div style={{fontSize: '0.9em', lineHeight: 2}} className='mt-2'>
-            {text.length > 100 ? text.slice(0, 100) : text}{link && <a className='underline' href={link} target='_blank'>link</a>}
+            {text.length > 100 ? 
+                text.slice(0, 100) 
+                : 
+                <>{text} {link && <a className='underline' href={link} target='_blank'>link</a>}</>
+            }
             {more ? 
                 <>{text.slice(100)}
                     <>{text.length > 100 && 
-                        <span style={{color: 'gray', fontWeight: '0.3em'}} className='cursor-pointer' onClick={showMore}>
-                            ...<span className='underline'>See less</span>
+                        <span className='cursor-pointer' onClick={showMore}>
+                           {link && <a className='underline' href={link} target='_blank'>link</a>} 
+                           ...<span style={{fontStyle: 'italic', fontWeight: '0.3em'}} className='underline'>See less</span>
                         </span>
                         }
                     </>
                 </> :
                 <>
                     {text.length > 100 && 
-                        <span style={{color: 'gray', fontWeight: '0.3em'}} className='cursor-pointer' onClick={showMore}>
+                        <span style={{fontStyle: 'italic', fontWeight: '0.3em'}} className='cursor-pointer' onClick={showMore}>
                             ...<span className='underline'>See more</span>
                         </span>
                     }
@@ -438,9 +461,9 @@ export const Twit = (props) => {
         </span> 
         <Image show={show} handleShow={handleShow} sourceData={sourceData} />
         {/* likes and comments count section */}
-            {(likeCount > 0 || comments.length > 0) && 
+            {(llikeCount > 0 || comments.length > 0) && 
             <div className='flex text-xs p-1 px-3 mt-1 -mx-4'>
-                {likeCount > 0 && <span className='mr-2'>{likeCount}{' '} {likeCount > 1 ? 'likes' : 'like'} </span>}
+                {llikeCount > 0 && <span className='mr-2'>{llikeCount}{' '} {llikeCount > 1 ? 'likes' : 'like'} </span>}
                 {filteredComments.length > 0 && <span className=''>{filteredComments.length}{' '} {filteredComments.length > 1 ? 'comments' : 'comment'} </span>}
             </div>}
 
@@ -457,12 +480,12 @@ export const Twit = (props) => {
             </span>
             <span className='flex'> 
             <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => likeTwit()}>
-               {!likeLoading ? 
+                <span className={lisLiked ? 'text-blue-500' : 'text-gray-500'}><AiFillLike size={20}/></span>
+               {/* {!likeLoading ? 
                <>
-               <span className={isLiked ? 'text-blue-500' : 'text-gray-500'}><AiFillLike size={20}/></span>
                 </>:
-                <LoadSpan height={20} width={18} color='#00bfff' />}
-            </span>
+                <LoadSpan height={20} width={18} color='#00bfff' />} */}
+            </span> 
             <span style={{cursor: 'pointer'}} className='mx-2 flex text-gray-500' onClick={() => commentTwit()}>
                 <BsChatText size={18}/>
             </span>
@@ -513,6 +536,10 @@ const Comment = (props) => {
         const liked = likecomments.filter(like => like.userId === userId && like.isLiked === true);
        return liked.length ? true : false;
     })();
+    const likeCount = likecomments?.filter(like => like.isLiked).length;
+
+    const [llikeCount, setLikeCount] = useState(likeCount);
+    const [lisLiked, setIsLiked] = useState(isLiked);
 
     let link;
     if(text.search('http') >= 0) {
@@ -521,12 +548,18 @@ const Comment = (props) => {
         text = text.replace(link, '')
     }
 
-    const likeCount = likecomments?.filter(like => like.isLiked).length;
     const likeComment = () => {
-        setLikeLoading(true);
-        setTimeout(() => {
-            setLikeLoading(false);
-        }, 1000);
+        // setLikeLoading(true);
+        // setTimeout(() => {
+        //     setLikeLoading(false);
+        // }, 1000);
+        if(lisLiked) {
+            setIsLiked(!lisLiked);
+            setLikeCount(likeCount - 1);
+        } else {
+            setIsLiked(!lisLiked);
+            setLikeCount(likeCount + 1);
+        }
         apiCallHook('POST', `${baseUrl}/likecomments/like/${id}`);
     }
     const deleteComment = () => {
@@ -544,13 +577,18 @@ const Comment = (props) => {
             </span>
             <p style={{fontSize: '0.9em', lineHeight: 2}} className='p-2 font-semibold'>
             {/* {text.length > 100 ? text.slice(0, 100) : text} */}
-            {text.length > 100 ? text.slice(0, 100) : text}{link && <a className='underline' href={link} target='_blank'>link</a>}
+            {text.length > 100 ? 
+                text.slice(0, 100) 
+                : 
+                <>{text} {link && <a className='underline' href={link} target='_blank'>link</a>}</>
+            }
 
             {more ? 
                 <>{text.slice(100)}
                     <>{text.length > 100 && 
                         <span style={{color: 'gray', fontWeight: '0.3em'}} className='cursor-pointer' onClick={showMore}>
-                            ...<span className='underline'>See less</span>
+                            {link && <a className='underline' href={link} target='_blank'>link</a>}
+                            ...<span className='italic underline'>See less</span>
                         </span>
                         }
                     </>
@@ -558,7 +596,7 @@ const Comment = (props) => {
                 <>
                     {text.length > 100 && 
                         <span style={{color: 'gray', fontWeight: '0.3em'}} className='cursor-pointer' onClick={showMore}>
-                            ...<span className='underline'>See more</span>
+                            ...<span className='italic underline'>See more</span>
                         </span>
                     }
                 </>
@@ -568,9 +606,9 @@ const Comment = (props) => {
         {/* likes and comments count section */}
 
         {/* TODO refactor for replies count */}
-        {(likeCount > 0) && 
+        {(llikeCount > 0) && 
             <div className='flex text-xs p-1 px-3 mt-1 -mx-1'>
-                {likeCount > 0 && <span className='mr-2'>{likeCount}{' '} {likeCount > 1 ? 'likes' : 'like'} </span>}
+                {llikeCount > 0 && <span className='mr-2'>{llikeCount}{' '} {llikeCount > 1 ? 'likes' : 'like'} </span>}
                 {/* TODO refactor for replies count */}
             </div>}
 
@@ -587,11 +625,11 @@ const Comment = (props) => {
                 </span>
                 <span className='flex'>
                 <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => likeComment()}>
-                {!likeLoading ? 
+                    <span className={lisLiked ? 'text-blue-500' : 'text-gray-500'}><AiFillLike size={20}/></span>
+                {/* {!likeLoading ? 
                 <>
-                <span className={isLiked ? 'text-blue-500' : 'text-gray-500'}><AiFillLike size={20}/></span>
                     </>:
-                    <LoadSpan height={20} width={18} color='#00bfff' />}
+                    <LoadSpan height={20} width={18} color='#00bfff' />} */}
                 </span>
                 {/* TODO Implement reply comment component */}
              
