@@ -90,7 +90,6 @@ exports.likeTwit = async(req, res) => {
                     ],
                 });
                 const likingUser = twit.likes.filter(x => x.userId === userId)
-                console.log(likingUser[0].userlikes.username, twit.twits.verified)
                 if(twit.twits.verified) {
                     await mailer.like(twit.twits.email, twit.id, likingUser[0].userlikes.username);
                 }
@@ -123,7 +122,7 @@ exports.likeTwit = async(req, res) => {
                     }
                 ],
             });
-            const likingUser = twit.likes.filter(x => x.userId === userId)
+            const likingUser = twit.likes.filter(x => x.userId === userId);
             if(twit.twits.verified) {
                 await mailer.like(twit.twits.email, twit.id, likingUser[0].userlikes.username);
             }

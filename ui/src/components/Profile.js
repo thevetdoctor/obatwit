@@ -209,11 +209,11 @@ export default function Profile() {
         />
         </div>:
         <>
-            <div style={{marginTop: '3.5em'}} className='mb-1 flex justify-between'>
+            <div style={{marginTop: '3.5em'}} className='mb-1 flex border-b-2'>
                 <>
                     <AttachProfileImage imgUrl={userData?.imageUrl} error={error} email={email} userData={userData} apiCallHook={apiCallHook} />
                 </>
-                <div className='ml-2'>
+                <div className='ml-2 flex-grow mb-1'>
                     <div>
                         <span className='text-xl font-semibold ml-2 mb-2'>{userData?.username}</span>
                     </div>
@@ -520,20 +520,20 @@ function AttachProfileImage({imgUrl, error, email, userData, apiCallHook}) {
       }
 
     return (
-        <div className="flex p-1 rounded ml-1">
-            <label className={`${(email === userData?.email) && 'cursor-pointer'} -ml-2 -mr-5  flex`}>
+        <div className="flex p-1 rounded ml-1 mr-4 md:w-1/5">
+            <label className={`${(email === userData?.email) && 'cursor-pointer'} -ml-2 -mr-5 flex`}>
             {(limgUrl || imgUrl) ?
                 <>
                 {!error ? 
-                    <img src={limgUrl ? limgUrl : imgUrl} alt='avatar' style={{width: '6em', height: '6em', borderRadius: '10%'}} className='rounded -mr-2'
+                    <img src={limgUrl ? limgUrl : imgUrl} alt='avatar' className='w-40 flex-grow rounded-lg -mr-2'
                     />:
-                    <span className='flex bg-gray-300 p-3 rounded'>
+                    <span className='flex bg-gray-300 p-3 rounded flex-grow'>
                         <BsPersonFill size={80} />
                     </span>}
                 </>
             :
             <>
-                <span className='flex bg-gray-300 p-3 rounded'>
+                <span className='flex bg-gray-300 p-3 rounded flex-grow'>
                     <BsPersonFill size={80} />
                 </span>
             </>

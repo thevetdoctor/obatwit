@@ -8,6 +8,12 @@ import store from './redux/store';
 // import * as serviceWorker from "./service-worker";
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
+if (localStorage.theme === 'dark' || (!('theme' in localStorage))) {
+  document.documentElement.classList.add('dark')
+} else {
+  document.documentElement.classList.remove('dark')
+}
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>

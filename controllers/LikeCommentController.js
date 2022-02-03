@@ -85,6 +85,11 @@ exports.likeComment = async(req, res) => {
                             }
                         ]
                     });
+                    const commentLikeUser = commentExist.likes.filter(x => x.userId === userId)
+                    console.log(commentLikeUser[0].userlikes.username, twit.twits.verified)
+                    if(commentExist.twits.verified) {
+                        await mailer.like(twit.twits.email, twit.id, likingUser[0].userlikes.username);
+                    }
                     return response(res, 200, { comment }, null, 'Comment liked successfully');
                 }
             } else {

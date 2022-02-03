@@ -7,8 +7,8 @@ import { useHistory } from 'react-router-dom';
 import Moment from 'react-moment';
 import { BsPersonFill, BsChatText, BsBox } from 'react-icons/bs';
 import { AiFillLike, AiTwotoneDelete, AiFillHome } from 'react-icons/ai';
-import { IoIosPeople } from 'react-icons/io';
-import { MdContentCopy, MdEmail, MdMessage } from 'react-icons/md';
+import { IoIosPeople, IoMdClose } from 'react-icons/io';
+import { MdContentCopy, MdEdit, MdEmail, MdMessage } from 'react-icons/md';
 import { BiMessage, BiMessageSquare, BiMessageX } from 'react-icons/bi';
 import { GrEdit } from 'react-icons/gr';
 import { RiArrowDownLine, RiArrowUpLine, RiChatNewLine } from 'react-icons/ri';
@@ -20,6 +20,7 @@ import { Logout } from './GoogleAuth';
 import Loader from 'react-loader-spinner';
 import store from '../redux/store';
 import { useSelector } from 'react-redux';
+import { FaEllipsisV, FaRegComment } from 'react-icons/fa';
 
 export default function Twits() {
     const [error, setError] = useState('');
@@ -199,7 +200,7 @@ return (
                 <span style={{fontFamily: 'Architects Daughter', fontSize: '1.8em'}} className='text-purple-900 font-bold italic'>Buzz<br/>
                 </span> 
                 <span style={{fontSize: '1em'}}> Feel free, express yourself & network </span>
-                </p>
+                </p> 
 
                 <div style={{top: '0em', margin: 'auto'}} className='p-2 rounded mb-2 flex justify-between border-3 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
                     {img !== 'null' ? (
@@ -215,26 +216,25 @@ return (
                 </div>
 
                 <div style={{bottom: '0em', margin: 'auto'}} className='p-2 rounded flex justify-around border-3 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
-            <span className='cursor-pointer pt-2 border-t-2 border-black' onClick={() => history.push("/twits")}>
-                <AiFillHome size={25} color='black' />
-            </span>
-            {img !== 'null' ? (
-                        <span className='cursor-pointer pt-1'  onClick= {e => history.push(`/${username}`)}>
-                            {error ? <BsPersonFill size={25} />:
-                            <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
-                        </span>) 
-                        : <span className='pt-2 cursor-pointer'><BsPersonFill size={25} onClick={e => history.push(`/${username}`)} /></span>}
-            <span className='cursor-pointer pt-1' onClick= {e => history.push('/people')}>
-                <IoIosPeople size={30} color='gray'/>
-            </span>
-            {/* <span className='cursor-pointer pt-1'>
-                <RiChatNewLine size={25} color='gray' onClick={showForm} />
-            </span> */}
+                <span className='cursor-pointer pt-2 border-t-2 border-black' onClick={() => history.push("/twits")}>
+                    <AiFillHome size={25} color='black' />
+                </span>
+                {img !== 'null' ? (
+                            <span className='cursor-pointer pt-1'  onClick= {e => history.push('/twits')}>
+                                {error ? <BsPersonFill size={25} color='gray' />:
+                                <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
+                            </span>) 
+                            : <span className='cursor-pointer pt-2'><BsPersonFill size={25} color='gray' onClick={e => history.push('/twits')} /></span>}
+                <span className='cursor-pointer pt-1' onClick= {e => history.push('/people')}>
+                    <IoIosPeople size={30} color='gray'/>
+                </span>
+                {/* <span className='cursor-pointer pt-1'>
+                    <RiChatNewLine size={25} color='gray' onClick={showForm} />
+                </span> */}
 
-            <span className='cursor-pointer pt-1'  onClick= {e => history.push(`/chats/${username}`)}><MdEmail size={25} color='gray' />
-            </span>
-        </div>
-
+                <span className='cursor-pointer pt-1'  onClick= {e => history.push(`/chats/${username}`)}><MdEmail size={25} color='gray' />
+                </span>
+            </div>
                 {error && <div style={{fontFamily: 'Roboto', backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-1 m-0 rounded border-3 -mx-2 md:w-300'>Please check your network !</div>}
             </div>
 
@@ -273,6 +273,7 @@ export const Twit = (props) => {
     const [viewComments, setViewComments] = useState(false);
     const [show, setShow] = useState(false);
     const [sourceData, setSourceData] = useState({});
+    const [menuShow, setMenuShow] = useState(false);
     
     
     const history = useHistory();
@@ -298,6 +299,14 @@ export const Twit = (props) => {
         text = text.replace(link, '')
     }
 
+    const showMenu = () => {
+        if(menuShow) {
+            setMenuShow(false);
+        } else {
+            setMenuShow(true);
+        }
+    }
+
     const showMore = () => {
         if(more) {
             setMore(false);
@@ -319,11 +328,13 @@ export const Twit = (props) => {
         setTimeout(() => {
             setLinkCopied(false);
         }, 1000);
+        setMenuShow(false);
     }
 
     const editStory = () => {
         setEditForm(!editForm);
         setStoryText(text);
+        setMenuShow(false);
     }
    
     const updateStory = () => {
@@ -340,10 +351,6 @@ export const Twit = (props) => {
     }
     
     const likeTwit = () => {
-        // setLikeLoading(true);
-        // setTimeout(() => {
-        //     setLikeLoading(false);
-        // }, 1000);
         if(lisLiked) {
             setIsLiked(!lisLiked);
             setLikeCount(likeCount - 1);
@@ -380,22 +387,42 @@ export const Twit = (props) => {
     }
 
     return (
-    <div id={`${id}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 rounded px-4 pb-4 mb-4'>
+    <div id={`${id}`} style={{fontSize: '1.1em'}} className='shadow-lg border-2 border-gray-200 rounded-lg px-4 pb-4 mb-4'>
         <p className='flex justify-between mb-2'>
             <span></span>
             {/* <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>{title}</span> */}
             <span className={!linkCopied ? 'mr-2 mb-1 invisible text-xs self-end' : 'mr-2 mb-1 text-xs self-end'}>copied</span>
         </p>
-        <span className='text-xs mb-2 flex justify-between'>
+        <span className='text-xs mb-2 -mt-2 flex justify-between'>
             <Moment fromNow>{createdAt}</Moment>
             <span className='flex'>
-            {(email === twits.email) && !editForm && 
-                <span className='cursor-pointer mr-2 text-black p-2 -mt-2 rounded-full' onClick={() => editStory()}> 
-                    <GrEdit size={15} />
+            {menuShow &&
+                <>
+                {(email === twits.email) && !editForm && 
+                    <>
+                    <span className={`flex flex-col cursor-pointer mr-2 p-2 -mt-2 rounded-full text-gray-500 ${menuShow ? '' : 'invisible'}`} onClick={() => editStory()}> 
+                        <span className='m-auto mb-2'><MdEdit size={15} /></span><span>Edit</span>
+                    </span>
+                    <span className='cursor-pointer flex-col mr-2 p-2 -mt-2 flex' onClick={() => deleteTwit()}>
+                        {!deleteLoading ? 
+                        <><span className='m-auto mb-2'><AiTwotoneDelete size={15} color='red'/></span><span>Clear</span></>:
+                        <LoadSpan height={20} width={20} color='#00bfff' />}
+                    </span>
+                    </>
+                }
+                <span className={linkCopied ? 'justify-center flex flex-col rounded-full p-2 text-white bg-blue-900 cursor-pointer -mt-2 mr-0' : `justify-center flex flex-col rounded-full p-2 cursor-pointer -mt-2 mr-0 text-gray-500 ${menuShow ? '' : 'invisible'}`} onClick={() => copyTwitLink()}> 
+                    <span className='m-auto mb-2'><MdContentCopy size={15} /></span><span>Copy</span>
                 </span>
-            }
-                <span className={linkCopied ? 'flex-col rounded-full p-2 text-white bg-blue-900 cursor-pointer -mt-2 mr-1' : 'rounded-full p-2 cursor-pointer -mt-2 mr-1'} onClick={() => copyTwitLink()}> 
-                    <MdContentCopy  size={15} />
+                </>}
+                <span className={'justify-center flex flex-col rounded-full p-2 cursor-pointer -mt-2 mr-0 text-gray-500'} onClick={() => showMenu()}> 
+                    {!menuShow ? 
+                    <>
+                        <span className='m-auto mb-2'><FaEllipsisV size={15} /></span><span>More</span>
+                    </>
+                    :
+                    <>
+                        <span className='m-auto mb-2'><IoMdClose size={15} /></span><span>Hide</span>
+                    </>}
                 </span>
             </span>
         </span>
@@ -464,44 +491,42 @@ export const Twit = (props) => {
             {(llikeCount > 0 || comments.length > 0) && 
             <div className='flex text-xs p-1 px-3 mt-1 -mx-4'>
                 {llikeCount > 0 && <span className='mr-2'>{llikeCount}{' '} {llikeCount > 1 ? 'likes' : 'like'} </span>}
-                {filteredComments.length > 0 && <span className=''>{filteredComments.length}{' '} {filteredComments.length > 1 ? 'comments' : 'comment'} </span>}
+                <span onClick={showComments}>
+                {filteredComments.length > 0 && <span className='cursor-pointer'>{filteredComments.length}{' '} {filteredComments.length > 1 ? 'comments' : 'comment'} </span>}
+                </span>
             </div>}
 
         {/*  */}
-        <div style={{fontSize: '0.9em'}} className='justify-between text-gray-800 flex mt-1 pt-2 pl-3 pr-3 -mb-3 -ml-5 -mr-5 pt-1 border-t-2'>
+        <div className='justify-between text-gray-800 flex mt-1 pt-2 px-3 -mb-3 -mx-5 border-t-2'>
             <span className='mx-1 flex cursor-pointer'  onClick= {e => history.push(`/${twits.username}`)}>
                 {twits.imageUrl ? (
                 <span className='mr-1'>
-                    {(error || twits.imageUrl === 'null') ? <BsPersonFill size={18}/>:
-                    <img src={twits.imageUrl} alt='Profile' style={{width: '20px', height: '20px', borderRadius: '50%'}} />}
+                    {(error || twits.imageUrl === 'null') ? <BsPersonFill size={30}/>:
+                    <img src={twits.imageUrl} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
                 </span>) 
-                : <BsPersonFill size={18}/>}
-                {email === twits.email ? 'Me' : twits.username}
+                : <BsPersonFill size={30}/>}
+                <span className='text-md pt-1 text-blue-600 underline'>{email === twits.email ? 'Me' : `@${twits.username}`}</span>
             </span>
             <span className='flex'> 
-            <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => likeTwit()}>
-                <span className={lisLiked ? 'text-blue-500' : 'text-gray-500'}><AiFillLike size={20}/></span>
-               {/* {!likeLoading ? 
-               <>
-                </>:
-                <LoadSpan height={20} width={18} color='#00bfff' />} */}
-            </span> 
-            <span style={{cursor: 'pointer'}} className='mx-2 flex text-gray-500' onClick={() => commentTwit()}>
-                <BsChatText size={18}/>
-            </span>
-            {email === twits.email &&
-            <span style={{cursor: 'pointer'}} className='mx-2 flex hover:text-red-800' onClick={() => deleteTwit()}>
-                {!deleteLoading ? 
-                <AiTwotoneDelete size={20} color='red'/>:
-                <LoadSpan height={20} width={20} color='#00bfff' />}
-            </span>}
+                <span style={{cursor: 'pointer'}} className='flex flex-col text-xs mx-2' onClick={() => likeTwit()}>
+                    <span className={lisLiked ? 'text-blue-500 m-auto' : 'text-gray-500 m-auto'}><AiFillLike size={18}/></span><span>Like</span>
+                </span> 
+                <span className='text-xs cursor-pointer mx-2 flex text-gray-500 flex-col' onClick={() => commentTwit()}>
+                    <span className='m-auto'><FaRegComment size={16}/></span><span>Comment</span>
+                </span>
+                {/* {email === twits.email &&
+                <span className='cursor-pointer flex-col text-xs mx-2 flex' onClick={() => deleteTwit()}>
+                    {!deleteLoading ? 
+                    <><span className='m-auto'><AiTwotoneDelete size={18} color='red'/></span><span>Clear</span></>:
+                    <LoadSpan height={20} width={20} color='#00bfff' />}
+                </span>} */}
             </span>
         </div>
         {commentFormActive && <CommentForm twitId={id} showCommentForm={showCommentForm} sync={sync} setSync={setSync}/>}
         
-        {filteredComments.length > 0 &&
+        {/* {filteredComments.length > 0 &&
         <div className='mt-5'><span className='text-xs mt-4 -mb-2 cursor-pointer shadow-sm border-2 p-2' onClick={showComments}>{viewComments ? 'Hide Comments' : 'View Comments'}</span></div>
-        }
+        } */}
         {viewComments && 
             <>{comments.length > 0 && 
                     (<div className='mt-4 rounded'>

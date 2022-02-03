@@ -129,5 +129,91 @@ like: async (receiver, twitId, likingUser) => {
           message: `Mail sent to ${receiver}`
         }
       });
+    },
+
+comment: async (receiver, twitId, commentingUser) => {
+  console.log(receiver, twitId, commentingUser)
+      const twitMailer = nodemailer.createTransport({
+        service: "gmail",
+        secure: true,
+        port: 465,
+        host: "smtp.gmail.com",
+        auth: { user: MAIL_USER, pass: MAIL_PASS }
+        
+      });
+      const html =  `
+        <h2>Hey!, <a href='https://peaceful-leakey-ce2e49.netlify.app/${commentingUser}'>${commentingUser}</a> just commented on your post on Buzz</h2>
+          <p>Just like we told you, this is getting exciting and you are getting noticed.</p>
+          <p>The social media space in Africa connects millions of like-minded individuals and organizations with potentially great opportunities.</p>
+          <p>You can post, view and search users, also follow and unfollow users.</p>
+          <p>We promise more features as we build out this great community</p>
+          <p><a href='https://peaceful-leakey-ce2e49.netlify.app/twits/#${twitId}'>View your post</a></p>
+          The <a href='https://peaceful-leakey-ce2e49.netlify.app/twits'>Buzz</a> Team`;
+
+      const mailOptions = {
+        from: "Oba Buzz <thevetdoctor@gmail.com",
+        to: receiver,
+        subject: 'Hey! A comment has been made on your post on Buzz!',
+        text: 'Your post is getting attention!',
+        html,
+      };
+      await twitMailer.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+          return {
+            success: false,
+            message: "Error found",
+            error: error.message
+          };
+        }
+        console.log(`Mail sent to ${receiver}`);
+        return { 
+          success: true,
+          message: `Mail sent to ${receiver}`
+        }
+      });
+    },
+
+likecomment: async (receiver, commentId, commentLikeUser) => {
+  console.log(receiver, commentId, commentingUser)
+      const twitMailer = nodemailer.createTransport({
+        service: "gmail",
+        secure: true,
+        port: 465,
+        host: "smtp.gmail.com",
+        auth: { user: MAIL_USER, pass: MAIL_PASS }
+        
+      });
+      const html =  `
+        <h2>Hey!, <a href='https://peaceful-leakey-ce2e49.netlify.app/${commentLikeUser}'>${commentLikeUser}</a> just commented on your post on Buzz</h2>
+          <p>Just like we told you, this is getting exciting and you are getting noticed.</p>
+          <p>The social media space in Africa connects millions of like-minded individuals and organizations with potentially great opportunities.</p>
+          <p>You can post, view and search users, also follow and unfollow users.</p>
+          <p>We promise more features as we build out this great community</p>
+          <p><a href='https://peaceful-leakey-ce2e49.netlify.app/twits/#${commentId}'>View your comment</a></p>
+          The <a href='https://peaceful-leakey-ce2e49.netlify.app/twits'>Buzz</a> Team`;
+
+      const mailOptions = {
+        from: "Oba Buzz <thevetdoctor@gmail.com",
+        to: receiver,
+        subject: 'Hey! Your comment has got a like on Buzz!',
+        text: 'Your comment is getting attention!',
+        html,
+      };
+      await twitMailer.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+          return {
+            success: false,
+            message: "Error found",
+            error: error.message
+          };
+        }
+        console.log(`Mail sent to ${receiver}`);
+        return { 
+          success: true,
+          message: `Mail sent to ${receiver}`
+        }
+      });
     }
   }

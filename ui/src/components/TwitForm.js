@@ -23,7 +23,7 @@ export default function TwitForm(props) {
 
     const sendTwit = async() => {
         console.log(text, imageUrl)
-            if(!text && !imageUrl) {
+            if(!(text || imageUrl)) {
                 setError('Inputs required');
                 return;
             }
