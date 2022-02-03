@@ -189,7 +189,7 @@ useEffect(() => {
 
 return (
     <div style={{fontFamily: 'Roboto', fontWeight: '600', height: '90vh'}} className='mb-5 p-3 m-auto flex justify-center md:w-1/2'>
-        <span style={{cursor: 'pointer', borderRadius: '50%'}} className='text-xs mb-3 fixed bottom-9 right-2 bg-green-500 px-5 py-3 text-white'><RiChatNewLine size={25} onClick={showForm} />post</span>
+        <span style={{cursor: 'pointer', borderRadius: '50%'}} className='text-xs mb-3 fixed bottom-10 right-2 bg-green-500 px-4 py-2 text-white'><RiChatNewLine size={25} onClick={showForm} />post</span>
         {/* <span style={{cursor: 'pointer', borderRadius: '50%'}} className='text-xs fixed bottom-5 right-4 bg-purple-500 px-5 py-3 text-white'><RiArrowUpLine size={20} onClick={showForm} />top</span> */}
         {formActive && <TwitForm error={error} showForm={showForm} sync={sync} setSync={setSync}/>}
         
@@ -220,11 +220,11 @@ return (
                     <AiFillHome size={25} color='black' />
                 </span>
                 {img !== 'null' ? (
-                            <span className='cursor-pointer pt-1'  onClick= {e => history.push('/twits')}>
+                            <span className='cursor-pointer pt-1'  onClick= {e => history.push(`/${username}`)}>
                                 {error ? <BsPersonFill size={25} color='gray' />:
                                 <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
                             </span>) 
-                            : <span className='cursor-pointer pt-2'><BsPersonFill size={25} color='gray' onClick={e => history.push('/twits')} /></span>}
+                            : <span className='cursor-pointer pt-2'><BsPersonFill size={25} color='gray' onClick={e => history.push(`/${username}`)} /></span>}
                 <span className='cursor-pointer pt-1' onClick= {e => history.push('/people')}>
                     <IoIosPeople size={30} color='gray'/>
                 </span>
@@ -387,7 +387,7 @@ export const Twit = (props) => {
     }
 
     return (
-    <div id={`${id}`} style={{fontSize: '1.1em'}} className='shadow-lg border-2 border-gray-200 rounded-lg px-4 pb-4 mb-4'>
+    <div id={`${id}`} style={{fontSize: '1.1em'}} className='shadow-lg border-2 border-gray-200 rounded-lg px-4 mx-2 pb-4 mb-4'>
         <p className='flex justify-between mb-2'>
             <span></span>
             {/* <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>{title}</span> */}
@@ -401,27 +401,27 @@ export const Twit = (props) => {
                 {(email === twits.email) && !editForm && 
                     <>
                     <span className={`flex flex-col cursor-pointer mr-2 p-2 -mt-2 rounded-full text-gray-500 ${menuShow ? '' : 'invisible'}`} onClick={() => editStory()}> 
-                        <span className='m-auto mb-2'><MdEdit size={15} /></span><span>Edit</span>
+                        <span className='m-auto mb-2'><MdEdit size={18} /></span><span>Edit</span>
                     </span>
                     <span className='cursor-pointer flex-col mr-2 p-2 -mt-2 flex' onClick={() => deleteTwit()}>
                         {!deleteLoading ? 
-                        <><span className='m-auto mb-2'><AiTwotoneDelete size={15} color='red'/></span><span>Clear</span></>:
+                        <><span className='m-auto mb-2'><AiTwotoneDelete size={18} color='red'/></span><span>Clear</span></>:
                         <LoadSpan height={20} width={20} color='#00bfff' />}
                     </span>
                     </>
                 }
                 <span className={linkCopied ? 'justify-center flex flex-col rounded-full p-2 text-white bg-blue-900 cursor-pointer -mt-2 mr-0' : `justify-center flex flex-col rounded-full p-2 cursor-pointer -mt-2 mr-0 text-gray-500 ${menuShow ? '' : 'invisible'}`} onClick={() => copyTwitLink()}> 
-                    <span className='m-auto mb-2'><MdContentCopy size={15} /></span><span>Copy</span>
+                    <span className='m-auto mb-2'><MdContentCopy size={18} /></span><span>Copy</span>
                 </span>
                 </>}
                 <span className={'justify-center flex flex-col rounded-full p-2 cursor-pointer -mt-2 mr-0 text-gray-500'} onClick={() => showMenu()}> 
                     {!menuShow ? 
                     <>
-                        <span className='m-auto mb-2'><FaEllipsisV size={15} /></span><span>More</span>
+                        <span className='m-auto mb-2'><FaEllipsisV size={18} /></span><span>More</span>
                     </>
                     :
                     <>
-                        <span className='m-auto mb-2'><IoMdClose size={15} /></span><span>Hide</span>
+                        <span className='m-auto mb-2'><IoMdClose size={18} /></span><span>Hide</span>
                     </>}
                 </span>
             </span>

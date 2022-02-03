@@ -74,7 +74,8 @@ export default function TwitForm(props) {
                 name='text'
                 rows={4}
                 cols={3}
-                style={{width: '16em', height: `${imageUrl ? '5em' : '13em'}`, border: 'none'}}
+                style={{width: '100%', height: `${imageUrl ? '5em' : '13em'}`, border: 'none'}}
+                // style={{height: `${imageUrl ? '5em' : '13em'}`, border: 'none'}}
                 maxLength={550}
                 value={text}
                 overflow="hidden"
@@ -96,7 +97,7 @@ export default function TwitForm(props) {
                     <span 
                         style={{cursor: 'pointer'}}
                         onClick={() => props.showForm()}
-                        className='hover:bg-gray-900 bg-gray-400 text-lg font-medium p-1 rounded text-white'
+                        className='hover:bg-gray-900 shadow-md bg-gray-400 text-md font-medium p-1 rounded text-white'
                         >    
                         Cancel
                     </span>
@@ -104,7 +105,7 @@ export default function TwitForm(props) {
                     <span 
                     style={{cursor: 'pointer'}}
                     onClick={sendTwit}
-                    className='hover:bg-green-900 bg-green-400 text-lg font-bold p-1 rounded text-white mx-2'
+                    className='hover:bg-green-900 shadow-md bg-green-400 text-md font-bold p-1 rounded text-white mx-2'
                     >    
                         Send
                     </span>

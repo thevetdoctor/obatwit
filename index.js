@@ -5,8 +5,10 @@ const db = require('./models/index');
 const routeHandler = require('./routes/index');
 const path = require('path');
 const webPush = require('web-push');
+const redisClient = require('redis');
 require('dotenv').config();
 
+// const client = redisClient.createClient();
 const port = process.env.PORT || 4000;
 const app = express();
 

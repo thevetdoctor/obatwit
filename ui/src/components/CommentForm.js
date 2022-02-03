@@ -58,7 +58,7 @@ export default function CommentForm(props) {
                 rows={5}
                 cols={8}
                 maxLength={160}
-                style={{width: '15em', height: '8em'}}
+                style={{width: '100%', height: '8em'}}
                 value={text} 
                 placeholder='Drop in your comment ...' 
                 onChange={handleChange}
