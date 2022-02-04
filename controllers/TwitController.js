@@ -8,8 +8,13 @@ const { response } = require('oba-http-response');
 const {createClient} = require('redis');
 require('dotenv').config();
 
-const client = createClient({url: process.env.REDIS_URL});
-client.connect()
+// const client = process.env.NODE_ENV !== 'development' ? createClient({url: process.env.REDIS_URL}) : createClient();
+// client.connect();
+
+// client.on( 'error', function( err ) {
+//     console.log( 'Error' + err );
+//     client.quit();
+//   });
 
 exports.postTwit = async(req, res) => {
     const { text, imageUrl, userId } = req.body;
@@ -52,6 +57,7 @@ exports.postTwit = async(req, res) => {
                 });
 
             client.set('twits', JSON.stringify(twits));
+            client.quit();
 
             response(res, 201, newTwit, null, 'Twit sent successfully');
         }catch(error) {
@@ -62,15 +68,15 @@ exports.postTwit = async(req, res) => {
 exports.getTwits = async(req, res) => {
       try {
 
-          const data = await client.get('twits')
+        //   const data = await client.get('twits')
         //   console.log(JSON.parse(data))
         //   client.get('twits', async (err, data) => {
         //       if(err) return response(res, 400, null, null, 'Cache error');
-              if(data !== null) {
-                  console.log('cache found');
-                  return response(res, 200, JSON.parse(data), null, 'Cached twits');
-                } else {
-                  console.log('cache not found');
+            //   if(data !== null) {
+            //       console.log('cache found');
+            //       return response(res, 200, JSON.parse(data), null, 'Cached twits');
+            //     } else {
+            //       console.log('cache not found');
                   const twits = await Twits.findAll({ 
                       where: { 
                               isDeleted: false
@@ -99,9 +105,9 @@ exports.getTwits = async(req, res) => {
                       ]
                       });
       
-                  client.set('twits', JSON.stringify(twits));
+                //   client.set('twits', JSON.stringify(twits));
                   response(res, 200, twits, null, 'List of twits');
-              }
+            //   }
         //   }).catch(err => console.log(err));
         }catch(error) {
             response(res, 500, null, error.message, 'Error in fetching twits');
@@ -183,6 +189,38 @@ exports.updateTwit = async(req, res) => {
                     }
                 ]
             });
+
+            // const twits = await Twits.findAll({ 
+            //     where: { 
+            //             isDeleted: false
+            //         },
+            //     include: [
+            //         { model: Users, as: 'twits',
+            //                 attributes: ['username', 'email', 'imageUrl']
+            //         },
+            //         { model: Comments, as: 'comments',
+            //             include: [
+            //                 { model: Users, as: 'usercomments',
+            //                     attributes: ['username', 'email', 'imageUrl']
+            //                 },
+            //                 { model: LikeComments, as: 'likecomments',
+            //                     // attributes: ['username', 'email', 'imageUrl']
+            //                 }
+            //             ]
+            //         },
+            //         { model: Likes, as: 'likes',
+            //             include: [
+            //                 { model: Users, as: 'userlikes',
+            //                 attributes: ['username', 'email', 'imageUrl']
+            //             }
+            //             ]
+            //         }
+            //     ]
+            //     });
+
+            // client.set('twits', JSON.stringify(twits));
+            // client.quit();
+
             response(res, 200, updatedTwit, null, 'Twit updated');
         }catch(error) {
             response(res, 500, null, error.message, 'Error in updating twit');
@@ -212,6 +250,38 @@ exports.deleteTwit = async(req, res) => {
                     isDeleted: false
                 }
             });
+
+            // const twits = await Twits.findAll({ 
+            //     where: { 
+            //             isDeleted: false
+            //         },
+            //     include: [
+            //         { model: Users, as: 'twits',
+            //                 attributes: ['username', 'email', 'imageUrl']
+            //         },
+            //         { model: Comments, as: 'comments',
+            //             include: [
+            //                 { model: Users, as: 'usercomments',
+            //                     attributes: ['username', 'email', 'imageUrl']
+            //                 },
+            //                 { model: LikeComments, as: 'likecomments',
+            //                     // attributes: ['username', 'email', 'imageUrl']
+            //                 }
+            //             ]
+            //         },
+            //         { model: Likes, as: 'likes',
+            //             include: [
+            //                 { model: Users, as: 'userlikes',
+            //                 attributes: ['username', 'email', 'imageUrl']
+            //             }
+            //             ]
+            //         }
+            //     ]
+            //     });
+
+            // client.set('twits', JSON.stringify(twits));
+            // client.quit();
+
             response(res, 200, updatedTwit, null, 'Twit deleted');
         }catch(error) {
             response(res, 500, null, error.message, 'Error in deleting twit');

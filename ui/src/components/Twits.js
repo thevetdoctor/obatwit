@@ -202,7 +202,7 @@ return (
                 <span style={{fontSize: '1em'}}> Feel free, express yourself & network </span>
                 </p> 
 
-                <div style={{top: '0em', margin: 'auto'}} className='p-2 rounded mb-2 flex justify-between border-3 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
+                <div style={{top: '0em', margin: 'auto'}} className='p-2 rounded mb-2 flex justify-between border-4 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
                     {img !== 'null' ? (
                         <span className='cursor-pointer'  onClick= {e => history.push(`/${username}`)}>
                             {error ? <BsPersonFill size={25} />:
@@ -215,7 +215,7 @@ return (
                     </span>
                 </div>
 
-                <div style={{bottom: '0em', margin: 'auto'}} className='p-2 rounded flex justify-around border-3 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
+                <div style={{bottom: '0em', margin: 'auto'}} className='p-2 rounded flex justify-around border-4 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
                 <span className='cursor-pointer pt-2 border-t-2 border-black' onClick={() => history.push("/twits")}>
                     <AiFillHome size={25} color='black' />
                 </span>
@@ -387,7 +387,7 @@ export const Twit = (props) => {
     }
 
     return (
-    <div id={`${id}`} style={{fontSize: '1.1em'}} className='shadow-lg border-2 border-gray-200 rounded-lg px-4 mx-2 pb-4 mb-4'>
+    <div id={`${id}`} style={{fontSize: '1.1em'}} className='shadow-lg border-2 border-gray-200 rounded-lg px-5 m-0 pb-4 mb-4'>
         <p className='flex justify-between mb-2'>
             <span></span>
             {/* <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>{title}</span> */}
@@ -454,7 +454,7 @@ export const Twit = (props) => {
                     <LoadSpan height={20} width={20} color='#00bfff' />}
                 </div>}
 
-        {!editForm && <div style={{fontSize: '0.9em', lineHeight: 2}} className='mt-2'>
+        {!editForm && <div style={{fontSize: '0.9em', lineHeight: 2}} className='mt-6 px-2'>
             {text.length > 100 ? 
                 text.slice(0, 100) 
                 : 

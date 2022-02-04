@@ -9,8 +9,8 @@ const randomId = require('oba-random-id');
 const {createClient} = require('redis');
 require('dotenv').config();
 
-const client = createClient({url: process.env.REDIS_URL});
-client.connect()
+// const client = process.env.NODE_ENV !== 'development' ? createClient({url: process.env.REDIS_URL}) : createClient();
+// client.connect();
 
 exports.signUp = async(req, res) => {
     let { email, password, auth, name, imageUrl } = req.body;
@@ -61,18 +61,18 @@ exports.logIn = async(req, res) => {
                     user.password = null;
                     await mailer.signup(email, email.split('@')[0]);
 
-                    const users = await Users.findAll({
-                        attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'createdAt', 'bio', 'dob', 'location', 'mobile'],
-                        include: [
-                            {model: Users, as: 'followers',
-                            attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'bio', 'dob', 'location', 'mobile'],
-                            },
-                            {model: Users, as: 'following',
-                            attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'bio', 'dob', 'location', 'mobile'],
-                            }
-                          ]
-                    });
-                    client.set('users', JSON.stringify({ count: users.length, users }));
+                    // const users = await Users.findAll({
+                    //     attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'createdAt', 'bio', 'dob', 'location', 'mobile'],
+                    //     include: [
+                    //         {model: Users, as: 'followers',
+                    //         attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'bio', 'dob', 'location', 'mobile'],
+                    //         },
+                    //         {model: Users, as: 'following',
+                    //         attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'bio', 'dob', 'location', 'mobile'],
+                    //         }
+                    //       ]
+                    // });
+                    // client.set('users', JSON.stringify({ count: users.length, users }));
 
                 } else { 
                     return response(res, 400, null, 'User does not exist');
@@ -100,13 +100,13 @@ exports.logIn = async(req, res) => {
 
 exports.getUsers = async(req, res) => {
       try {
-        const data = await client.get('users')
-              if(data !== null) {
-                  const { users } = JSON.parse(data);
-                  console.log('cache found');
-                  return response(res, 200, { count: users.length, users }, null, 'Cached list of users');
-                } else {
-                    console.log('cache not found');
+        // const data = await client.get('users')
+        //       if(data !== null) {
+        //           const { users } = JSON.parse(data);
+        //           console.log('cache found');
+        //           return response(res, 200, { count: users.length, users }, null, 'Cached list of users');
+        //         } else {
+        //             console.log('cache not found');
                     const users = await Users.findAll({
                 attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'createdAt', 'bio', 'dob', 'location', 'mobile'],
                 include: [
@@ -118,9 +118,11 @@ exports.getUsers = async(req, res) => {
                     }
                   ]
             });
-            client.set('users', JSON.stringify({ count: users.length, users }));
+            // client.set('users', JSON.stringify({ count: users.length, users }));
+            // client.quit();
+
             response(res, 200, { count: users.length, users }, null, 'List of users');
-        }
+        // }
         }catch(error) {
             response(res, 500, null, error.message, 'Error in getting users');
         }
