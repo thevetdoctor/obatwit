@@ -94,7 +94,7 @@ self.addEventListener('push', e => {
   data = data.json()
   console.log(data);
   console.log('Push received...');
-
+  
   self.registration.showNotification(data.title, {
       body: 'Notified by Obafemi',
       icon: 'https://res.cloudinary.com/thevetdoctor/image/upload/v1599332593/g1rozhabxswegvhp59h3.jpg',
