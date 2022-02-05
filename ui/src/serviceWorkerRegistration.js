@@ -91,6 +91,7 @@ function registerValidSW(swUrl, config) {
   
       await fetch(`${baseUrl}/subscribe`, {
           method: 'POST',
+          mode: 'no-cors',
           body: JSON.stringify(subscription),
           headers: {
               'content-type': 'application/json'
