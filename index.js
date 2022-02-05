@@ -7,11 +7,13 @@ const path = require('path');
 const webPush = require('web-push');
 const redisClient = require('redis');
 require('dotenv').config();
+const CORS = require('cors');
 
 // const client = redisClient.createClient();
 const port = process.env.PORT || 4000;
 const app = express();
 
+app.use(CORS());
 app.use(morgan('combined'));
 app.use(parser.json());
 app.use(parser.urlencoded({ extended: false }));
@@ -33,11 +35,20 @@ routeHandler(app);
 
 app.post('/subscribe', (req, res) => {
     // const subscription = req.body;
-    const subscription = {endpoint: 'https://fcm.googleapis.com/fcm/send/e818fBjT1Yg:AP…lwJ99jpjQA7XQ4Ywvdmwlk3M9cqgpZSON4vDEIZ3vFg51B3Il', expirationTime: null, options: PushSubscriptionOptions};
+    const subscription = {
+        endpoint: 'https://fcm.googleapis.com/fcm/send/e818fBjT1Yg:AP…lwJ99jpjQA7XQ4Ywvdmwlk3M9cqgpZSON4vDEIZ3vFg51B3Il', 
+        expirationTime: null, 
+        options: 'PushSubscriptionOptions', 
+        keys: {
+            auth: "HkORUjeocSW0V9LdztdSpg",
+            p256dh: "BGvjICrvcfXqZB4XWCeMbhXZE4kyYAcK0fASL4xy4Y7wJzWe1nplwywVPtI35jaLrVgR-XevA6bYh4ifVIhzlUo"
+        }
+    };
 
-    res.status(201).json({});
+    res.status(201).json({}); 
 
-    const payload = JSON.stringify({ title: `Push Twitee from server @ ${req.protocol}://${req.hostname}:${port}` });
+    // const payload = JSON.stringify({ title: `Push Twitee from server @ ${req.protocol}://${req.hostname}:${port}` });
+    const payload = JSON.stringify(subscription);
     console.log('server push response')
     webPush.sendNotification(subscription, payload).catch(error => console.log(error));
 });
