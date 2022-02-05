@@ -96,14 +96,12 @@ self.addEventListener('push', e => {
   console.log('Push received...');
   
   self.registration.showNotification(data.title, {
-      body: 'Notified by Obafemi',
-      icon: 'https://res.cloudinary.com/thevetdoctor/image/upload/v1599332593/g1rozhabxswegvhp59h3.jpg',
-      // body : notifiBody,
-      // icon : imageIcon,
+      body: 'Oba Buzz',
+      icon: 'https://res.cloudinary.com/thevetdoctor/image/upload/v1644026260/buzz/Buzz-logo-120.png',
       data: {
         dateOfArrival: Date.now(),
         primaryKey: 1,
-        redirectUrl : 'https://res.cloudinary.com/thevetdoctor/image/upload/v1599332593/g1rozhabxswegvhp59h3.jpg'
+        redirectUrl : 'https://peaceful-leakey-ce2e49.netlify.app/twits/#f8f26638-ce8f-4981-b2d4-ffe5a0b60651'
       },
       timeout : 1000
   });

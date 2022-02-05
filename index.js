@@ -36,21 +36,21 @@ routeHandler(app);
 app.post('/subscribe', (req, res) => {
     // const subscription = req.body;
     const subscription = {
-        endpoint: 'https://fcm.googleapis.com/fcm/send/e818fBjT1Yg:AP…lwJ99jpjQA7XQ4Ywvdmwlk3M9cqgpZSON4vDEIZ3vFg51B3Il', 
+        endpoint: 'https://fcm.googleapis.com/fcm/send/fGaRuEXd-Ks:APA91bEqV736aPoFNU_7Irvvh15fU6zAZ5NnnB1pm2T_812simqeXXOxj8xLUkJXzhLd9Mh4wey8Qcu8Ue0fUQOobo2dvioClgbW5jC58oNd5g4VXl_he3j9Ic21K67445T7S_cSkq_P', 
         expirationTime: null, 
         options: 'PushSubscriptionOptions', 
         keys: {
-            auth: "HkORUjeocSW0V9LdztdSpg",
-            p256dh: "BGvjICrvcfXqZB4XWCeMbhXZE4kyYAcK0fASL4xy4Y7wJzWe1nplwywVPtI35jaLrVgR-XevA6bYh4ifVIhzlUo"
+            auth: "vQtN7v-nNcYin1wKp78GEw",
+            p256dh: "BAs1GSDAVMKgVTcvrNGFwtV8-lk9wCSxK4XJJ0nHR2zZPhk5YfQBuFKLOycJC3vKbPMRx3FzzvPzgKoRuBmcU-I"
         }
     };
 
     res.status(201).json({}); 
 
     // const payload = JSON.stringify({ title: `Push Twitee from server @ ${req.protocol}://${req.hostname}:${port}` });
-    const payload = JSON.stringify(subscription);
+    const payload = JSON.stringify({ title: 'Buzz' });
     console.log('server push response')
-    webPush.sendNotification(subscription, payload).catch(error => console.log(error));
+    webPush.sendNotification(subscription, payload).catch(error => console.log(error.message));
 });
 
 // Handles all errors

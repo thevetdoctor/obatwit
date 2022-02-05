@@ -12,7 +12,6 @@
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read https://cra.link/PWA
 
-const publicVapid = 'BNjjQs4mQL339-Dk2i5HF5jbv14xHn-jHrPbTa1LJ-HZZXZnArYQfR7ddcdB0oQ0ADQjgx8q_nN_cTW7jOq9k6Y';
 const {baseUrl} = require('./helper');
 
 const urlBase64ToUint8Array = (base64String) => {
@@ -82,8 +81,7 @@ function registerValidSW(swUrl, config) {
   
       const subscription = await registration.pushManager.subscribe({
           userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(publicVapid)
-          // applicationServerKey: publicVapid
+          applicationServerKey: urlBase64ToUint8Array(process.env.PUBLIC_VAPID)
       });
       console.log('Push Manager registered');
   
@@ -91,7 +89,6 @@ function registerValidSW(swUrl, config) {
   
       await fetch(`${baseUrl}/subscribe`, {
           method: 'POST',
-          mode: 'no-cors',
           body: JSON.stringify(subscription),
           headers: {
               'content-type': 'application/json'
