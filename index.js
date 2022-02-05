@@ -33,19 +33,19 @@ webPush.setVapidDetails('mailto:thevetdoctor@gmail.com', PUBLIC_VAPID_KEY, PRIVA
 
 routeHandler(app);
 
-app.post('/subscribe', (req, res) => {
-    // const subscription = req.body;
-    const subscription = {
-        endpoint: 'https://fcm.googleapis.com/fcm/send/fGaRuEXd-Ks:APA91bEqV736aPoFNU_7Irvvh15fU6zAZ5NnnB1pm2T_812simqeXXOxj8xLUkJXzhLd9Mh4wey8Qcu8Ue0fUQOobo2dvioClgbW5jC58oNd5g4VXl_he3j9Ic21K67445T7S_cSkq_P', 
-        expirationTime: null, 
-        options: 'PushSubscriptionOptions', 
-        keys: {
-            auth: "vQtN7v-nNcYin1wKp78GEw",
-            p256dh: "BAs1GSDAVMKgVTcvrNGFwtV8-lk9wCSxK4XJJ0nHR2zZPhk5YfQBuFKLOycJC3vKbPMRx3FzzvPzgKoRuBmcU-I"
-        }
-    };
-
-    res.status(201).json({}); 
+app.post('/subscribe', CORS(), (req, res) => {
+    const subscription = req.body;
+    // const subscription = {
+    //     endpoint: 'https://fcm.googleapis.com/fcm/send/fs3lFWhQdFo:APA91bHJpJiI5XdMbaN5KTzJ5FN82A8j_Tmi8ZT-uFNzMYwOB-_K73dOArc1RJXj2NjnRAhDY3iBRU_XllMxcN6gZqVvifyCz79wiz5uUSQafWD8J7GtGjvoCMYKgjgjpNzaK-GfaHU2', 
+    //     expirationTime: null, 
+    //     options: 'PushSubscriptionOptions', 
+    //     keys: {
+    //         auth: "9ipCHxYlDxb8YlOBZrIhvA",
+    //         p256dh: "BFKQTVM7nqpPD2vU-t4XNDNNl61saWtR1SZChHNAPmMv9znFqT2ipxD7spkulqpATPN-0hWgPKnvMTzU5wbNsEU"
+    //     }
+    // };
+ 
+    res.status(201).json({message: 'Notification sent'}); 
 
     // const payload = JSON.stringify({ title: `Push Twitee from server @ ${req.protocol}://${req.hostname}:${port}` });
     const payload = JSON.stringify({ title: 'Buzz' });

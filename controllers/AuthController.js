@@ -123,7 +123,7 @@ exports.getUsers = async(req, res) => {
 
             response(res, 200, { count: users.length, users }, null, 'List of users');
         // }
-        }catch(error) {
+        }catch(error) { 
             response(res, 500, null, error.message, 'Error in getting users');
         }
 }; 

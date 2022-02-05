@@ -92,7 +92,7 @@ self.addEventListener('push', e => {
   // const data = e.data.json()
   let { data } = e;
   data = data.json()
-  console.log(data);
+  // console.log(data);
   console.log('Push received...');
   
   self.registration.showNotification(data.title, {
@@ -101,7 +101,7 @@ self.addEventListener('push', e => {
       data: {
         dateOfArrival: Date.now(),
         primaryKey: 1,
-        redirectUrl : 'https://peaceful-leakey-ce2e49.netlify.app/twits/#f8f26638-ce8f-4981-b2d4-ffe5a0b60651'
+        redirectUrl : 'https://obabuzz.netlify.app/twits/#f8f26638-ce8f-4981-b2d4-ffe5a0b60651'
       },
       timeout : 1000
   });

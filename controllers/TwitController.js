@@ -28,36 +28,36 @@ exports.postTwit = async(req, res) => {
 
             const newTwit = await Twits.create(req.body);
 
-            const twits = await Twits.findAll({ 
-                where: { 
-                        isDeleted: false
-                    },
-                include: [
-                    { model: Users, as: 'twits',
-                            attributes: ['username', 'email', 'imageUrl']
-                    },
-                    { model: Comments, as: 'comments',
-                        include: [
-                            { model: Users, as: 'usercomments',
-                                attributes: ['username', 'email', 'imageUrl']
-                            },
-                            { model: LikeComments, as: 'likecomments',
-                                // attributes: ['username', 'email', 'imageUrl']
-                            }
-                        ]
-                    },
-                    { model: Likes, as: 'likes',
-                        include: [
-                            { model: Users, as: 'userlikes',
-                            attributes: ['username', 'email', 'imageUrl']
-                        }
-                        ]
-                    }
-                ]
-                });
+            // const twits = await Twits.findAll({ 
+            //     where: { 
+            //             isDeleted: false
+            //         },
+            //     include: [
+            //         { model: Users, as: 'twits',
+            //                 attributes: ['username', 'email', 'imageUrl']
+            //         },
+            //         { model: Comments, as: 'comments',
+            //             include: [
+            //                 { model: Users, as: 'usercomments',
+            //                     attributes: ['username', 'email', 'imageUrl']
+            //                 },
+            //                 { model: LikeComments, as: 'likecomments',
+            //                     // attributes: ['username', 'email', 'imageUrl']
+            //                 }
+            //             ]
+            //         },
+            //         { model: Likes, as: 'likes',
+            //             include: [
+            //                 { model: Users, as: 'userlikes',
+            //                 attributes: ['username', 'email', 'imageUrl']
+            //             }
+            //             ]
+            //         }
+            //     ]
+            //     });
 
-            client.set('twits', JSON.stringify(twits));
-            client.quit();
+            // client.set('twits', JSON.stringify(twits));
+            // client.quit();
 
             response(res, 201, newTwit, null, 'Twit sent successfully');
         }catch(error) {
