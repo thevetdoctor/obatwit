@@ -80,14 +80,14 @@ function registerValidSW(swUrl, config) {
 
       console.log('Registering Push Manager');
   
-      const subscription = registration.pushManager.subscribe({
+      const subscription = await registration.pushManager.subscribe({
           userVisibleOnly: true,
           // applicationServerKey: urlBase64ToUint8Array(publicVapid)
           applicationServerKey: publicVapid
       });
       console.log('Push Manager registered');
   
-      console.log('Sending Push');
+      console.log('Sending Push', subscription);
   
       await fetch(`${baseUrl}/subscribe`, {
           method: 'POST',
@@ -96,7 +96,7 @@ function registerValidSW(swUrl, config) {
               'content-type': 'application/json'
           }
       });
-      console.log('Push Sent');
+      console.log('Push Sent', subscription);
 
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
