@@ -82,8 +82,8 @@ function registerValidSW(swUrl, config) {
   
       const subscription = await registration.pushManager.subscribe({
           userVisibleOnly: true,
-          // applicationServerKey: urlBase64ToUint8Array(publicVapid)
-          applicationServerKey: publicVapid
+          applicationServerKey: urlBase64ToUint8Array(publicVapid)
+          // applicationServerKey: publicVapid
       });
       console.log('Push Manager registered');
   
