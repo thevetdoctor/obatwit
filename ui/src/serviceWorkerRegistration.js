@@ -13,6 +13,7 @@
 // opt-in, read https://cra.link/PWA
 
 const {baseUrl} = require('./helper');
+console.log(process.env.REACT_APP_PUBLIC_VAPID ? 'Valid' : 'Invalid');
 
 const urlBase64ToUint8Array = (base64String) => {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
