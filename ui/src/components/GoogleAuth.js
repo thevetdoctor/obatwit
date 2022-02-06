@@ -31,7 +31,7 @@ export default function GoogleAuth(props) {
                 buttonText={'Use Google'}
                 onSuccess={onSuccess}
                 onFailure={onFailure}
-                isSignedIn={true}
+                // isSignedIn={true}
                 cookeiPolicy={'single_host_origin'}
                 style={{marginTop: '160px'}}
             />

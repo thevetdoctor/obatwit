@@ -615,7 +615,7 @@ const Comment = (props) => {
     }
 
     return(
-        <div className='border border-gray-200 shadow-lg mb-2 p-1 rounded'>
+        <div id={`${id}`} className='border border-gray-200 shadow-lg mb-2 p-1 rounded'>
             <span className='text-xs mb-2 ml-2'>
             <Moment fromNow>{createdAt}</Moment>
             </span>
