@@ -1,12 +1,18 @@
 const Sequelize = require("sequelize");
 const Users = require('../models').user;
 const Twits = require('../models').twit;
+const Push = require('../models').push;
 const Comments = require('../models').comment;
 const Likes = require('../models').like;
 const LikeComments = require('../models').likecomment;
 const { response } = require('oba-http-response');
 const {createClient} = require('redis');
 require('dotenv').config();
+const webPush = require('web-push');
+
+const {PUBLIC_VAPID_KEY, PRIVATE_VAPID_KEY} = process.env;
+
+webPush.setVapidDetails('mailto:thevetdoctor@gmail.com', PUBLIC_VAPID_KEY, PRIVATE_VAPID_KEY);
 
 // const client = process.env.NODE_ENV !== 'development' ? createClient({url: process.env.REDIS_URL}) : createClient();
 // client.connect();
@@ -58,6 +64,20 @@ exports.postTwit = async(req, res) => {
 
             // client.set('twits', JSON.stringify(twits));
             // client.quit();
+
+            const allPushIds = await Push.findAll({
+                attributes: ['text']
+            });
+            if(allPushIds[0]) {
+                allPushIds.forEach(push => {
+                    const subscription = JSON.parse(push.text);
+                    console.log(text);
+                    const payload = JSON.stringify({ title: 'Buzz', message: text.slice(0, 20), postId: newTwit.id});
+                    webPush.sendNotification(subscription, payload).catch(error => console.log(error.message));
+                });
+            } else {
+                console.log('No push IDs in record');
+            }
 
             response(res, 201, newTwit, null, 'Twit sent successfully');
         }catch(error) {

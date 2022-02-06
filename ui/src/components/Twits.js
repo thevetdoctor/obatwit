@@ -144,6 +144,13 @@ export default function Twits() {
             }
     }
 
+    const handleDeleteTwit = (id) => {
+            dispatch({
+                type: 'DELETE_TWIT',
+                data: id
+            });
+    }
+
     const checkOpenForms = () => {
         let closedTwits = twits.map(twit => {
             twit.formActive = false;
@@ -188,7 +195,7 @@ useEffect(() => {
 }, [twits]);
 
 return (
-    <div style={{fontFamily: 'Roboto', fontWeight: '600', height: '90vh'}} className='mb-5 p-3 m-auto flex justify-center md:w-1/2'>
+    <div style={{fontFamily: 'Raleway', height: '90vh', fontSize: '0.8em'}} className='text-md mb-5 p-3 m-auto flex justify-center md:w-1/2'>
         <span style={{cursor: 'pointer', borderRadius: '50%'}} className='text-xs mb-3 fixed bottom-10 right-2 bg-green-500 px-4 py-2 text-white'><RiChatNewLine size={25} onClick={showForm} />post</span>
         {/* <span style={{cursor: 'pointer', borderRadius: '50%'}} className='text-xs fixed bottom-5 right-4 bg-purple-500 px-5 py-3 text-white'><RiArrowUpLine size={20} onClick={showForm} />top</span> */}
         {formActive && <TwitForm error={error} showForm={showForm} sync={sync} setSync={setSync}/>}
@@ -197,9 +204,9 @@ return (
         <div>
             <div className='flex justify-center m-auto -mt-3 p-2 md:w-1/2 flex-col'>
                 <p style={{marginTop: '3em'}} className='text-center mb-2 grow'>
-                <span style={{fontFamily: 'Architects Daughter', fontSize: '1.8em'}} className='text-purple-900 font-bold italic'>Buzz<br/>
+                <span style={{fontFamily: 'Architects Daughter', fontSize: '2em'}} className='text-purple-900 font-bold italic'>Buzz<br/>
                 </span> 
-                <span style={{fontSize: '1em'}}> Feel free, express yourself & network </span>
+                <span style={{fontSize: '1.2em'}}> Feel free, express yourself & network </span>
                 </p> 
 
                 <div style={{top: '0em', margin: 'auto'}} className='p-2 rounded mb-2 flex justify-between border-4 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
@@ -215,26 +222,18 @@ return (
                     </span>
                 </div>
 
-                <div style={{bottom: '0em', margin: 'auto'}} className='p-2 rounded flex justify-around border-4 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
-                <span className='cursor-pointer pt-2 border-t-2 border-black' onClick={() => history.push("/twits")}>
-                    <AiFillHome size={25} color='black' />
-                </span>
-                {img !== 'null' ? (
-                            <span className='cursor-pointer pt-1'  onClick= {e => history.push(`/${username}`)}>
-                                {error ? <BsPersonFill size={25} color='gray' />:
-                                <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
-                            </span>) 
-                            : <span className='cursor-pointer pt-2'><BsPersonFill size={25} color='gray' onClick={e => history.push(`/${username}`)} /></span>}
-                <span className='cursor-pointer pt-1' onClick= {e => history.push('/people')}>
-                    <IoIosPeople size={30} color='gray'/>
-                </span>
-                {/* <span className='cursor-pointer pt-1'>
-                    <RiChatNewLine size={25} color='gray' onClick={showForm} />
-                </span> */}
+                <div style={{bottom: '0em', margin: 'auto'}} className='pb-1 rounded flex justify-around border-2 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
+                    <span className='cursor-pointer pt-1 border-t-2 border-black' onClick={() => history.push("/twits")}>
+                        <AiFillHome size={25} color='black' />
+                    </span>
 
-                <span className='cursor-pointer pt-1'  onClick= {e => history.push(`/chats/${username}`)}><MdEmail size={25} color='gray' />
-                </span>
-            </div>
+                    <span className='cursor-pointer pt-2' onClick= {e => history.push('/people')}>
+                        <IoIosPeople size={30} color='gray'/>
+                    </span>
+
+                    <span className='cursor-pointer pt-2'  onClick= {e => history.push(`/chats/${username}`)}><MdEmail size={25} color='gray' />
+                    </span>
+                </div>
                 {error && <div style={{fontFamily: 'Roboto', backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-1 m-0 rounded border-3 -mx-2 md:w-300'>Please check your network !</div>}
             </div>
 
@@ -251,7 +250,7 @@ return (
             <div className=''>
             {
                 twits.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((twit, idx) => 
-                    <Twit key={idx} twit={twit} email={email} userId={userId} apiCallHook={apiCallHook} baseUrl={baseUrl} frontendUrl={frontendUrl} sync={sync} setSync={setSync} showForm={showForm} formActive={formActive} checkOpenForms={checkOpenForms} error={error} />
+                    <Twit key={idx} twit={twit} email={email} userId={userId} apiCallHook={apiCallHook} baseUrl={baseUrl} frontendUrl={frontendUrl} sync={sync} setSync={setSync} showForm={showForm} formActive={formActive} checkOpenForms={checkOpenForms} error={error} handleDeleteTwit={handleDeleteTwit} />
                 )
             }
             </div>}
@@ -261,7 +260,7 @@ return (
 }
 
 export const Twit = (props) => {
-    let { twit: {id, text, imageUrl, twits, likes, comments, createdAt, updatedAt }, email, userId, apiCallHook, baseUrl, frontendUrl, sync, setSync, checkOpenForms, error } = props;
+    let { twit: {id, text, imageUrl, twits, likes, comments, createdAt, updatedAt }, email, userId, apiCallHook, baseUrl, frontendUrl, sync, setSync, checkOpenForms, error, handleDeleteTwit } = props;
     const [commentFormActive, setCommentFormActive] = useState(false);
     const [editLoading, setEditLoading] = useState(false);
     // const [likeLoading, setLikeLoading] = useState(false);
@@ -270,11 +269,11 @@ export const Twit = (props) => {
     const [editForm, setEditForm] = useState(false);
     const [linkCopied, setLinkCopied] = useState(false);
     const [more, setMore] = useState(false);
+    const [viewLikes, setViewLikes] = useState(false);
     const [viewComments, setViewComments] = useState(false);
     const [show, setShow] = useState(false);
     const [sourceData, setSourceData] = useState({});
     const [menuShow, setMenuShow] = useState(false);
-    
     
     const history = useHistory();
     const likeCount = likes.filter(like => like.isLiked).length;
@@ -315,10 +314,20 @@ export const Twit = (props) => {
         }
     }
 
+    const showLikes = () => {
+        if(viewLikes) {
+            setViewLikes(false);
+        } else {
+            setViewComments(false);
+            setViewLikes(true);
+        }
+    }
+
     const showComments = () => {
         if(viewComments) {
             setViewComments(false);
         } else {
+            setViewLikes(false);
             setViewComments(true);
         }
     }
@@ -365,10 +374,11 @@ export const Twit = (props) => {
         showCommentForm();
     }
     const deleteTwit = () => {
-        setDeleteLoading(true);
-        setTimeout(() => {
-            setDeleteLoading(false);
-        }, 1000);
+        // setDeleteLoading(true);
+        // setTimeout(() => {
+        //     setDeleteLoading(false);
+        // }, 1000);
+        handleDeleteTwit(id);
         apiCallHook('DELETE', `${baseUrl}/twits/${id}`);
     }
 
@@ -403,25 +413,25 @@ export const Twit = (props) => {
                     <span className={`flex flex-col cursor-pointer mr-2 p-2 -mt-2 rounded-full text-gray-500 ${menuShow ? '' : 'invisible'}`} onClick={() => editStory()}> 
                         <span className='m-auto mb-2'><MdEdit size={18} /></span><span>Edit</span>
                     </span>
-                    <span className='cursor-pointer flex-col mr-2 p-2 -mt-2 flex' onClick={() => deleteTwit()}>
+                    <span className='cursor-pointer flex-col mr-2 p-2 -mt-2 flex text-gray-500' onClick={() => deleteTwit()}>
                         {!deleteLoading ? 
                         <><span className='m-auto mb-2'><AiTwotoneDelete size={18} color='red'/></span><span>Clear</span></>:
                         <LoadSpan height={20} width={20} color='#00bfff' />}
                     </span>
                     </>
                 }
-                <span className={linkCopied ? 'justify-center flex flex-col rounded-full p-2 text-white bg-blue-900 cursor-pointer -mt-2 mr-0' : `justify-center flex flex-col rounded-full p-2 cursor-pointer -mt-2 mr-0 text-gray-500 ${menuShow ? '' : 'invisible'}`} onClick={() => copyTwitLink()}> 
+                <span className={`justify-center flex flex-col rounded-full p-2 cursor-pointer -mt-2 mr-0 text-gray-500 ${menuShow ? '' : 'invisible'}`} onClick={() => copyTwitLink()}> 
                     <span className='m-auto mb-2'><MdContentCopy size={18} /></span><span>Copy</span>
                 </span>
                 </>}
                 <span className={'justify-center flex flex-col rounded-full p-2 cursor-pointer -mt-2 mr-0 text-gray-500'} onClick={() => showMenu()}> 
-                    {!menuShow ? 
+                    {menuShow ? 
                     <>
-                        <span className='m-auto mb-2'><FaEllipsisV size={18} /></span><span>More</span>
+                        <span className='m-auto mb-2'><IoMdClose size={18} /></span><span>Hide</span>
                     </>
                     :
                     <>
-                        <span className='m-auto mb-2'><IoMdClose size={18} /></span><span>Hide</span>
+                        <span className='m-auto mb-2'><FaEllipsisV size={18} /></span><span>More</span>
                     </>}
                 </span>
             </span>
@@ -454,7 +464,7 @@ export const Twit = (props) => {
                     <LoadSpan height={20} width={20} color='#00bfff' />}
                 </div>}
 
-        {!editForm && <div style={{fontSize: '0.9em', lineHeight: 2}} className='mt-6 px-2'>
+        {!editForm && <div style={{fontSize: '1.1em', lineHeight: 2}} className='mt-6 px-2'>
             {text.length > 100 ? 
                 text.slice(0, 100) 
                 : 
@@ -489,16 +499,18 @@ export const Twit = (props) => {
         <Image show={show} handleShow={handleShow} sourceData={sourceData} />
         {/* likes and comments count section */}
             {(llikeCount > 0 || comments.length > 0) && 
-            <div className='flex text-xs p-1 px-3 mt-1 -mx-4'>
-                {llikeCount > 0 && <span className='mr-2'>{llikeCount}{' '} {llikeCount > 1 ? 'likes' : 'like'} </span>}
+            <div className='flex text-md p-1 px-3 mt-1 -mx-4'>
+                <span onClick={showLikes}>
+                    {llikeCount > 0 && <span className='mr-2 cursor-pointer'>{llikeCount}{' '} {llikeCount > 1 ? 'likes' : 'like'} </span>}
+                </span>
                 <span onClick={showComments}>
-                {filteredComments.length > 0 && <span className='cursor-pointer'>{filteredComments.length}{' '} {filteredComments.length > 1 ? 'comments' : 'comment'} </span>}
+                    {filteredComments.length > 0 && <span className='cursor-pointer'>{filteredComments.length}{' '} {filteredComments.length > 1 ? 'comments' : 'comment'} </span>}
                 </span>
             </div>}
 
         {/*  */}
         <div className='justify-between text-gray-800 flex mt-1 pt-2 px-3 -mb-3 -mx-5 border-t-2'>
-            <span className='mx-1 flex cursor-pointer'  onClick= {e => history.push(`/${twits.username}`)}>
+            <span className='mx-1 flex cursor-pointer' onClick= {e => history.push(`/${twits.username}`)}>
                 {twits.imageUrl ? (
                 <span className='mr-1'>
                     {(error || twits.imageUrl === 'null') ? <BsPersonFill size={30}/>:
@@ -527,6 +539,13 @@ export const Twit = (props) => {
         {/* {filteredComments.length > 0 &&
         <div className='mt-5'><span className='text-xs mt-4 -mb-2 cursor-pointer shadow-sm border-2 p-2' onClick={showComments}>{viewComments ? 'Hide Comments' : 'View Comments'}</span></div>
         } */}
+        {viewLikes && 
+            <div className='border-2 border-gray-200 shadow-lg mt-4 rounded'>
+                {likes.map((person, idx) => (
+                    <LikeUsers key={idx} person={person} email={email} error={error} />
+                ))}
+            </div>
+        }
         {viewComments && 
             <>{comments.length > 0 && 
                     (<div className='mt-4 rounded'>
@@ -600,7 +619,7 @@ const Comment = (props) => {
             <span className='text-xs mb-2 ml-2'>
             <Moment fromNow>{createdAt}</Moment>
             </span>
-            <p style={{fontSize: '0.9em', lineHeight: 2}} className='p-2 font-semibold'>
+            <p style={{fontSize: '1.1em', lineHeight: 2}} className='p-2'>
             {/* {text.length > 100 ? text.slice(0, 100) : text} */}
             {text.length > 100 ? 
                 text.slice(0, 100) 
@@ -649,26 +668,47 @@ const Comment = (props) => {
                     {email === usercomments.email ? 'Me' : usercomments.username}
                 </span>
                 <span className='flex'>
-                <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => likeComment()}>
-                    <span className={lisLiked ? 'text-blue-500' : 'text-gray-500'}><AiFillLike size={20}/></span>
-                {/* {!likeLoading ? 
-                <>
-                    </>:
-                    <LoadSpan height={20} width={18} color='#00bfff' />} */}
-                </span>
-                {/* TODO Implement reply comment component */}
+                    <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => likeComment()}>
+                        <span className={lisLiked ? 'text-blue-500' : 'text-gray-500'}><AiFillLike size={20}/></span>
+                    {/* {!likeLoading ? 
+                    <>
+                        </>:
+                        <LoadSpan height={20} width={18} color='#00bfff' />} */}
+                    </span>
+                    {/* TODO Implement reply comment component */}
              
-                {email === usercomments.email &&
-                <span style={{cursor: 'pointer'}} className='mx-2 flex hover:text-red-800' onClick={() => deleteComment()}>
-                    {!deleteLoading ? 
-                    <AiTwotoneDelete size={20} color='red'/>:
-                    <LoadSpan height={20} width={20} color='#00bfff' />}
-                </span>}
+                    {email === usercomments.email &&
+                    <span style={{cursor: 'pointer'}} className='mx-2 flex hover:text-red-800' onClick={() => deleteComment()}>
+                        {!deleteLoading ? 
+                        <AiTwotoneDelete size={20} color='red'/>:
+                        <LoadSpan height={20} width={20} color='#00bfff' />}
+                    </span>}
                 </span>
             </div>
         </div>
     )
 }
+
+
+const LikeUsers = ({person, email, error}) => {
+    const history = useHistory();
+
+    return(
+            
+            <div className='flex cursor-pointer hover:bg-gray-300 underline justify-between p-2 border-t-2 border-gray-200 pb-1' onClick= {e => history.push(`/${person.userlikes.username}`)}>
+                <span className='mx-1 flex'>
+                    {person.userlikes.imageUrl ? (
+                    <span>
+                        {error ? <BsPersonFill size={20}/>:
+                        <img src={person.userlikes.imageUrl} alt='Profile' style={{width: '20px', height: '20px', borderRadius: '50%'}} />}
+                    </span>)
+                    : <BsPersonFill size={20}/>}
+                    <span className=' text-blue-600'>@{email === person.userlikes.email ? 'Me' : person.userlikes.username}</span>
+                </span>
+            </div>
+        
+        )
+    }
 
 export const LoadSpan = ({height, width, color}) => (
             <span 

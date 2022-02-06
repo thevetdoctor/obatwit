@@ -8,6 +8,7 @@ const webPush = require('web-push');
 const redisClient = require('redis');
 require('dotenv').config();
 const CORS = require('cors');
+const Push = require('./models').push;
 
 // const client = redisClient.createClient();
 const port = process.env.PORT || 4000;
@@ -33,24 +34,22 @@ webPush.setVapidDetails('mailto:thevetdoctor@gmail.com', PUBLIC_VAPID_KEY, PRIVA
 
 routeHandler(app);
 
-app.post('/subscribe', CORS(), (req, res) => {
+app.post('/subscribe', CORS(), async (req, res) => {
     const subscription = req.body;
-    // const subscription = {
-    //     endpoint: 'https://fcm.googleapis.com/fcm/send/fs3lFWhQdFo:APA91bHJpJiI5XdMbaN5KTzJ5FN82A8j_Tmi8ZT-uFNzMYwOB-_K73dOArc1RJXj2NjnRAhDY3iBRU_XllMxcN6gZqVvifyCz79wiz5uUSQafWD8J7GtGjvoCMYKgjgjpNzaK-GfaHU2', 
-    //     expirationTime: null, 
-    //     options: 'PushSubscriptionOptions', 
-    //     keys: {
-    //         auth: "9ipCHxYlDxb8YlOBZrIhvA",
-    //         p256dh: "BFKQTVM7nqpPD2vU-t4XNDNNl61saWtR1SZChHNAPmMv9znFqT2ipxD7spkulqpATPN-0hWgPKnvMTzU5wbNsEU"
-    //     }
-    // };
- 
-    res.status(201).json({message: 'Notification sent'}); 
-
-    // const payload = JSON.stringify({ title: `Push Twitee from server @ ${req.protocol}://${req.hostname}:${port}` });
-    const payload = JSON.stringify({ title: 'Buzz' });
-    console.log('server push response')
-    webPush.sendNotification(subscription, payload).catch(error => console.log(error.message));
+    
+    console.log(req.body)
+    if(!req.body.endpoint) return res.status(400).json({message: 'Endpoint not supplied'})
+    const pushExist = await Push.findOne({where: {text: JSON.stringify(req.body)}});
+    // console.log(pushExist)
+    if(!pushExist) {
+        const randomPost = await Push.create({text: JSON.stringify(req.body)});
+        res.status(201).json({message: 'Subscription received'}); 
+        const payload = JSON.stringify({ title: 'Buzz', message: 'Subscription received'});
+        console.log('server push response')
+        webPush.sendNotification(subscription, payload).catch(error => console.log(error.message));
+    } else {
+        res.status(200).json({message: 'Subscription exist'});
+    }
 });
 
 // Handles all errors

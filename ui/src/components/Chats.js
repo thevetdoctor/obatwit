@@ -27,7 +27,7 @@ export default function Chats() {
     // console.log(messages)
 
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
-    const username = localStorage.getItem('username') ? localStorage.getItem('username') : '';    
+    const defaultUsername = localStorage.getItem('username') ? localStorage.getItem('username') : '';    
     const img = localStorage.getItem('img') ? localStorage.getItem('img') : '';      
     const token = localStorage.getItem('token');
     const apiUrl = `${baseUrl}/messages`;
@@ -114,33 +114,25 @@ export default function Chats() {
     // console.log(messages, messageLine);
     
     return (
-        <div id={`${user}`} style={{fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-2 mb-4 md:w-1/2 m-auto'>
+        <div id={`${user}`} style={{fontFamily: 'Raleway', fontSize: '1.1em'}} className='shadow-lg border border-gray-200 h-full rounded p-2 mb-4 md:w-1/2 m-auto'>
         <p className='flex justify-between mb-4 border-3 border shadow-md p-2'>
             <span className='cursor-pointer text-left' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
-            <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>Messages</span>
+            <span style={{fontFamily: 'Raleway'}} className='text-xl font-bold self-center'>Messages</span>
             <span></span>
         </p>
         
-        <div style={{bottom: '0em', margin: 'auto'}} className='p-2 rounded flex justify-around border-3 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
-            <span className='cursor-pointer pt-2' onClick={() => history.push("/twits")}>
-                <AiFillHome size={25} color='gray' />
-            </span>
-            {img !== 'null' ? (
-                        <span className='cursor-pointer pt-1'  onClick= {e => history.push(`/${username}`)}>
-                            {error ? <BsPersonFill size={25} color='gray' />:
-                            <img src={img} alt='Profile' className='mt-2' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
-                        </span>) 
-                        : <span className='pt-2 cursor-pointer'><BsPersonFill size={25} color='gray' onClick={e => history.push(`/${username}`)} /></span>}
-            <span className='cursor-pointer pt-1' onClick= {e => history.push('/people')}>
-                <IoIosPeople size={30} color='gray'/>
-            </span>
-            {/* <span className='cursor-pointer pt-1'>
-                <RiChatNewLine size={25} color='gray' onClick={showForm} />
-            </span> */}
+        <div style={{bottom: '0em', margin: 'auto'}} className='pb-1 rounded flex justify-around border-2 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
+                <span className='cursor-pointer pt-2' onClick={() => history.push("/twits")}>
+                    <AiFillHome size={25} color='gray' />
+                </span>
 
-            <span className='cursor-pointer pt-1 border-t-2 border-black'  onClick= {e => history.push(`/chats/${username}`)}><MdEmail size={25} color='black' />
-            </span>
-        </div>
+                <span className='cursor-pointer pt-2' onClick= {e => history.push('/people')}>
+                    <IoIosPeople size={30} color='gray'/>
+                </span>
+
+                <span className='cursor-pointer pt-2 border-t-2 border-black'  onClick= {e => history.push(`/chats/${defaultUsername}`)}><MdEmail size={25} color='black' />
+                </span>
+            </div>
         
         {error && <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-1 m-1 rounded'>Please check your network !</div>}
         <div className='mb-1'>

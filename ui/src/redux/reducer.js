@@ -103,6 +103,16 @@ export default function reducer(state= initialState, action) {
                 ...state,
                 networkStatus: action.data
             }                   
+            case actions.deleteTwit.type:
+                const twitIndex = state.twits.findIndex(twit => twit.id === action.data);
+                const leftOvertwits = [...state.twits];
+                leftOvertwits.splice(twitIndex, 1);
+                console.log(twitIndex, leftOvertwits);
+                
+            return {
+                ...state,
+                twits: leftOvertwits
+            }                   
             default:
                 return state;
     }

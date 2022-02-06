@@ -38,7 +38,9 @@ export default function TwitForm(props) {
                     }
                 })
                 .catch(error => {
-                        setError('Please check your network');
+                    if(error.isAxiosError) {
+                        setError(error.response?.data?.error);
+                    }
                     });
                 if(res && res.data.success) {
                     setLoading(false);
@@ -52,10 +54,10 @@ export default function TwitForm(props) {
     }
 
     return (
-        <div className='sticky text-center h-full bg-blue-200 p-1 -mb-2 -mt-3 align-self-center'>
+        <div className='sticky text-center w-full h-full bg-blue-200 p-3 -mb-2 -m-4'>
             {/* <div className='text-center bg-blue-200 mt-3 pt-3 mb-1 pb-1 rounded'> */}
-            <h1 className='font-bold text-md mb-3 mt-2'>
-                New Post
+            <h1 className='font-bold text-lg mb-3 mt-2'>
+                New Post 
             </h1>
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', borderRadius: '20%'}}>
 
@@ -75,19 +77,20 @@ export default function TwitForm(props) {
                 rows={4}
                 cols={3}
                 style={{width: '100%', height: `${imageUrl ? '5em' : '13em'}`, border: 'none'}}
-                // style={{height: `${imageUrl ? '5em' : '13em'}`, border: 'none'}}
                 maxLength={550}
                 value={text}
                 overflow="hidden"
                 placeholder='Write and share ...' 
                 onChange={handleChange}
-                className='px-3 rounded mb-1 text-lg text-black font-bold w-full'
+                className='px-3 rounded mb-1 text-xs text-black w-full'
                 required
             />
-                <span style={{display: 'flex', width: '18em'}} className='shadow-md justify-between px-3 mb-2 ml-5 mr-5 bg-blue-300'>
+                <div style={{display: 'flex', width: '100%', fontSize: '1.2em', justifyContent: 'flex-end'}} className='shadow-md p-1 flex-end mb-2'>
+                    <span>{textArea}</span>
+                </div>
+                <div style={{display: 'flex', width: '100%', fontSize: '1.2em', justifyContent: 'center'}} className='shadow-md p-1 flex-end mb-2'>
                     <AttachImage imageUrl={imageUrl} setImageUrl={setImageUrl} />
-                    <span className='mr-6'>{textArea}</span>
-                </span>
+                </div>
             </div>
             <div style={{flexDirection: 'column'}} className='flex mb-3'>
                 {error && <span className='mb-2 text-red-800 text-md'>{error}</span>}
@@ -97,7 +100,7 @@ export default function TwitForm(props) {
                     <span 
                         style={{cursor: 'pointer'}}
                         onClick={() => props.showForm()}
-                        className='hover:bg-gray-900 shadow-md bg-gray-400 text-md font-medium p-1 rounded text-white'
+                        className='hover:bg-gray-900 shadow-md bg-gray-400 text-md font-medium p-2 rounded text-white'
                         >    
                         Cancel
                     </span>
@@ -105,7 +108,7 @@ export default function TwitForm(props) {
                     <span 
                     style={{cursor: 'pointer'}}
                     onClick={sendTwit}
-                    className='hover:bg-green-900 shadow-md bg-green-400 text-md font-bold p-1 rounded text-white mx-2'
+                    className='hover:bg-green-900 shadow-md bg-green-400 text-md font-bold p-2 rounded text-white mx-2'
                     >    
                         Send
                     </span>

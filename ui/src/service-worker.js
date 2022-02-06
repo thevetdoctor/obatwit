@@ -93,15 +93,15 @@ self.addEventListener('push', e => {
   let { data } = e;
   data = data.json()
   // console.log(data);
-  console.log('Push received...');
+  console.log('Push received...', data);
   
   self.registration.showNotification(data.title, {
-      body: 'Oba Buzz',
+      body: data.message ? data.message : "Trending news from Buzz",
       icon: 'https://res.cloudinary.com/thevetdoctor/image/upload/v1644026260/buzz/Buzz-logo-120.png',
       data: {
         dateOfArrival: Date.now(),
         primaryKey: 1,
-        redirectUrl : 'https://obabuzz.netlify.app/twits/#f8f26638-ce8f-4981-b2d4-ffe5a0b60651'
+        redirectUrl : `https://obabuzz.netlify.app/twits${data.postId ? `/#${data.postId}` : ''}`
       },
       timeout : 1000
   });

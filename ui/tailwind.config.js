@@ -5,6 +5,7 @@ module.exports = {
   theme: {
     extend: {
        fontFamily: {
+       Rampart: ['Raleway', "sans-serif"],
        Rampart: ['Roboto', "sans-serif"],
        Rampart: ['Allura', "sans-serif"],
        }

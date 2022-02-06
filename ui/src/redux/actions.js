@@ -11,7 +11,8 @@ const actions = {
     setSearchQuery: { type: 'SET_SEARCH_QUERY'},
     setNetworkStatus: { type: 'SET_NETWORK_STATUS'},
     setFormActive: { type: 'SET_FORM_ACTIVE'},
-    setUser: { type: 'SET_USER'}
+    setUser: { type: 'SET_USER'},
+    deleteTwit: { type: 'DELETE_TWIT'}
   }
   
   export default actions;
