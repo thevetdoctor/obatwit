@@ -5,13 +5,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import Moment from 'react-moment';
-import { BsPersonFill, BsChatText, BsBox } from 'react-icons/bs';
+import { BsPersonFill } from 'react-icons/bs';
 import { AiFillLike, AiTwotoneDelete, AiFillHome } from 'react-icons/ai';
 import { IoIosPeople, IoMdClose } from 'react-icons/io';
-import { MdContentCopy, MdEdit, MdEmail, MdMessage } from 'react-icons/md';
-import { BiMessage, BiMessageSquare, BiMessageX } from 'react-icons/bi';
-import { GrEdit } from 'react-icons/gr';
-import { RiArrowDownLine, RiArrowUpLine, RiChatNewLine } from 'react-icons/ri';
+import { MdContentCopy, MdEdit, MdEmail } from 'react-icons/md';
+import { RiChatNewLine } from 'react-icons/ri';
 import TwitForm from './TwitForm';
 import CommentForm from './CommentForm';
 import Image from './Image';
@@ -158,6 +156,33 @@ export default function Twits() {
         });
     }
 
+
+    const checkSub = async() => {
+        const sub = localStorage.getItem('sub');
+        // console.log('sub', sub);
+        if(sub) {
+        const res = await axios({
+            method: 'POST',
+            url: `${baseUrl}/checksub`,
+            data: {sub: JSON.parse(sub), id: userId},
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+            })
+            .catch(error => {
+                console.log('sub', error.response?.data?.error);
+                if(error.isAxiosError) {
+                    setError(error.response?.data?.error);
+                }
+            });
+                if(res && res.data.success) {
+                    localStorage.setItem('subed', true);
+                }
+            }
+        }
+
+
 useEffect(() => {
     localStorage.setItem('hash', window.location.hash);
     if(!token) {
@@ -165,6 +190,10 @@ useEffect(() => {
         return history.push('/');
     }
     getUsers();
+    // console.log(localStorage.getItem('subed'))
+    if(!localStorage.getItem('subed')) {
+        checkSub();
+    }
     return () => {}
 }, []);
 
@@ -203,7 +232,7 @@ return (
         {!formActive && 
         <div>
             <div className='flex justify-center m-auto -mt-3 p-2 md:w-1/2 flex-col'>
-                <p style={{marginTop: '3em'}} className='text-center mb-2 grow'>
+                <p style={{marginTop: '3em'}} className='text-center mb-2 pt-2 grow'>
                 <span style={{fontFamily: 'Architects Daughter', fontSize: '2em'}} className='text-purple-900 font-bold italic'>Buzz<br/>
                 </span> 
                 <span style={{fontSize: '1.2em'}}> Feel free, express yourself & network </span>
@@ -517,7 +546,7 @@ export const Twit = (props) => {
                     <img src={twits.imageUrl} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
                 </span>) 
                 : <BsPersonFill size={30}/>}
-                <span className='text-md pt-1 text-blue-600 underline'>{email === twits.email ? 'Me' : `@${twits.username}`}</span>
+                <span className='text-md pt-1 text-blue-600'>{email === twits.email ? 'Me' : `@${twits.username}`}</span>
             </span>
             <span className='flex'> 
                 <span style={{cursor: 'pointer'}} className='flex flex-col text-xs mx-2' onClick={() => likeTwit()}>
@@ -662,10 +691,10 @@ const Comment = (props) => {
                     {usercomments.imageUrl ? (
                     <span className='mr-1'>
                         {error ? <BsPersonFill size={20}/>:
-                        <img src={usercomments.imageUrl} alt='Profile' style={{width: '20px', height: '20px', borderRadius: '50%'}} />}
+                        <img src={usercomments.imageUrl} alt='Profile' style={{width: '1.5em', height: '1.5em', borderRadius: '50%'}} />}
                     </span>)
                     : <BsPersonFill size={20}/>}
-                    {email === usercomments.email ? 'Me' : usercomments.username}
+                    <span className=' text-blue-600'>@{email === usercomments.email ? 'Me' : usercomments.username}</span>
                 </span>
                 <span className='flex'>
                     <span style={{cursor: 'pointer'}} className='mx-2 flex' onClick={() => likeComment()}>
@@ -695,15 +724,15 @@ const LikeUsers = ({person, email, error}) => {
 
     return(
             
-            <div className='flex cursor-pointer hover:bg-gray-300 underline justify-between p-2 border-t-2 border-gray-200 pb-1' onClick= {e => history.push(`/${person.userlikes.username}`)}>
+            <div className='flex cursor-pointer hover:bg-gray-300 justify-between p-2 border-t-2 border-gray-200 pb-1' onClick= {e => history.push(`/${person.userlikes.username}`)}>
                 <span className='mx-1 flex'>
                     {person.userlikes.imageUrl ? (
                     <span>
-                        {error ? <BsPersonFill size={20}/>:
-                        <img src={person.userlikes.imageUrl} alt='Profile' style={{width: '20px', height: '20px', borderRadius: '50%'}} />}
+                        {error ? <BsPersonFill size={23}/>:
+                        <img src={person.userlikes.imageUrl} alt='Profile' style={{width: '1.5em', height: '1.5em', borderRadius: '50%'}} />}
                     </span>)
-                    : <BsPersonFill size={20}/>}
-                    <span className=' text-blue-600'>@{email === person.userlikes.email ? 'Me' : person.userlikes.username}</span>
+                    : <BsPersonFill size={23}/>}
+                    <span className=' text-blue-600 ml-1'>@{email === person.userlikes.email ? 'Me' : person.userlikes.username}</span>
                 </span>
             </div>
         

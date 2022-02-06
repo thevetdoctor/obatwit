@@ -12,10 +12,9 @@ module.exports = {
         type: Sequelize.STRING(550),
         allowNull: false
       },
-      // userId: {
-      //   type: Sequelize.UUID,
-      //   allowNull: false
-      // },
+      userId: {
+        type: Sequelize.UUID,
+      },
       isDeleted: {
         type: Sequelize.BOOLEAN,
         defaultValue: false

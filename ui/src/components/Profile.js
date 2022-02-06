@@ -153,6 +153,7 @@ export default function Profile() {
         }
     }
 
+
     useEffect(() => {
         if(token) {
             apiCallHook('GET', `${baseUrl}/auth/users`);

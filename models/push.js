@@ -24,10 +24,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(550),
       allowNull: false
     },
-    // userId: {
-    //   type: DataTypes.UUID,
-    //   allowNull: false
-    // },
+    userId: {
+      type: DataTypes.UUID,
+    },
     isDeleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
