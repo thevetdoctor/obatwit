@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true
     },
     text: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(550),
       allowNull: false
     },    
     twitId: {

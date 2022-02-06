@@ -4,8 +4,8 @@ import Loader from 'react-loader-spinner';
 import { baseUrl } from '../helper';
 
 export default function CommentForm(props) {
-    const [text, setText] = useState('');
-    const [textArea, setTextArea] = useState(160);
+    const [text, setText] = useState(localStorage.getItem('commentText') ? localStorage.getItem('commentText') : '');
+    const [textArea, setTextArea] = useState(550);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const token = localStorage.getItem('token'); 
@@ -15,7 +15,8 @@ export default function CommentForm(props) {
     const handleChange = (e) => {
         if(e.target.name === 'text') {
             setText(e.target.value);
-            setTextArea(160 - e.target.value.length)
+            setTextArea(550 - e.target.value.length);
+            localStorage.setItem('commentText', e.target.value)
         }
     }
 
@@ -57,7 +58,7 @@ export default function CommentForm(props) {
                 name='text'
                 rows={5}
                 cols={8}
-                maxLength={160}
+                maxLength={550}
                 style={{width: '100%', height: '8em'}}
                 value={text} 
                 placeholder='Drop in your comment ...' 

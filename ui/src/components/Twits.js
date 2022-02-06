@@ -576,9 +576,9 @@ export const Twit = (props) => {
             </div>
         }
         {viewComments && 
-            <>{comments.length > 0 && 
+            <>{comments.length > 0 &&
                     (<div className='mt-4 rounded'>
-                        {filteredComments.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((comment, idx) => (
+                        {filteredComments.sort((a, b) => - new Date(b.createdAt).getTime() + new Date(a.createdAt).getTime()).map((comment, idx) => (
                             <Comment key={idx} comment={comment} apiCallHook={apiCallHook} email={email} userId={userId} error={error} />
                         )
                     )}
@@ -644,11 +644,11 @@ const Comment = (props) => {
     }
 
     return(
-        <div id={`${id}`} className='border border-gray-200 shadow-lg mb-2 p-1 rounded'>
+        <div id={`${id}`} className='bg-gray-200 border-2 border-gray-200 shadow-md mb-3 p-1 rounded'>
             <span className='text-xs mb-2 ml-2'>
             <Moment fromNow>{createdAt}</Moment>
             </span>
-            <p style={{fontSize: '1.1em', lineHeight: 2}} className='p-2'>
+            <p style={{fontSize: '1.1em', lineHeight: 2}} className='p-2 pl-4'>
             {/* {text.length > 100 ? text.slice(0, 100) : text} */}
             {text.length > 100 ? 
                 text.slice(0, 100) 

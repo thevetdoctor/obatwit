@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true
       },
       text: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(550),
         allowNull: false
       },   
       twitId: {

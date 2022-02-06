@@ -16,9 +16,14 @@ export default function TwitForm(props) {
     const apiUrl = `${baseUrl}/twits/post`; 
 
     const handleChange = (e) => {
-        setText(e.target.value);
-        setTextArea(550 - e.target.value.length)
-        localStorage.setItem('twitText', e.target.value)
+        if(e.target.name === 'text') {
+            setText(e.target.value);
+            setTextArea(550 - e.target.value.length)
+            localStorage.setItem('twitText', e.target.value)
+        } else {
+            setImageUrl(e.target.value);
+            localStorage.setItem('twitImage', e.target.value)
+        }
     }
 
     const sendTwit = async() => {
