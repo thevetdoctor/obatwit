@@ -15,6 +15,7 @@ const SubRoute = router.post('/', async(req, res) => {
     const pushExist = await Push.findOne({where: {text: JSON.stringify(req.body.sub)}}, {
         attributes: ['id', 'userId', 'text']
     });
+    if(!pushExist) await Push.create({text: req.body.sub, userId: req.body.id});
     if(!pushExist.userId) await Push.update({userId: req.body.id}, {where: {text: pushExist.text}});
     console.log(pushExist);
 
