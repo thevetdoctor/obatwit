@@ -101,7 +101,7 @@ self.addEventListener('push', e => {
       data: {
         dateOfArrival: Date.now(),
         primaryKey: 1,
-        redirectUrl : `https://obabuzz.netlify.app/twits${data.postId ? `/#${data.postId}` : '#06d9ff63-a2a3-4729-89d5-48d66545882a'}`
+        redirectUrl : `https://obabuzz.netlify.app/twits${data.postId ? `/#${data.postId}` : ''}`
       },
       actions: [
         {action: 'view', title: 'View'},
