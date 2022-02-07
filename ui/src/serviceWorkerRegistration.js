@@ -95,7 +95,7 @@ function registerValidSW(swUrl, config) {
               'content-type': 'application/json'
           }
       });
-      localStorage.setItem('sub', sub)
+      localStorage.setItem('sub', JSON.stringify(sub))
       console.log('Push Sent');
 
       registration.onupdatefound = () => {
