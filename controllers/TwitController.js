@@ -71,8 +71,8 @@ exports.postTwit = async(req, res) => {
             if(allPushIds[0]) {
                 allPushIds.forEach(push => {
                     const subscription = JSON.parse(push.text);
-                    console.log(text);
-                    const payload = JSON.stringify({ title: 'Buzz', message: text.slice(0, 20), postId: newTwit.id});
+                    // console.log(text);
+                    const payload = JSON.stringify({ title: 'Buzz', message: text.slice(0, 40), postId: newTwit.id});
                     webPush.sendNotification(subscription, payload).catch(error => console.log(error.message));
                 });
             } else {
