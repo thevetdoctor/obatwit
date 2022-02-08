@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import Moment from 'react-moment';
-import { BsPersonFill } from 'react-icons/bs';
+import { BsPersonFill, BsShareFill } from 'react-icons/bs';
 import { AiFillLike, AiTwotoneDelete, AiFillHome } from 'react-icons/ai';
 import { IoIosPeople, IoMdClose } from 'react-icons/io';
 import { MdContentCopy, MdEdit, MdEmail } from 'react-icons/md';
@@ -319,21 +319,21 @@ export const Twit = (props) => {
     const [lfilteredComents, setFilteredComments] = useState(filteredComments);
     const [lisLiked, setIsLiked] = useState(isLiked);
 
-    const share = () => {
-        console.log('Welcome to sharing!');
+    const share = (id, text) => {
+        // console.log('Welcome to sharing!');
         if (navigator.share) {
-            console.log('Sharing exist!');
-            alert('hi')
+            // console.log('Sharing exist!');
           navigator.share({
             title: 'Buzz',
-            url: 'https://obabuzz.netlify.app',
-            text: 'https://obabuzz.netlify.app',
+            url: `https://obabuzz.netlify.app/twits/#${id}`,
+            text: `${text?.slice(0, 80)}...`,
             // files: ['./mm.txt'],
           }).then(() => {
-            console.log('Thanks for sharing!');
+            // console.log('Thanks for sharing!', id, text?.slice(0, 80));
+            setMenuShow(false);
           }).catch(console.error);
         } else {
-                console.log('Sharing is not supported!');
+                // console.log('Sharing is not supported!');
         }
     }
 
@@ -382,13 +382,13 @@ export const Twit = (props) => {
         }
     }
 
-    const copyTwitLink = () => {
-        clipboardCopy(`${frontendUrl}/#${id}`);
-        setTimeout(() => {
-            setLinkCopied(false);
-        }, 1000);
-        setMenuShow(false);
-    }
+    // const copyTwitLink = () => {
+    //     clipboardCopy(`${frontendUrl}/#${id}`);
+    //     setTimeout(() => {
+    //         setLinkCopied(false);
+    //     }, 1000);
+    //     setMenuShow(false);
+    // }
 
     const editStory = () => {
         setEditForm(!editForm);
@@ -447,10 +447,9 @@ export const Twit = (props) => {
     }
 
     return (
-    <div id={`${id}`} style={{fontSize: '1.1em'}} className='shadow-lg border-2 border-gray-200 rounded-lg px-5 m-0 pb-4 mb-4'>
+    <div id={`${id}`} style={{fontSize: '1.1em', fontWeight: '400'}} className='bg-white text-black shadow-lg border-2 border-gray-300 rounded-lg px-2 m-0 pb-4 mb-4'>
         <p className='flex justify-between mb-2'>
             <span></span>
-            {/* <span style={{fontFamily: 'Roboto Slab'}} className='text-xl font-bold self-center'>{title}</span> */}
             <span className={!linkCopied ? 'mr-2 mb-1 invisible text-xs self-end' : 'mr-2 mb-1 text-xs self-end'}>copied</span>
         </p>
         <span className='text-xs mb-2 -mt-2 flex justify-between'>
@@ -470,8 +469,8 @@ export const Twit = (props) => {
                     </span>
                     </>
                 }
-                <span className={`justify-center flex flex-col rounded-full p-2 cursor-pointer -mt-2 mr-0 text-gray-500 ${menuShow ? '' : 'invisible'}`} onClick={() => share()}> 
-                    <span className='m-auto mb-2'><MdContentCopy size={18} /></span><span>Copy</span>
+                <span className={`justify-center flex flex-col rounded-full p-2 cursor-pointer -mt-2 mr-0 text-gray-500 ${menuShow ? '' : 'invisible'}`} onClick={() => share(id, text)}> 
+                    <span className='m-auto mb-2'><BsShareFill size={16} /></span><span>Share</span>
                 </span>
                 </>}
                 <span className={'justify-center flex flex-col rounded-full p-2 cursor-pointer -mt-2 mr-0 text-gray-500'} onClick={() => showMenu()}> 
@@ -514,7 +513,7 @@ export const Twit = (props) => {
                     <LoadSpan height={20} width={20} color='#00bfff' />}
                 </div>}
 
-        {!editForm && <div style={{fontSize: '1.1em', lineHeight: 2}} className='mt-6 px-2'>
+        {!editForm && <div style={{fontSize: '1.3em', lineHeight: 2}} className='mt-6 px-2'>
             {text.length > 100 ? 
                 text.slice(0, 100) 
                 : 
@@ -561,9 +560,9 @@ export const Twit = (props) => {
         {/*  */}
         <div className='justify-between text-gray-800 flex mt-1 pt-2 px-3 -mb-3 -mx-5 border-t-2'>
             <span className='mx-1 flex cursor-pointer' onClick= {e => history.push(`/${twits.username}`)}>
-                {twits.imageUrl ? (
+                {twits.imageUrl !== null ? (
                 <span className='mr-1'>
-                    {(error || twits.imageUrl === 'null') ? <BsPersonFill size={30}/>:
+                    {(error) ? <BsPersonFill size={30}/>:
                     <img src={twits.imageUrl} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
                 </span>) 
                 : <BsPersonFill size={30}/>}
