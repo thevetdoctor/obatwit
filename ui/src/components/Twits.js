@@ -256,6 +256,9 @@ return (
                         <AiFillHome size={25} color='black' />
                     </span>
 
+                    {/* <span className='cursor-pointer pt-2' onClick= {share}>
+                        <IoIosPeople size={30} color='gray'/>
+                    </span> */}
                     <span className='cursor-pointer pt-2' onClick= {e => history.push('/people')}>
                         <IoIosPeople size={30} color='gray'/>
                     </span>
@@ -315,6 +318,24 @@ export const Twit = (props) => {
     const [llikeCount, setLikeCount] = useState(likeCount);
     const [lfilteredComents, setFilteredComments] = useState(filteredComments);
     const [lisLiked, setIsLiked] = useState(isLiked);
+
+    const share = () => {
+        console.log('Welcome to sharing!');
+        if (navigator.share) {
+            console.log('Sharing exist!');
+            alert('hi')
+          navigator.share({
+            title: 'Buzz',
+            url: 'https://obabuzz.netlify.app',
+            text: 'https://obabuzz.netlify.app',
+            // files: ['./mm.txt'],
+          }).then(() => {
+            console.log('Thanks for sharing!');
+          }).catch(console.error);
+        } else {
+                console.log('Sharing is not supported!');
+        }
+    }
 
     const handleStoryChange = (e) => {
         setStoryText(e.target.value);
@@ -449,7 +470,7 @@ export const Twit = (props) => {
                     </span>
                     </>
                 }
-                <span className={`justify-center flex flex-col rounded-full p-2 cursor-pointer -mt-2 mr-0 text-gray-500 ${menuShow ? '' : 'invisible'}`} onClick={() => copyTwitLink()}> 
+                <span className={`justify-center flex flex-col rounded-full p-2 cursor-pointer -mt-2 mr-0 text-gray-500 ${menuShow ? '' : 'invisible'}`} onClick={() => share()}> 
                     <span className='m-auto mb-2'><MdContentCopy size={18} /></span><span>Copy</span>
                 </span>
                 </>}
