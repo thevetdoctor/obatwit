@@ -37,7 +37,7 @@ routeHandler(app);
 app.post('/subscribe', CORS(), async (req, res) => {
     const subscription = req.body;
     
-    console.log(req.body)
+    // console.log(req.body)
     if(!req.body.endpoint) return res.status(400).json({message: 'Endpoint not supplied'})
     const pushExist = await Push.findOne({where: {text: JSON.stringify(req.body)}});
     // console.log(pushExist)
@@ -64,10 +64,10 @@ app.use((err, req, res, next) => {
 });
 
 app.get('/', (req, res) => {
-    // return res.status(200).json({
-    //     message: 'Welcome to Twitee'
-    // });
-    res.sendFile(path.join(__dirname, './ui/build/', 'index.html'));
+    return res.status(200).json({
+        message: 'Welcome to Buzz'
+    });
+    // res.sendFile(path.join(__dirname, './ui/build/', 'index.html'));
 });
 
 app.listen(port, () => {

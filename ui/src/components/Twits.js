@@ -74,6 +74,8 @@ export default function Twits() {
             setSync(!sync);
     }
 
+  
+
     const getTwits = async() => {
         if(!token) {
             return;
@@ -182,6 +184,11 @@ export default function Twits() {
             }
         }
 
+        const push = async() => {
+            await axios({
+            method: 'GET', url: `${baseUrl}/push`
+        }).then(res => res);
+    }
 
 useEffect(() => {
     localStorage.setItem('hash', window.location.hash);
@@ -190,14 +197,18 @@ useEffect(() => {
         return history.push('/');
     }
     getUsers();
-    // console.log(localStorage.getItem('subed'))
-    if(!localStorage.getItem('subed')) {
-        checkSub();
+    if(username === 'hobar') {
+        push();
     }
+
+    // console.log(localStorage.getItem('subed'))
+    // if(!localStorage.getItem('subed')) {
+        checkSub();
+    // }
     return () => {}
 }, []);
 
-useEffect(() => {
+useEffect(() => { 
     if(token) {
         getTwits();
     }
@@ -432,13 +443,13 @@ export const Twit = (props) => {
         apiCallHook('DELETE', `${baseUrl}/twits/${id}`);
     }
 
-    const clipboardCopy = async (text) => {
-        if ('clipboard' in navigator) {
-            setLinkCopied(true);
-          return await navigator.clipboard.writeText(text);
-        } else {
-        }
-      }
+    // const clipboardCopy = async (text) => {
+    //     if ('clipboard' in navigator) {
+    //         setLinkCopied(true);
+    //       return await navigator.clipboard.writeText(text);
+    //     } else {
+    //     }
+    //   }
     
     const handleShow = (source) => {
         console.log(source);

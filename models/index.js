@@ -198,15 +198,15 @@ db.message.belongsTo(db.user, {
   foreignKey: 'senderId'
 });
 
-// db.user.hasMany(db.push, {
-//   as: 'push',
-//   foreignKey: 'userId'
-// });
+db.user.hasMany(db.push, {
+  as: 'users',
+  foreignKey: 'userId'
+});
 
-// db.push.belongsTo(db.user, {
-//   as: 'push',
-//   foreignKey: 'userId'
-// });
+db.push.belongsTo(db.user, {
+  as: 'users',
+  foreignKey: 'userId'
+});
 
 // db.user.hasMany(db.follower, {
 //   as: 'followers',
