@@ -1,8 +1,8 @@
 import React from 'react';
 // import { FaSearch } from "react-icons/fa";
 
-export default function TopSearch({searchQuery, setSearchQuery, handleChange, error}) {
-
+export default function TopSearch({placeholder, searchQuery, setSearchQuery, handleChange, error}) {
+    if(!placeholder) placeholder = 'Search friends';
     return (
         <div className='flex mt-9 rounded'>
             <div className='flex-grow'>
@@ -10,7 +10,7 @@ export default function TopSearch({searchQuery, setSearchQuery, handleChange, er
                     type='text'
                     name='top-search'
                     value={searchQuery}
-                    placeholder='Search friends'
+                    placeholder={placeholder}
                     required
                     onChange={handleChange}
                     className='p-2 text-dark-3 text-md rounded font-semibold text-center bg-white-200 w-full outline-none mt-1'

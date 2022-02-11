@@ -103,6 +103,12 @@ export default function reducer(state= initialState, action) {
                 ...state,
                 networkStatus: action.data
             }                   
+            case actions.setSubs.type:
+                
+            return {
+                ...state,
+                subs: action.data
+            }                   
             case actions.deleteTwit.type:
                 const twitIndex = state.twits.findIndex(twit => twit.id === action.data);
                 const leftOvertwits = [...state.twits];
@@ -125,6 +131,7 @@ export const initialState = {
     peopleData: JSON.parse(localStorage.getItem('peopleData')) || [],
     searchData: [],
     usersData: [],
+    subs: JSON.parse(localStorage.getItem('subs')) || [],
     searchQuery: '',
     networkStatus: false,
     formActive: false,

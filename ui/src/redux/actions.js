@@ -12,6 +12,7 @@ const actions = {
     setNetworkStatus: { type: 'SET_NETWORK_STATUS'},
     setFormActive: { type: 'SET_FORM_ACTIVE'},
     setUser: { type: 'SET_USER'},
+    setSubs: { type: 'SET_SUBS'},
     deleteTwit: { type: 'DELETE_TWIT'}
   }
   

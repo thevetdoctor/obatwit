@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import Chat from './Chat';
 import { MdEmail } from 'react-icons/md';
 import { RiChatNewLine } from 'react-icons/ri';
+import { SiSubstack } from 'react-icons/si';
 
 export default function Chats() {
     const [error, setError] = useState('');
@@ -28,6 +29,7 @@ export default function Chats() {
 
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
     const defaultUsername = localStorage.getItem('username') ? localStorage.getItem('username') : '';    
+    const username = localStorage.getItem('username') ? localStorage.getItem('username') : '';
     const img = localStorage.getItem('img') ? localStorage.getItem('img') : '';      
     const token = localStorage.getItem('token');
     const apiUrl = `${baseUrl}/messages`;
@@ -125,7 +127,9 @@ export default function Chats() {
                 <span className='cursor-pointer pt-2' onClick={() => history.push("/twits")}>
                     <AiFillHome size={25} color='gray' />
                 </span>
-
+                {username === 'hobar' && <span className='cursor-pointer pt-2' onClick= {e => history.push('/subscriptions')}>
+                        <SiSubstack size={20} color='gray'/>
+                    </span>}
                 <span className='cursor-pointer pt-2' onClick= {e => history.push('/people')}>
                     <IoIosPeople size={30} color='gray'/>
                 </span>

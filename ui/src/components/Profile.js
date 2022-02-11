@@ -518,7 +518,7 @@ function AttachProfileImage({imgUrl, error, email, userData, apiCallHook}) {
             {(limgUrl || imgUrl) ?
                 <>
                 {!error ? 
-                    <img src={limgUrl ? limgUrl : imgUrl} alt='avatar' className='w-40 flex-grow rounded-lg -mr-2'
+                    <img src={limgUrl ? limgUrl : imgUrl} alt='avatar' className='w-40 max-h-52 flex-grow rounded-lg -mr-2'
                     />:
                     <span className='flex bg-gray-300 p-3 rounded flex-grow'>
                         <BsPersonFill size={80} />

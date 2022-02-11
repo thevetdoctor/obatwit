@@ -8,8 +8,9 @@ import Moment from 'react-moment';
 import { BsPersonFill, BsShareFill } from 'react-icons/bs';
 import { AiFillLike, AiTwotoneDelete, AiFillHome } from 'react-icons/ai';
 import { IoIosPeople, IoMdClose } from 'react-icons/io';
-import { MdContentCopy, MdEdit, MdEmail } from 'react-icons/md';
+import { MdEdit, MdEmail } from 'react-icons/md';
 import { RiChatNewLine } from 'react-icons/ri';
+import { SiSubstack } from 'react-icons/si';
 import TwitForm from './TwitForm';
 import CommentForm from './CommentForm';
 import Image from './Image';
@@ -19,14 +20,17 @@ import Loader from 'react-loader-spinner';
 import store from '../redux/store';
 import { useSelector } from 'react-redux';
 import { FaEllipsisV, FaRegComment } from 'react-icons/fa';
+import TopSearch from './TopSearch';
 
 export default function Twits() {
     const [error, setError] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [ twitData, setTwitData ] = useState([]);
     // const [formActive, setFormActive] = useState(false);
     const [sync, setSync] = useState(false);
 
     const {getState, dispatch} = store;
-    const state = getState();
+    const state = getState(); 
     const { twits, users, formActive } = useSelector(state => state);
 
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
@@ -55,6 +59,27 @@ export default function Twits() {
     //     console.log(window.location.hash)
     //     history.push('/');
     // }
+
+    const handleChange = (e) => {
+        const target = e.target;
+        const value = target.value;
+        console.log(searchQuery);
+        setSearchQuery(value);  
+    }
+
+    const handleSearch = () => {
+        const searchResults = twits.filter(twit => {
+            return twit.text.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0;
+        });
+        setTwitData(searchResults);
+    }
+    
+    useEffect(() => {
+        handleSearch();
+        
+        return () => {
+        }
+    }, [searchQuery]);
 
     const apiCallHook = async(method, url, data) => {
         await axios({
@@ -187,7 +212,14 @@ export default function Twits() {
         const push = async() => {
             await axios({
             method: 'GET', url: `${baseUrl}/push`
-        }).then(res => res);
+        }).then(res => {
+            dispatch({
+                type: 'SET_SUBS',
+                data: res.data.data
+            });
+            localStorage.setItem('subs', JSON.stringify(res.data.data));
+            return res;
+        });
     }
 
 useEffect(() => {
@@ -261,15 +293,15 @@ return (
                     <span style={{cursor: 'pointer'}} className='text-right' onClick={() => logout()}><Logout />
                     </span>
                 </div>
+                    {/* <TopSearch placeholder='Search' searchQuery={searchQuery} handleChange={handleChange} setSearchQuery={setSearchQuery} error={error} /> */}
 
                 <div style={{bottom: '0em', margin: 'auto'}} className='pb-1 rounded flex justify-around border-2 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
                     <span className='cursor-pointer pt-1 border-t-2 border-black' onClick={() => history.push("/twits")}>
                         <AiFillHome size={25} color='black' />
                     </span>
-
-                    {/* <span className='cursor-pointer pt-2' onClick= {share}>
-                        <IoIosPeople size={30} color='gray'/>
-                    </span> */}
+                    {username === 'hobar' && <span className='cursor-pointer pt-3' onClick= {e => history.push('/subscriptions')}>
+                        <SiSubstack size={20} color='gray'/>
+                    </span>}
                     <span className='cursor-pointer pt-2' onClick= {e => history.push('/people')}>
                         <IoIosPeople size={30} color='gray'/>
                     </span>

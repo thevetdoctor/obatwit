@@ -10,10 +10,10 @@ exports.pushCheck = async(req, res) => {
             where: { 
             isDeleted: false
             },
-            attributes: ['userId', 'text'],
+            attributes: ['createdAt'],
             include: [
                 {model: Users, as: 'users',
-                    attributes: ['username', 'email', 'imageUrl']
+                    attributes: ['username', 'imageUrl']
                 }
             ]
         });

@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import Reset from './components/Reset';
 import Chats from './components/Chats';
 import Verified from './components/Verified';
+import Subscriptions from './components/Subscriptions';
 // import { useHistory } from 'react-router-dom';
 
 function App() {
@@ -74,6 +75,7 @@ function App() {
               <Route exact path="/" component={Posts} />
               <Route exact path="/twits" component={Twits} />
               <Route exact path="/people" component={People} />
+              <Route exact path="/subscriptions" component={Subscriptions} />
               <Route exact path="/reset" component={Reset} />
               <Route exact path="/verify/:user" component={Verified} />
               <Route path="/twits/:user" component={UserTwits} />

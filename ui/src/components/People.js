@@ -16,6 +16,7 @@ import { AiFillHome } from 'react-icons/ai';
 import Loader from 'react-loader-spinner';
 import { RiChatNewLine } from 'react-icons/ri';
 import { MdEmail } from 'react-icons/md';
+import { SiSubstack } from 'react-icons/si';
 
 export default function People() {
     const [error, setError] = useState('');
@@ -152,7 +153,9 @@ export default function People() {
             <span className='cursor-pointer pt-2' onClick={() => history.push("/twits")}>
                 <AiFillHome size={25} color='gray' />
             </span>
-
+            {username === 'hobar' && <span className='cursor-pointer pt-2' onClick= {e => history.push('/subscriptions')}>
+                        <SiSubstack size={20} color='gray'/>
+            </span>}
             <span className='cursor-pointer pt-1 border-t-2 border-black' onClick= {e => history.push('/people')}>
                 <IoIosPeople size={30} color='black'/>
             </span>
