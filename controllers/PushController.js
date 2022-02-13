@@ -15,7 +15,8 @@ exports.pushCheck = async(req, res) => {
                 {model: Users, as: 'users',
                     attributes: ['username', 'imageUrl']
                 }
-            ]
+            ],
+            order: [['createdAt', 'DESC']]
         });
         response(res, 200, pushes, null, 'List of pushIDs');
     }catch(error) {

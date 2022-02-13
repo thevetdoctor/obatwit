@@ -5,11 +5,11 @@ const checkAuth = require('../helpers/auth');
 
 router.post('/signup', AuthController.signUp);
 router.post('/login', AuthController.logIn);
-router.get('/users', AuthController.getUsers);
+router.get('/users', checkAuth, AuthController.getUsers);
 router.get('/users/:username', AuthController.getUserProfile);
 router.get('/verify/:username', AuthController.verifyUser);
 router.post('/verify/all', AuthController.verifyUsers);
-router.get('/emails', AuthController.getAllUserEmails);
+router.get('/emails', checkAuth, AuthController.getAllUserEmails);
 router.patch('/update', checkAuth, AuthController.updateUserInfo);
 router.patch('/imageurl/update', checkAuth, AuthController.updateUserImage);
 

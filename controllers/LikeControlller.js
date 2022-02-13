@@ -2,8 +2,17 @@ const Sequelize = require("sequelize");
 const Users = require('../models').user;
 const Twits = require('../models').twit;
 const Likes = require('../models').like;
+const Push = require('../models').push;
+const Comments = require('../models').comment;
+const LikeComments = require('../models').likecomment;
 const { response } = require('oba-http-response');
 const mailer = require("../helpers/mailer");
+require('dotenv').config();
+const webPush = require('web-push');
+
+const {PUBLIC_VAPID_KEY, PRIVATE_VAPID_KEY} = process.env;
+
+webPush.setVapidDetails('mailto:thevetdoctor@gmail.com', PUBLIC_VAPID_KEY, PRIVATE_VAPID_KEY);
 
 exports.likeTwit = async(req, res) => {
     const { twitId } = req.params;
@@ -47,11 +56,24 @@ exports.likeTwit = async(req, res) => {
                             isDeleted: false
                         },
                         include: [
+                            { model: Users, as: 'twits',
+                                    attributes: ['username', 'email', 'imageUrl']
+                            },
+                            { model: Comments, as: 'comments',
+                                include: [
+                                    { model: Users, as: 'usercomments',
+                                        attributes: ['username', 'email', 'imageUrl']
+                                    },
+                                    { model: LikeComments, as: 'likecomments',
+                                        // attributes: ['username', 'email', 'imageUrl']
+                                    }
+                                ]
+                            },
                             { model: Likes, as: 'likes',
                                 include: [
                                     { model: Users, as: 'userlikes',
-                            attributes: ['username', 'email']
-                        }
+                                    attributes: ['username', 'email', 'imageUrl']
+                                }
                                 ]
                             }
                         ]
@@ -78,21 +100,43 @@ exports.likeTwit = async(req, res) => {
                     },
                     include: [
                         { model: Users, as: 'twits',
-                            attributes: ['username', 'email', 'verified']
+                                attributes: ['id', 'username', 'email', 'imageUrl']
+                        },
+                        { model: Comments, as: 'comments',
+                            include: [
+                                { model: Users, as: 'usercomments',
+                                    attributes: ['username', 'email', 'imageUrl']
+                                },
+                                { model: LikeComments, as: 'likecomments',
+                                    // attributes: ['username', 'email', 'imageUrl']
+                                }
+                            ]
                         },
                         { model: Likes, as: 'likes',
                             include: [
                                 { model: Users, as: 'userlikes',
-                                attributes: ['username', 'email', 'verified']
+                                attributes: ['id', 'username', 'email', 'imageUrl']
                             }
                             ]
                         }
-                    ],
+                    ]
                 });
                 const likingUser = twit.likes.filter(x => x.userId === userId)
                 if(twit.twits.verified) {
                     await mailer.like(twit.twits.email, twit.id, likingUser[0].userlikes.username);
                 }
+                    // send push to twit author
+                    console.log(twit.twits)
+                    const push = await Push.findOne({
+                        where: {userId: twit.twits.id}
+                    });
+                    const subscription = JSON.parse(push.text);
+                    console.log('sub', subscription, push.text);
+                    if(push) {
+                        const payload = JSON.stringify({ title: 'Buzz', message: 'Someone just liked your post!', postId: twit.id});
+                        webPush.sendNotification(subscription, payload).catch(error => console.log(error));
+                    }
+
                 return response(res, 200, { twit }, null, 'Twit re-liked successfully');
             }
         } else {
@@ -111,16 +155,26 @@ exports.likeTwit = async(req, res) => {
                 },
                 include: [
                     { model: Users, as: 'twits',
-                        attributes: ['username', 'email', 'verified']
+                            attributes: ['username', 'email', 'imageUrl']
+                    },
+                    { model: Comments, as: 'comments',
+                        include: [
+                            { model: Users, as: 'usercomments',
+                                attributes: ['username', 'email', 'imageUrl']
+                            },
+                            { model: LikeComments, as: 'likecomments',
+                                // attributes: ['username', 'email', 'imageUrl']
+                            }
+                        ]
                     },
                     { model: Likes, as: 'likes',
                         include: [
                             { model: Users, as: 'userlikes',
-                            attributes: ['username', 'email', 'verified']
-                            }
+                            attributes: ['username', 'email', 'imageUrl']
+                        }
                         ]
                     }
-                ],
+                ]
             });
             const likingUser = twit.likes.filter(x => x.userId === userId);
             if(twit.twits.verified) {
