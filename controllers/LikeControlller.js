@@ -105,10 +105,10 @@ exports.likeTwit = async(req, res) => {
                         { model: Comments, as: 'comments',
                             include: [
                                 { model: Users, as: 'usercomments',
-                                    attributes: ['username', 'email', 'imageUrl']
+                                    attributes: ['id', 'username', 'email', 'imageUrl']
                                 },
                                 { model: LikeComments, as: 'likecomments',
-                                    // attributes: ['username', 'email', 'imageUrl']
+                                    // attributes: ['id', 'username', 'email', 'imageUrl']
                                 }
                             ]
                         },
@@ -155,22 +155,22 @@ exports.likeTwit = async(req, res) => {
                 },
                 include: [
                     { model: Users, as: 'twits',
-                            attributes: ['username', 'email', 'imageUrl']
+                            attributes: ['id', 'username', 'email', 'imageUrl']
                     },
                     { model: Comments, as: 'comments',
                         include: [
                             { model: Users, as: 'usercomments',
-                                attributes: ['username', 'email', 'imageUrl']
+                                attributes: ['id', 'username', 'email', 'imageUrl']
                             },
                             { model: LikeComments, as: 'likecomments',
-                                // attributes: ['username', 'email', 'imageUrl']
+                                // attributes: ['id', 'username', 'email', 'imageUrl']
                             }
                         ]
                     },
                     { model: Likes, as: 'likes',
                         include: [
                             { model: Users, as: 'userlikes',
-                            attributes: ['username', 'email', 'imageUrl']
+                            attributes: ['id', 'username', 'email', 'imageUrl']
                         }
                         ]
                     }
@@ -180,6 +180,18 @@ exports.likeTwit = async(req, res) => {
             if(twit.twits.verified) {
                 await mailer.like(twit.twits.email, twit.id, likingUser[0].userlikes.username);
             }
+
+              // send push to twit author
+              console.log(twit.twits)
+              const push = await Push.findOne({
+                  where: {userId: twit.twits.id}
+              });
+              const subscription = JSON.parse(push.text);
+              console.log('sub', subscription, push.text);
+              if(push) {
+                  const payload = JSON.stringify({ title: 'Buzz', message: 'Someone just liked your post!', postId: twit.id});
+                  webPush.sendNotification(subscription, payload).catch(error => console.log(error));
+              }
             return response(res, 201, { twit }, null, 'Twit liked successfully');
 
         }

@@ -65,6 +65,7 @@ exports.postTwit = async(req, res) => {
             // client.set('twits', JSON.stringify(twits));
             // client.quit();
 
+            // send push notifications to subscribed users
             const allPushIds = await Push.findAll({
                 attributes: ['text']
             });
@@ -125,7 +126,6 @@ exports.getTwits = async(req, res) => {
                     }
                 ]
                 });
-                console.log(twitCount);
                 response(res, 200, {twits, twitCount, page, perPage}, null, 'List of twits');
         } else {
             const twits = await Twits.findAll({ 
@@ -156,7 +156,6 @@ exports.getTwits = async(req, res) => {
                     }
                 ]
                 });
-                console.log(twitCount);
                 response(res, 200, {twits, twitCount, page, perPage}, null, 'List of twits');
                 
             }

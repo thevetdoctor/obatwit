@@ -61,6 +61,10 @@ exports.logIn = async(req, res) => {
                     user.password = null;
                     await mailer.signup(email, email.split('@')[0]);
 
+                    user.password = null;
+                    const token = jwt.sign({user: user }, process.env.JWT_SECRET);
+        
+                    response(res, 201, { token, user, newUser: true }, null, 'Signed Up');
                     // const users = await Users.findAll({
                     //     attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'createdAt', 'bio', 'dob', 'location', 'mobile'],
                     //     include: [
@@ -88,11 +92,11 @@ exports.logIn = async(req, res) => {
                 const compared = bcrypt.compareSync(password, user.password);
                 if(!compared) return response(res, 400, null, 'Invalid credentials');
             }
-
+ 
             user.password = null;
             const token = jwt.sign({user: user }, process.env.JWT_SECRET);
 
-            response(res, 200, { token, user }, null, 'Logged In');
+            response(res, 200, { token, user, newUser: false }, null, 'Logged In');
         }catch(error) {
             response(res, 500, null, error.message, 'Error in creating user');
         }
