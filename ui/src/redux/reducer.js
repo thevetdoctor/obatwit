@@ -3,7 +3,7 @@ import actions from "./actions";
 export default function reducer(state= initialState, action) {
     switch(action.type) {
         case actions.setTwitData.type:
-        console.log('setting twits data', action.data);
+        // console.log('setting twits data', action.data);
         let newTwitData;
         if(state.twits.length < state.twitCount) {
                 newTwitData = [...state.twits, ...action.data.twits];
@@ -38,18 +38,18 @@ export default function reducer(state= initialState, action) {
             // console.log('user is set as', action.data);
             const user = action.data.user;
             const email = action.data.email;
-            const userData = state.peopleData.filter(obj => obj.username === user)[0];
+            const userData = state.peopleData?.filter(obj => obj.username === user)[0];
             const userTwits = state.twits?.filter(obj => obj.twits.username === user);
 
-            const {followers, following} = userData; 
-            const followerCount = followers?.filter(user => user.follower.isFollowed).length;
-            const followingCount = following?.filter(user => user.follower.isFollowed).length;
-            const isFollower = followers.filter(user => user.follower.isFollowed).filter(user => user.email === email).length > 0;
-            const isFollowing = following.filter(user => user.follower.isFollowed).filter(user => user.email === email).length > 0;
+            // const {followers, following} = userData; 
+            const followerCount = userData?.followers?.filter(user => user.follower.isFollowed).length;
+            const followingCount =  userData?.following?.filter(user => user.follower.isFollowed).length;
+            const isFollower = userData?.followers.filter(user => user.follower.isFollowed).filter(user => user.email === email).length > 0;
+            const isFollowing = userData?.following.filter(user => user.follower.isFollowed).filter(user => user.email === email).length > 0;
 
             return {
               ...state,
-              user, userData, followers, following, followerCount, followingCount, isFollower, isFollowing, userTwits
+              user, userData, followers: userData?.followers, following: userData?.following, followerCount, followingCount, isFollower, isFollowing, userTwits
             }          
         case actions.setUsersData.type:
 
@@ -77,7 +77,7 @@ export default function reducer(state= initialState, action) {
               newsType: action.data, news: newsByType, searchQuery: '', page: 1, totalPages: Math.ceil(newsByType.length / state.pageSize)
             }          
             case actions.setPage.type:
-                console.log(action.data)
+                // console.log(action.data)
             return {
                 ...state,
                 page: action.data
@@ -121,7 +121,7 @@ export default function reducer(state= initialState, action) {
                 const twitIndex = state.twits.findIndex(twit => twit.id === action.data);
                 const leftOvertwits = [...state.twits];
                 leftOvertwits.splice(twitIndex, 1);
-                console.log(twitIndex, leftOvertwits);
+                // console.log(twitIndex, leftOvertwits);
                 
             return {
                 ...state,
@@ -142,6 +142,12 @@ export default function reducer(state= initialState, action) {
             return {
                 ...state,
                 twits: updatedTwitData
+            }                   
+            case actions.setRefreshTwitData.type:
+                    console.log('updated feed');                
+            return {
+                ...state,
+                twits: action.data.twits
             }                   
             default:
                 return state;

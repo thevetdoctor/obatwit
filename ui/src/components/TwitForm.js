@@ -51,7 +51,9 @@ export default function TwitForm(props) {
                     setLoading(false);
                     localStorage.removeItem('twitTitle');
                     localStorage.removeItem('twitText');
-                    props.setSync(!props.sync);
+                    // props.setSync(!props.sync);
+                    // change logic for showing newly posted content
+                    props.refreshData();
                     props.showForm();
                 } else {
                     setLoading(false);

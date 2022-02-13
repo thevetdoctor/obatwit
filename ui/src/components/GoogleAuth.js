@@ -32,7 +32,7 @@ export default function GoogleAuth(props) {
                 onSuccess={onSuccess}
                 onFailure={onFailure}
                 // isSignedIn={true}
-                cookeiPolicy={'single_host_origin'}
+                cookiePolicy={'single_host_origin'}
                 style={{marginTop: '160px'}}
             />
         </div>

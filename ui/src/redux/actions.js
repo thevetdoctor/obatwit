@@ -14,7 +14,8 @@ const actions = {
     setUser: { type: 'SET_USER'},
     setSubs: { type: 'SET_SUBS'},
     deleteTwit: { type: 'DELETE_TWIT'},
-    updateTwit: { type: 'UPDATE_TWIT'}
+    updateTwit: { type: 'UPDATE_TWIT'},
+    setRefreshTwitData: { type: 'SET_REFRESH_TWIT_DATA'}
   }
   
   export default actions;

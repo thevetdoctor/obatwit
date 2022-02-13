@@ -8,9 +8,8 @@ import GoogleAuth from './GoogleAuth';
 import { baseUrl } from '../helper';
 // import LinkedinAuth from './LinkedinAuth';
 import dotenv from "dotenv";
-import chat from './chat.jpg';
-import bg from './bg.png';
-import { CgCopyright } from 'react-icons/cg';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 dotenv.config();
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
@@ -47,6 +46,17 @@ export const authenticate = async(google = false, email, password = null, apiUrl
                 }
             }
         });
+        if(res && res.data.success) {
+            console.log("Login successful!", res.data.data.newUser);
+            if(res.data.data.newUser) {
+                toast.success("Signup successful!", {position: "top-center", hideProgressBar: true,});
+                toast.success("Please check your mail to activate your account!", {position: "top-center", hideProgressBar: true,});
+            } else {
+                toast.success("Login successful!", {position: "top-center", hideProgressBar: true});
+            }
+        } else {
+            toast.error("Something went wrong!", {position: "top-center", hideProgressBar: true});
+        }
     } else {
         res = await axios({
             method: 'POST',
@@ -59,16 +69,29 @@ export const authenticate = async(google = false, email, password = null, apiUrl
         .catch(error => {
             setError(error.response.data.error);
         });
-
+        if(res && res.data.success) {
+            console.log("Login successful!");
+            if(res.data.data.newUser) {
+                toast.success("Signup successful!", {position: "top-center", hideProgressBar: true});
+                toast.success("Please check your mail to activate your account!", {position: "top-center", hideProgressBar: true});
+            } else {
+            toast.success("Login successful!", {position: "top-center", hideProgressBar: true});
+            }
+        } else {
+            toast.error("Something went wrong!", {position: "top-center", hideProgressBar: true});
+        }
     }
         if(res && res.data.success) {
+            const {user: {id, imageUrl, username}, token} = res.data.data;
             localStorage.setItem('email', email);
-            localStorage.setItem('img', res.data.data.user.imageUrl);
-            localStorage.setItem('userId', res.data.data.user.id);
-            localStorage.setItem('username', res.data.data.user?.username);
-            localStorage.setItem('token', res.data.data.token);
+            localStorage.setItem('img', imageUrl);
+            localStorage.setItem('userId', id);
+            localStorage.setItem('username', username);
+            localStorage.setItem('token', token);
             setLoading(false);
-            history.push('/twits');
+            setTimeout(() => {
+                history.push('/twits');
+            }, 2000);
         } else {
             setLoading(false);
         }
@@ -116,6 +139,8 @@ useEffect(() => {
                 </span> 
                 <span className='text-md'> Feel free, express yourself & network </span>
             </p>
+            <ToastContainer />
+
             <h3 style={{fontSize: 20}} className='font-bold text-md mb-4 mt-7'>
                 {signup ?  'Signup' : 'Login'}
             </h3>

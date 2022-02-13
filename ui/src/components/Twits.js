@@ -31,6 +31,8 @@ export default function Twits() {
     const [scrollValue, setScrollValue] = useState(0);
     const [loadMore, setLoadMore] = useState(false);
     const [loadingMore, setLoadingMore] = useState(false);
+    const [refresh, setRefresh] = useState(false);
+    const [defaultSate, setDefaultState] = useState(false);
 
     const {getState, dispatch} = store;
     const state = getState(); 
@@ -53,13 +55,21 @@ export default function Twits() {
         // setFormActive(!formActive);
     }
     
+    const refreshData = () => {
+    //  setRefresh(true);
+     getTwits(1, 50, 'refresh');
+    }
+
     const scrollToTop = () => {
+        // console.log('scroll to top')
+        setTimeout(() => {
         const element = document.getElementById('top');
         element.scrollIntoView();
+        }, 0);
     }
 
     const getMoreTwits = () =>  {
-        console.log(page, perPage);
+        // console.log(page, perPage);
         setLoadingMore(true);
         let newPage = page + 1;
         if(twits.length < twitCount) {
@@ -96,7 +106,7 @@ export default function Twits() {
     const handleChange = (e) => {
         const target = e.target;
         const value = target.value;
-        console.log(searchQuery);
+        // console.log(searchQuery);
         setSearchQuery(value);  
     }
 
@@ -129,17 +139,18 @@ export default function Twits() {
                     setError(error.response?.data?.error);
                 }
             });
-            console.log(res.data);
-            dispatch({
-                type: 'UPDATE_TWIT',
-                data: res.data.data
-            })
             // setSync(!sync);
+            if(method === 'POST') {
+                dispatch({
+                    type: 'UPDATE_TWIT',
+                    data: res.data.data
+                })
+            } else {
+                refreshData();
+            }
     }
 
-  
-
-    const getTwits = async(page = 1, perPage = 50) => {
+    const getTwits = async(page = 1, perPage = 50, refresh = null) => {
         if(!token) {
             return;
         }
@@ -157,18 +168,29 @@ export default function Twits() {
                     setError(error.response?.data?.error);
                 }
             });
+            // console.log('get twits', res?.data)
             if(res && res.data.success) {
-                dispatch({
-                    type: 'SET_TWIT_DATA',
-                    data: res.data.data
-                });
-                localStorage.setItem('twits', JSON.stringify(res.data.data));
-                // .map(x => {
-                //     x.formActive = false;
-                //     return x;
-                // })));
-                setLoadMore(false);
-                setLoadingMore(false);
+                if(refresh) {
+                    // console.log('refresh is', refresh)
+                    dispatch({
+                        type: 'SET_REFRESH_TWIT_DATA',
+                        data: res.data.data
+                    });
+                    localStorage.setItem('twits', JSON.stringify(res.data.data));
+                    setRefresh(false);
+                } else {
+                    dispatch({
+                        type: 'SET_TWIT_DATA',
+                        data: res.data.data
+                    });
+                    localStorage.setItem('twits', JSON.stringify(res.data.data));
+                    // .map(x => {
+                    //     x.formActive = false;
+                    //     return x;
+                    // })));
+                    setLoadMore(false);
+                    setLoadingMore(false);
+                }
             } else {
                 setError('Please check your network');
                 dispatch({
@@ -241,7 +263,7 @@ export default function Twits() {
             }
             })
             .catch(error => {
-                console.log('sub', error.response?.data?.error);
+                // console.log('sub', error.response?.data?.error);
                 if(error.isAxiosError) {
                     setError(error.response?.data?.error);
                 }
@@ -263,20 +285,21 @@ export default function Twits() {
             localStorage.setItem('subs', JSON.stringify(res.data.data));
             return res;
         });
-    }
+    } 
 
 useEffect(() => { 
     if(token) {
-        getTwits((page > 1) ? page + 1 : page);
+        // getTwits((page > 1) ? page + 1 : page);
+        refreshData();
     }
 
     return () => {}
-}, []);
+}, [defaultSate]); 
 
 useEffect(() => {
     window.addEventListener("scroll", onScroll);
 
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);   
   }, []);
 
 useEffect(() => {
@@ -319,7 +342,7 @@ return (
     <div id='top' style={{fontFamily: 'Raleway', height: '90vh', fontSize: '0.8em'}} className='text-md mb-5 p-3 m-auto flex justify-center md:w-1/2'>
         <span style={{cursor: 'pointer', borderRadius: '50%'}} className='text-xs mb-3 fixed bottom-10 right-2 bg-green-500 px-4 py-2 text-white'><RiChatNewLine size={25} onClick={showForm} />post</span>
         {(scrollValue > 3000) && <span style={{cursor: 'pointer', borderRadius: '50%', bottom: '10em'}} className='text-xs fixed bottom-5 right-2 bg-purple-500 px-5 py-3 text-white'><RiArrowUpLine size={20} onClick={scrollToTop} />top</span>}
-        {formActive && <TwitForm error={error} showForm={showForm} sync={sync} setSync={setSync}/>}
+        {formActive && <TwitForm error={error} showForm={showForm} sync={sync} setSync={setSync} refreshData={refreshData} />}
         
         {!formActive && 
         <div>
@@ -337,7 +360,7 @@ return (
                             <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
                         </span>) 
                         : <span className='text-left cursor-pointer'><BsPersonFill size={25} onClick={e => history.push(`/${username}`)} /></span>}
-                        {twits.length}{'/'}{twitCount}{'/'}{scrollValue}{/* {window.innerHeight} - {document.documentElement.scrollTop} - {document.scrollingElement.scrollHeight} */}
+                        {/* {twits.length}{'/'}{twitCount}{window.innerHeight} - {document.documentElement.scrollTop} - {document.scrollingElement.scrollHeight} */}
                     <span className='text-left flex cursor-pointer'  onClick= {e => history.push('people')}><IoIosPeople size={30}/><span className='pt-1 pl-1'>{users > 0 && users}</span></span>
                     
                     <span style={{cursor: 'pointer'}} className='text-right' onClick={() => logout()}><Logout />
@@ -493,7 +516,7 @@ export const Twit = (props) => {
     // }
 
     const editStory = () => {
-        console.log(text, storyText)
+        // console.log(text, storyText)
         setEditForm(!editForm);
         setStoryText(text);
         setMenuShow(false);
@@ -513,7 +536,7 @@ export const Twit = (props) => {
     }
     
     const likeTwit = () => {
-        setLikeLoading(true);
+        setLikeLoading(true); 
         // if(lisLiked) {
         //     setIsLiked(!lisLiked);
         //     // setLikeCount(likeCount - 1);
@@ -535,8 +558,9 @@ export const Twit = (props) => {
         // setTimeout(() => {
         //     setDeleteLoading(false);
         // }, 1000);
-        handleDeleteTwit(id);
+        // handleDeleteTwit(id);
         apiCallHook('DELETE', `${baseUrl}/twits/${id}`);
+        setMenuShow(false);
     }
 
     // const clipboardCopy = async (text) => {
@@ -548,7 +572,7 @@ export const Twit = (props) => {
     //   }
     
     const handleShow = (source) => {
-        console.log(source);
+        // console.log(source);
         setShow(!show);
         setSourceData(source);
     }

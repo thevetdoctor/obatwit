@@ -34,15 +34,7 @@ export default function Profile() {
     const state = getState();
     const { twits, formActive, userData, followers, following, followerCount, isFollower, isFollowing, followingCount, userTwits } = useSelector(state => state);
     // console.log(userData, followers, following, followerCount, followingCount, isFollower, isFollowing, userTwits);
-
-    useEffect(() => {
-        dispatch({
-            type: 'SET_USER',
-            data: {user, email}
-        });
-        return () => {}
-    }, []);
-
+    
     const apiCallHook = async(method, url, data) => {
         const res = await axios({
             method,
@@ -83,17 +75,17 @@ export default function Profile() {
                     // const checkIsFollower = followers.filter(user => user.email === email).length > 0;
                     // const checkIsFollowing = following.filter(user => user.email === email).length > 0;
                     // dispatch({
-                    //     type: 'SET_USER_DATA',
-                    //     data: userDataInStore
-                    // });
-                    // setFollowerCount(followers.length);
-                    // setFollowingCount(following.length);
-                    // setIsFollower(checkIsFollower);
-                    // setIsFollowing(checkIsFollowing);
+                        //     type: 'SET_USER_DATA',
+                        //     data: userDataInStore
+                        // });
+                        // setFollowerCount(followers.length);
+                        // setFollowingCount(following.length);
+                        // setIsFollower(checkIsFollower);
+                        // setIsFollowing(checkIsFollowing);
                     // setTwitCount(userTwits.length);
-
+                    
                     // if(userDataInStore.imageUrl) {
-                    //     localStorage.setItem('profileImg', userDataInStore.imageUrl);
+                        //     localStorage.setItem('profileImg', userDataInStore.imageUrl);
                     //     setProfileImg(userDataInStore.imageUrl);
                     // }
                     
@@ -123,8 +115,8 @@ export default function Profile() {
                 // const checkIsFollower = followers?.filter(user => user.email === email).length > 0;
                 // const checkIsFollowing = following?.filter(user => user.email === email).length > 0;
                 // dispatch({
-                //     type: 'SET_USER_DATA',
-                //     data: userDataInStore
+                    //     type: 'SET_USER_DATA',
+                    //     data: userDataInStore
                 // });
                 // setFollowerCount(followers?.length);
                 // setFollowingCount(following?.length);
@@ -132,12 +124,12 @@ export default function Profile() {
                 // setIsFollowing(checkIsFollowing);
                 // setTwitCount(userTwits?.length);         
             }
-    }
+        }
 
-    const showForm = () => {
-        dispatch({
-            type: 'SET_FORM_ACTIVE',
-            data: !formActive
+        const showForm = () => {
+            dispatch({
+                type: 'SET_FORM_ACTIVE',
+                data: !formActive
         });
     }
 
@@ -152,26 +144,36 @@ export default function Profile() {
             apiCallHook('POST', `${baseUrl}/followers/follow`, {followerId: userData?.id});
         }
     }
-
-
+    
+    
     useEffect(() => {
         if(token) {
             apiCallHook('GET', `${baseUrl}/auth/users`);
+        } else {
+            return history.push('/');
         }
         return () => {
         }
     }, [sync]);
-   
-    // useEffect(() => {
-    //     if(token) {
-    //         getTwits();
-    //     }
     
-    //     return () => {}
-    // }, []);
- 
-    return (
-        <div id={`${user}`} style={{fontFamily: 'Raleway', fontSize: '1.1em'}} className='shadow-lg border border-gray-200 rounded p-2 mb-4 m-auto justify-center md:w-1/2'>
+    
+        useEffect(() => {
+            dispatch({
+                type: 'SET_USER',
+                data: {user, email}
+            });
+            return () => {}
+        }, []);
+    // useEffect(() => {
+        //     if(token) {
+            //         getTwits();
+            //     }
+            
+            //     return () => {}
+            // }, []);
+            
+            return (
+                <div id={`${user}`} style={{fontFamily: 'Raleway', fontSize: '1.1em'}} className='shadow-lg border border-gray-200 rounded p-2 mb-4 m-auto justify-center md:w-1/2'>
             <div style={{margin: 'auto', top: '0em'}} className='flex justify-between mb-6 border-3 border -mt-2 -mx-2 shadow-md p-2 bg-white fixed right-0 left-0 md:w-1/2'>
                 <span className='cursor-pointer' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
                 <span style={{fontFamily: 'Raleway'}} className='text-xl font-bold self-center'>Profile</span>
