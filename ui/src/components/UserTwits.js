@@ -80,11 +80,12 @@ export default function UserTwits() {
                     type: 'SET_TWIT_DATA',
                     data: res.data.data
                 });
-                localStorage.setItem('twits', JSON.stringify(res.data.data.map(x => {
-                    x.formActive = false;
-                    return x;
-                })));
-                const userTwitData = res.data.data.filter(obj => obj.twits.username === user);
+                localStorage.setItem('twits', JSON.stringify(res.data.data));
+                // .map(x => {
+                //     x.formActive = false;
+                //     return x;
+                // })));
+                const userTwitData = res.data.data.twits.filter(obj => obj.twits.username === user);
                 setUserData(userTwitData[0]?.twits);
                 setTwitData(userTwitData);
             } else {
