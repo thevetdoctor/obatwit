@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-no-target-blank  */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import Moment from 'react-moment';
@@ -9,7 +9,7 @@ import { BsPersonFill, BsShareFill } from 'react-icons/bs';
 import { AiFillLike, AiTwotoneDelete, AiFillHome } from 'react-icons/ai';
 import { IoIosPeople, IoMdClose } from 'react-icons/io';
 import { MdEdit, MdEmail } from 'react-icons/md';
-import { RiChatNewLine } from 'react-icons/ri';
+import { RiArrowUpLine, RiChatNewLine } from 'react-icons/ri';
 import { SiSubstack } from 'react-icons/si';
 import TwitForm from './TwitForm';
 import CommentForm from './CommentForm';
@@ -28,10 +28,13 @@ export default function Twits() {
     const [ twitData, setTwitData ] = useState([]);
     // const [formActive, setFormActive] = useState(false);
     const [sync, setSync] = useState(false);
+    const [scrollValue, setScrollValue] = useState(0);
+    const [loadMore, setLoadMore] = useState(false);
+    const [loadingMore, setLoadingMore] = useState(false);
 
     const {getState, dispatch} = store;
     const state = getState(); 
-    const { twits, users, formActive } = useSelector(state => state);
+    const { twits, twitCount, users, formActive, page, perPage } = useSelector(state => state);
 
     const email = localStorage.getItem('email') ? localStorage.getItem('email') : '';
     const username = localStorage.getItem('username') ? localStorage.getItem('username') : '';
@@ -49,6 +52,36 @@ export default function Twits() {
         });
         // setFormActive(!formActive);
     }
+    
+    const scrollToTop = () => {
+        const element = document.getElementById('top');
+        element.scrollIntoView();
+    }
+
+    const getMoreTwits = () =>  {
+        console.log(page, perPage);
+        setLoadingMore(true);
+        let newPage = page + 1;
+        if(twits.length < twitCount) {
+            getTwits(newPage);
+            dispatch({
+                type: 'SET_PAGE',
+                data: newPage
+            });
+        }
+    }
+
+    const onScroll = e => {
+     
+        setScrollValue(window.document.documentElement.scrollTop);
+        if(twits.length < twitCount) {
+            if(e.target.documentElement.scrollHeight - (window.innerHeight + e.target.documentElement.scrollTop) < 1720) {
+                setLoadMore(true);
+            } else {
+              setLoadMore(false);
+            }
+        }
+    };
 
     const logout = () => {
         localStorage.removeItem('token');
@@ -82,7 +115,7 @@ export default function Twits() {
     }, [searchQuery]);
 
     const apiCallHook = async(method, url, data) => {
-        await axios({
+        const res = await axios({
             method,
             url,
             data,
@@ -96,18 +129,24 @@ export default function Twits() {
                     setError(error.response?.data?.error);
                 }
             });
-            setSync(!sync);
+            console.log(res.data);
+            dispatch({
+                type: 'UPDATE_TWIT',
+                data: res.data.data
+            })
+            // setSync(!sync);
     }
 
   
 
-    const getTwits = async() => {
+    const getTwits = async(page = 1, perPage = 50) => {
         if(!token) {
             return;
         }
         const res = await axios({
             method: 'GET',
-            url: `${apiUrl}`,
+            url: `${apiUrl}?page=${page}&perPage=${perPage}`,
+            // url: `${apiUrl}`,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -123,10 +162,13 @@ export default function Twits() {
                     type: 'SET_TWIT_DATA',
                     data: res.data.data
                 });
-                localStorage.setItem('twits', JSON.stringify(res.data.data.map(x => {
-                    x.formActive = false;
-                    return x;
-                })));
+                localStorage.setItem('twits', JSON.stringify(res.data.data));
+                // .map(x => {
+                //     x.formActive = false;
+                //     return x;
+                // })));
+                setLoadMore(false);
+                setLoadingMore(false);
             } else {
                 setError('Please check your network');
                 dispatch({
@@ -141,7 +183,8 @@ export default function Twits() {
             method: 'GET',
             url: `${baseUrl}/auth/users`,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             }
             })
             .catch(error => {
@@ -222,6 +265,20 @@ export default function Twits() {
         });
     }
 
+useEffect(() => { 
+    if(token) {
+        getTwits((page > 1) ? page + 1 : page);
+    }
+
+    return () => {}
+}, []);
+
+useEffect(() => {
+    window.addEventListener("scroll", onScroll);
+
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
 useEffect(() => {
     localStorage.setItem('hash', window.location.hash);
     if(!token) {
@@ -239,14 +296,6 @@ useEffect(() => {
     // }
     return () => {}
 }, []);
-
-useEffect(() => { 
-    if(token) {
-        getTwits();
-    }
-
-    return () => {}
-}, [sync]);
 
 useEffect(() => {
     if(token) {
@@ -267,9 +316,9 @@ useEffect(() => {
 }, [twits]);
 
 return (
-    <div style={{fontFamily: 'Raleway', height: '90vh', fontSize: '0.8em'}} className='text-md mb-5 p-3 m-auto flex justify-center md:w-1/2'>
+    <div id='top' style={{fontFamily: 'Raleway', height: '90vh', fontSize: '0.8em'}} className='text-md mb-5 p-3 m-auto flex justify-center md:w-1/2'>
         <span style={{cursor: 'pointer', borderRadius: '50%'}} className='text-xs mb-3 fixed bottom-10 right-2 bg-green-500 px-4 py-2 text-white'><RiChatNewLine size={25} onClick={showForm} />post</span>
-        {/* <span style={{cursor: 'pointer', borderRadius: '50%'}} className='text-xs fixed bottom-5 right-4 bg-purple-500 px-5 py-3 text-white'><RiArrowUpLine size={20} onClick={showForm} />top</span> */}
+        {(scrollValue > 3000) && <span style={{cursor: 'pointer', borderRadius: '50%', bottom: '10em'}} className='text-xs fixed bottom-5 right-2 bg-purple-500 px-5 py-3 text-white'><RiArrowUpLine size={20} onClick={scrollToTop} />top</span>}
         {formActive && <TwitForm error={error} showForm={showForm} sync={sync} setSync={setSync}/>}
         
         {!formActive && 
@@ -288,13 +337,20 @@ return (
                             <img src={img} alt='Profile' style={{width: '30px', height: '30px', borderRadius: '50%'}} />}
                         </span>) 
                         : <span className='text-left cursor-pointer'><BsPersonFill size={25} onClick={e => history.push(`/${username}`)} /></span>}
+                        {twits.length}{'/'}{twitCount}{'/'}{scrollValue}{/* {window.innerHeight} - {document.documentElement.scrollTop} - {document.scrollingElement.scrollHeight} */}
                     <span className='text-left flex cursor-pointer'  onClick= {e => history.push('people')}><IoIosPeople size={30}/><span className='pt-1 pl-1'>{users > 0 && users}</span></span>
                     
                     <span style={{cursor: 'pointer'}} className='text-right' onClick={() => logout()}><Logout />
                     </span>
                 </div>
                     {/* <TopSearch placeholder='Search' searchQuery={searchQuery} handleChange={handleChange} setSearchQuery={setSearchQuery} error={error} /> */}
-
+                {(twits.length < twitCount) &&
+                <>
+                {loadMore && <div onClick={() => getMoreTwits()} style={{bottom: '2.5em', margin: 'auto'}} className='animate-bounce transition p-2 hover:bg-blue-400 cursor-pointer text-lg rounded flex justify-around shadow-md fixed right-0 left-0 bg-blue-500 text-white md:w-1/2'>
+                 {loadingMore ? 'Loading ...' : 'Load more posts ...'}
+                </div>}
+                </>
+                }
                 <div style={{bottom: '0em', margin: 'auto'}} className='pb-1 rounded flex justify-around border-2 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
                     <span className='cursor-pointer pt-1 border-t-2 border-black' onClick={() => history.push("/twits")}>
                         <AiFillHome size={25} color='black' />
@@ -320,7 +376,7 @@ return (
                 color='#00bfff'
                 height={80} 
                 width={80} 
-            />
+            /> 
             </div>:
             <div className=''>
             {
@@ -336,11 +392,12 @@ return (
 
 export const Twit = (props) => {
     let { twit: {id, text, imageUrl, twits, likes, comments, createdAt, updatedAt }, email, userId, apiCallHook, baseUrl, frontendUrl, sync, setSync, checkOpenForms, error, handleDeleteTwit } = props;
+    let textIntact = text;
     const [commentFormActive, setCommentFormActive] = useState(false);
     const [editLoading, setEditLoading] = useState(false);
-    // const [likeLoading, setLikeLoading] = useState(false);
+    const [likeLoading, setLikeLoading] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
-    const [storyText, setStoryText] = useState(text);
+    const [storyText, setStoryText] = useState(textIntact);
     const [editForm, setEditForm] = useState(false);
     const [linkCopied, setLinkCopied] = useState(false);
     const [more, setMore] = useState(false);
@@ -358,9 +415,11 @@ export const Twit = (props) => {
        return liked.length ? true : false;
     })();
 
-    const [llikeCount, setLikeCount] = useState(likeCount);
+    // const [likeCount, setLikeCount] = useState(likeCount);
+    // let llikeCount = 0;
+    // let lisLiked = false;
     const [lfilteredComents, setFilteredComments] = useState(filteredComments);
-    const [lisLiked, setIsLiked] = useState(isLiked);
+    // const [lisLiked, setIsLiked] = useState(isLiked);
 
     const share = (id, text) => {
         // console.log('Welcome to sharing!');
@@ -434,6 +493,7 @@ export const Twit = (props) => {
     // }
 
     const editStory = () => {
+        console.log(text, storyText)
         setEditForm(!editForm);
         setStoryText(text);
         setMenuShow(false);
@@ -453,16 +513,20 @@ export const Twit = (props) => {
     }
     
     const likeTwit = () => {
-        if(lisLiked) {
-            setIsLiked(!lisLiked);
-            setLikeCount(likeCount - 1);
-        } else {
-            setIsLiked(!lisLiked);
-            setLikeCount(likeCount + 1);
-        }
-
+        setLikeLoading(true);
+        // if(lisLiked) {
+        //     setIsLiked(!lisLiked);
+        //     // setLikeCount(likeCount - 1);
+        // } else {
+        //     setIsLiked(!lisLiked);
+        //     // setLikeCount(likeCount + 1);
+        // }
         apiCallHook('POST', `${baseUrl}/likes/like/${id}`);
+        setTimeout(() => {
+            setLikeLoading(false);
+        }, 800);
     }
+
     const commentTwit = () => {
         showCommentForm();
     }
@@ -590,10 +654,10 @@ export const Twit = (props) => {
         </span> 
         <Image show={show} handleShow={handleShow} sourceData={sourceData} />
         {/* likes and comments count section */}
-            {(llikeCount > 0 || comments.length > 0) && 
+            {(likeCount > 0 || comments.length > 0) && 
             <div className='flex text-md p-1 px-3 mt-1 -mx-4'>
                 <span onClick={showLikes}>
-                    {llikeCount > 0 && <span className='mr-2 cursor-pointer'>{llikeCount}{' '} {llikeCount > 1 ? 'likes' : 'like'} </span>}
+                    {likeCount > 0 && <span className='mr-2 cursor-pointer'>{likeCount}{' '} {likeCount > 1 ? 'likes' : 'like'} </span>}
                 </span>
                 <span onClick={showComments}>
                     {filteredComments.length > 0 && <span className='cursor-pointer'>{filteredComments.length}{' '} {filteredComments.length > 1 ? 'comments' : 'comment'} </span>}
@@ -612,9 +676,11 @@ export const Twit = (props) => {
                 <span className='text-md pt-1 text-blue-600'>{email === twits.email ? 'Me' : `@${twits.username}`}</span>
             </span>
             <span className='flex'> 
-                <span style={{cursor: 'pointer'}} className='flex flex-col text-xs mx-2' onClick={() => likeTwit()}>
-                    <span className={lisLiked ? 'text-blue-500 m-auto' : 'text-gray-500 m-auto'}><AiFillLike size={18}/></span><span>Like</span>
+                {!likeLoading ? <span style={{cursor: 'pointer'}} className='flex flex-col text-xs mx-2' onClick={() => likeTwit()}>
+                    <span className={isLiked ? 'text-blue-500 m-auto' : 'text-gray-500 m-auto'}><AiFillLike size={18}/></span><span>Like</span>
                 </span> 
+                :<LoadSpan height={20} width={18} color='#00bfff' />
+                }
                 <span className='text-xs cursor-pointer mx-2 flex text-gray-500 flex-col' onClick={() => commentTwit()}>
                     <span className='m-auto'><FaRegComment size={16}/></span><span>Comment</span>
                 </span>
@@ -813,3 +879,10 @@ export const LoadSpan = ({height, width, color}) => (
                         />
             </span>
             )
+
+
+
+            // console.log(e.target.documentElement.scrollHeight);
+            // console.log(e.target.documentElement.scrollTop);
+            // console.log(e.target.documentElement.scrollHeight - e.target.documentElement.scrollTop);
+            // console.log(e.target.documentElement.scrollHeight - (window.innerHeight + e.target.documentElement.scrollTop));

@@ -13,7 +13,8 @@ const actions = {
     setFormActive: { type: 'SET_FORM_ACTIVE'},
     setUser: { type: 'SET_USER'},
     setSubs: { type: 'SET_SUBS'},
-    deleteTwit: { type: 'DELETE_TWIT'}
+    deleteTwit: { type: 'DELETE_TWIT'},
+    updateTwit: { type: 'UPDATE_TWIT'}
   }
   
   export default actions;

@@ -3,10 +3,17 @@ import actions from "./actions";
 export default function reducer(state= initialState, action) {
     switch(action.type) {
         case actions.setTwitData.type:
-
+        console.log('setting twits data', action.data);
+        let newTwitData;
+        if(state.twits.length < state.twitCount) {
+                newTwitData = [...state.twits, ...action.data.twits];
+            }  else {
+                newTwitData = state.twits;
+            }
             return {
               ...state,
-              twits: action.data
+              twits: newTwitData,
+              twitCount: action.data.twitCount
             }          
         case actions.setMessagesData.type:
 
@@ -70,6 +77,7 @@ export default function reducer(state= initialState, action) {
               newsType: action.data, news: newsByType, searchQuery: '', page: 1, totalPages: Math.ceil(newsByType.length / state.pageSize)
             }          
             case actions.setPage.type:
+                console.log(action.data)
             return {
                 ...state,
                 page: action.data
@@ -119,6 +127,22 @@ export default function reducer(state= initialState, action) {
                 ...state,
                 twits: leftOvertwits
             }                   
+            case actions.updateTwit.type:
+                const updateTwitIndex = state.twits.findIndex(twit => twit.id === action.data.twit.id)
+                // {
+                //     console.log(twit.id, action.data.twit.id)
+                //     return 
+                // });
+                let updatedTwitData = [...state.twits];
+                if(updateTwitIndex >= 0) {
+                    updatedTwitData.splice(updateTwitIndex, 1, action.data.twit);
+                }
+                // console.log(updateTwitIndex, updatedTwitData);
+                
+            return {
+                ...state,
+                twits: updatedTwitData
+            }                   
             default:
                 return state;
     }
@@ -126,6 +150,9 @@ export default function reducer(state= initialState, action) {
  
 export const initialState = {
     twits: [],
+    twitCount: 1,
+    page: 1,
+    perPage: 20,
     messages: [],
     users: 0,
     peopleData: JSON.parse(localStorage.getItem('peopleData')) || [],
