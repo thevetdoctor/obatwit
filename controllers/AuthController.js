@@ -111,8 +111,9 @@ exports.getUsers = async(req, res) => {
         //           return response(res, 200, { count: users.length, users }, null, 'Cached list of users');
         //         } else {
         //             console.log('cache not found');
-                    const users = await Users.findAll({
-                attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'createdAt', 'bio', 'dob', 'location', 'mobile'],
+            const users = await Users.findAll({
+                where: {isDeleted: false},
+                attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'verified', 'createdAt', 'bio', 'dob', 'location', 'mobile'],
                 include: [
                     {model: Users, as: 'followers',
                     attributes: ['id', 'name', 'username', 'email', 'imageUrl', 'bio', 'dob', 'location', 'mobile'],
@@ -247,5 +248,35 @@ exports.updateUserImage = async(req, res) => {
             response(res, 200, null, null, 'User profile image updated successfully');
         }catch(error) {
             response(res, 500, null, error.message, 'Error in updating user profile image');
+        }
+}; 
+
+exports.deactivateUser = async(req, res) => {
+    let { userId } = req.params;
+
+    try {
+        if(!userId) return response(res, 400, null, 'Please supply missing input(s)');
+        const user = await Users.findByPk(userId);
+        if(!user) response(res, 400, null, null, 'User not found');
+            await Users.update({isDeleted: true}, {where: {id: userId}});
+         
+            response(res, 200, null, null, 'User account deactivated successfully');
+        }catch(error) {
+            response(res, 500, null, error.message, 'Error in deactivating user account');
+        }
+}; 
+
+exports.deleteUser = async(req, res) => {
+    let { userId } = req.params;
+
+    try {
+        if(!userId) return response(res, 400, null, 'Please supply missing input(s)');
+        const user = await Users.findByPk(userId);
+        if(!user) response(res, 400, null, null, 'User not found');
+            await Users.delete({where: {id: userId}});
+         
+            response(res, 200, null, null, 'User account deleted successfully');
+        }catch(error) {
+            response(res, 500, null, error.message, 'Error in deleting user account');
         }
 }; 

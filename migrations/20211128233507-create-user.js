@@ -42,10 +42,22 @@ module.exports = {
       dob: {
         type: Sequelize.STRING,
       },
+      dobVisible: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
       mobile: {
         type: Sequelize.STRING,
       },
+      mobileVisible: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
       verified: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      isDeleted: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       },

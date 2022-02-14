@@ -53,10 +53,22 @@ module.exports = (sequelize, DataTypes) => {
     dob: {
       type: DataTypes.STRING,
     },
+    dobVisible: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
     mobile: {
       type: DataTypes.STRING,
     },
+    mobileVisible: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
     verified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    isDeleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },

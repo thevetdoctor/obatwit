@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Posts from "./components/Posts";
-import Twits from './components/Twits';
+import Twits from './components/Twits/Twits.js';
 import Profile from './components/Profile';
 import People from './components/People';
 import Follower from './components/Followers';

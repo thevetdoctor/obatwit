@@ -12,5 +12,7 @@ router.post('/verify/all', AuthController.verifyUsers);
 router.get('/emails', checkAuth, AuthController.getAllUserEmails);
 router.patch('/update', checkAuth, AuthController.updateUserInfo);
 router.patch('/imageurl/update', checkAuth, AuthController.updateUserImage);
+router.patch('/:userId', checkAuth, AuthController.deactivateUser);
+router.delete('/:userId', checkAuth, AuthController.deleteUser);
 
 module.exports = router;

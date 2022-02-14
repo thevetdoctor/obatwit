@@ -2,21 +2,25 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from "react-router-dom";
+import { useSelector } from 'react-redux';
+
+import axios from 'axios';
+import Moment from 'react-moment';
 import { BsPersonFill, BsToggleOff, BsToggleOn } from 'react-icons/bs';
 import { IoIosArrowBack, IoIosPeople, IoMdCloudUpload } from 'react-icons/io';
-import { GrEdit, GrUploadOption } from 'react-icons/gr';
-import Moment from 'react-moment';
-import axios from 'axios';
-import { baseUrl } from '../helper';
-import { LoadSpan } from './Twits';
-import store from '../redux/store';
-import { useSelector } from 'react-redux';
+import { GrClose, GrEdit, GrUploadOption } from 'react-icons/gr';
 import { AiFillHome } from 'react-icons/ai';
+import { MdEmail } from 'react-icons/md';
 import Loader from 'react-loader-spinner';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { MdEmail } from 'react-icons/md';
-import { RiChatNewLine } from 'react-icons/ri';
+
+import store from '../redux/store';
+import AttachProfileImage from './AttachProfileImage';
+import { baseUrl } from '../helper';
+import { LoadSpan } from './Twits';
+import UserAssetTab from './UserAssetTab';
+
 
 export default function Profile() {
     const [error, setError] = useState('');
@@ -33,7 +37,6 @@ export default function Profile() {
     const {getState, dispatch} = store;
     const state = getState();
     const { twits, formActive, userData, followers, following, followerCount, isFollower, isFollowing, followingCount, userTwits } = useSelector(state => state);
-    // console.log(userData, followers, following, followerCount, followingCount, isFollower, isFollowing, userTwits);
     
     const apiCallHook = async(method, url, data) => {
         const res = await axios({
@@ -68,26 +71,7 @@ export default function Profile() {
                     localStorage.setItem('peopleData', JSON.stringify(res.data.data.users));
                     localStorage.setItem('usersData', JSON.stringify(res.data.data.users));
                     localStorage.setItem('users', JSON.stringify(res.data.data.users));
-                    // const userTwits = twits.filter(obj => obj.twits.username === user);
-                    // const userDataInStore = res.data.data.users.filter(obj => obj.username === user)[0];
-                    // const followers = userDataInStore.followers.filter(user => user.follower.isFollowed);
-                    // const following = userDataInStore.following.filter(user => user.follower.isFollowed);
-                    // const checkIsFollower = followers.filter(user => user.email === email).length > 0;
-                    // const checkIsFollowing = following.filter(user => user.email === email).length > 0;
-                    // dispatch({
-                        //     type: 'SET_USER_DATA',
-                        //     data: userDataInStore
-                        // });
-                        // setFollowerCount(followers.length);
-                        // setFollowingCount(following.length);
-                        // setIsFollower(checkIsFollower);
-                        // setIsFollowing(checkIsFollowing);
-                    // setTwitCount(userTwits.length);
-                    
-                    // if(userDataInStore.imageUrl) {
-                        //     localStorage.setItem('profileImg', userDataInStore.imageUrl);
-                    //     setProfileImg(userDataInStore.imageUrl);
-                    // }
+
                     
                     setError('');
                 } else{
@@ -107,22 +91,7 @@ export default function Profile() {
                 dispatch({
                     type: 'SET_USER',
                     data: {user, email} 
-                });
-                // const userTwits = twits.filter(obj => obj.twits.username === user);
-                // const userDataInStore = JSON.parse(localStorage.getItem('usersData')).filter(obj => obj.username === user)[0];
-                // const followers = userDataInStore?.followers.filter(user => user.follower.isFollowed);
-                // const following = userDataInStore?.following.filter(user => user.follower.isFollowed);
-                // const checkIsFollower = followers?.filter(user => user.email === email).length > 0;
-                // const checkIsFollowing = following?.filter(user => user.email === email).length > 0;
-                // dispatch({
-                    //     type: 'SET_USER_DATA',
-                    //     data: userDataInStore
-                // });
-                // setFollowerCount(followers?.length);
-                // setFollowingCount(following?.length);
-                // setIsFollower(checkIsFollower);
-                // setIsFollowing(checkIsFollowing);
-                // setTwitCount(userTwits?.length);         
+                });         
             }
         }
 
@@ -162,22 +131,17 @@ export default function Profile() {
                 type: 'SET_USER',
                 data: {user, email}
             });
+            console.log(userData);
+
             return () => {}
         }, []);
-    // useEffect(() => {
-        //     if(token) {
-            //         getTwits();
-            //     }
-            
-            //     return () => {}
-            // }, []);
-            
+ 
             return (
                 <div id={`${user}`} style={{fontFamily: 'Raleway', fontSize: '1.1em'}} className='shadow-lg border border-gray-200 rounded p-2 mb-4 m-auto justify-center md:w-1/2'>
             <div style={{margin: 'auto', top: '0em'}} className='flex justify-between mb-6 border-3 border -mt-2 -mx-2 shadow-md p-2 bg-white fixed right-0 left-0 md:w-1/2'>
                 <span className='cursor-pointer' onClick={() => history.goBack()}><IoIosArrowBack size={30} /></span>
                 <span style={{fontFamily: 'Raleway'}} className='text-xl font-bold self-center'>Profile</span>
-                <span></span>
+                <span className='invisible'>yeah</span>
             </div>
     
             <div style={{bottom: '0em', margin: 'auto'}} className='pb-1 rounded flex justify-around border-2 border shadow-md fixed right-0 left-0 bg-white md:w-1/2'>
@@ -204,58 +168,40 @@ export default function Profile() {
         />
         </div>:
         <>
-            <div style={{marginTop: '3.5em'}} className='mb-1 flex border-b-2'>
-                <>
-                    <AttachProfileImage imgUrl={userData?.imageUrl} error={error} email={email} userData={userData} apiCallHook={apiCallHook} />
-                </>
-                <div className='ml-2 flex-grow mb-1'>
+            <div style={{marginTop: '3em'}} className='mb-1 p-1 flex flex-col border-2 border shadow-md rounded bg-gray-200'>
+                <div className='flex flex-grow'>
                     <div>
-                        <span className='text-xl font-semibold ml-2 mb-2'>{userData?.username}</span>
+                        <AttachProfileImage imgUrl={userData?.imageUrl} error={error} email={email} userData={userData} apiCallHook={apiCallHook} />
                     </div>
-                    <div className='flex justify-between mt-3 p-1 rounded bg-gray-200'>
-                            <span className={'flex-col flex text-center p-2 cursor-pointer mr-3'} onClick= {e => history.push(`/follower/${user}`)}> 
-                                <span className='text-lg font-bold'>
-                                    {followerCount}
-                                     {/* !== null ?
-                                    followerCount
-                                    :
-                                    <LoadSpan height={20} width={20} color='#000' className='-mb-3' />} */}
-                                </span> 
-                                <span className='text-xs'>
-                                        {followerCount  > 1 ? 'followers' : 'follower'}
-                                </span>
-                            </span>
-                            <span className={'flex-col flex text-center p-2 cursor-pointer mr-3'}  onClick= {e => history.push(`/following/${user}`)}> 
-                                <span className='text-lg font-bold'>
-                                {followingCount}
-                                 {/* !== null ?
-                                    followingCount
-                                    :
-                                    <LoadSpan height={20} width={20} color='#000' className='-mb-3' />} */}
-                                </span>
-                                <span className='text-xs'> following</span>
-                            </span>
-                            <span className={'flex-col flex text-center p-2 cursor-pointer mr-3'} onClick= {e => history.push(`/twits/${user}`)}> 
-                                <span className='text-lg font-bold'>
-                                {userTwits.length}
-                                 {/* !== null ?
-                                    twitCount
-                                    :
-                                    <LoadSpan height={20} width={20} color='#000' className='-mb-3' />} */}
-                                </span>
-                                <span className='text-xs'> {userTwits.length  > 1 ? 'posts' : 'post'}</span>
-                            </span>
+                    <div className='flex ml-3 mb-1'>
+                        <div className='flex flex-col text-center align-items-center'>
+                            <div className='flex flex-col'>
+                                <span className='text-xl font-semibold ml-2 mb-2'>{userData?.username}</span>
+                                <span className={`self-center mb-1 text-sm font-semibold bg-green-400 rounded text-white ${userData?.verified ? 'w-20' : 'w-40'}`}>{userData?.verified ? 'Verified' : 'Not verified'}</span>
+                            </div>
+                            <div className='flex justify-center rounded bg-gray-300 shadow-md'>
+                                <UserAssetTab url={`/follower/${user}`} count={followerCount} status={followerCount  > 1 ? 'followers' : 'follower'} />
+                                <UserAssetTab url={`/following/${user}`} count={followingCount} status='following' />
+                                <UserAssetTab url={`/twits/${user}`} count={userTwits.length} status={userTwits.length  > 1 ? 'posts' : 'post'} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className='text-sm text-center font-semibold p-1 border-2 bg-gray-400 shadow-md rounded-lg'>
+                    <div className={`${userData?.bioVisible && 'hidden'} px-2`}>
+                        <div className='text-white text-center font-semibold mb-2'>About Me</div>
+                        <div>{userData?.bio  ? userData?.bio : 'Not yet specified'}</div>
                     </div>
                 </div>
             </div>
             <>
             {error && 
-                <div style={{backgroundColor: 'white', fontWeight: 'bold'}} className='text-red-500 text-center py-1 mb-0 rounded'>
+                <div style={{backgroundColor: 'white', fontSize: '0.6em'}} className='text-red-500 text-center py-1 mb-0 rounded'>
                     {error}
                 </div>
             }
             </>
-            <span className='text-sm mt-3 mb-4 flex justify-between'>
+            <span className='text-sm pt-3 pb-1 mt-1 flex justify-between bg-gray-100'>
                 <span>
                     <span className=''>Joined: <Moment fromNow>{userData?.createdAt}</Moment></span><br />
                     {isFollowing && <span className='text-xs text-white bg-gray-500 rounded p-1 mb-3'> 
@@ -279,11 +225,11 @@ export default function Profile() {
                 </span>
             </span>
             <>
-            {(email === userData?.email) && 
+            {/* {(email === userData?.email) && 
                 <span className={'text-sm text-white bg-gray-900 rounded hover:bg-gray-400 p-2 cursor-pointer mr-3 mt-5'}  onClick= {e => history.push(`/chats/${user}`)}> 
                     Messages
                 </span>
-            }
+            } */}
             </>
             <UserProfile email={email} userData={userData} apiCallHook={apiCallHook} defaultUsername={defaultUsername} />
                     
@@ -341,13 +287,16 @@ const UserProfile = ({userData, email, apiCallHook, defaultUsername}) => {
     }
 
     return (
-        <div className='text-sm border border-t-1 shadow-md rounded mt-2 mb-8'>
-        <div className='flex mt-2 justify-between'>
+        <div className='border bg-gray-100 border-t-1 shadow-md rounded mt-1 mb-8'>
+        <div className='flex mt-2 justify-between mb-3'>
             <span className='ml-2 underline'>Profile Information</span>
             {(email === userData?.email) &&
             <>
                 {!editForm && <span className=' flex cursor-pointer text-black p-2 rounded-full justify-items-end' onClick={() => editProfile()}> 
                     <GrEdit size={18} /> <span className='text-sm ml-1'>Edit</span>
+                </span>}
+                {editForm && <span className='flex cursor-pointer text-black p-2 rounded-full' onClick={() => setEditForm()}> 
+                    <GrClose size={18} /><span className='text-sm ml-1'>Cancel</span>
                 </span>}
                 {editForm && <span className='flex cursor-pointer text-black p-2 rounded-full' onClick={() => editProfile()}> 
                     <GrUploadOption size={18} /><span className='text-sm ml-1'>Update</span>
@@ -361,9 +310,9 @@ const UserProfile = ({userData, email, apiCallHook, defaultUsername}) => {
                 {(email === userData?.email) &&
                 <span className='cursor-pointer mr-4'>
                     {nameHidden ? 
-                    <span onClick={() => setNameHidden(false)}><BsToggleOff size={30} /></span> 
+                    <span className='text-green-400' onClick={() => setNameHidden(false)}><BsToggleOff size={30} /></span> 
                     : 
-                    <span onClick={() => setNameHidden(true)}><BsToggleOn size={30} /></span>}
+                    <span className='text-green-400' onClick={() => setNameHidden(true)}><BsToggleOn size={30} /></span>}
                 </span>}
             </div>
             {editForm && <input
@@ -373,9 +322,9 @@ const UserProfile = ({userData, email, apiCallHook, defaultUsername}) => {
             style={{width: '16em'}}
             onChange={handleProfileInfo}
             placeholder="Your name"
-            className='p-1 my-1 rounded'
+            className='p-1 my-1 rounded-lg'
             />}
-            {!editForm && <div className={`${nameHidden && 'hidden'} px-2`}>{name ? name : 'Not available'}</div>}
+            {!editForm && <span style={{fontSize: '0.7em'}} className={`${nameHidden && 'hidden'} px-2`}>{name ? name : 'Not available'}</span>}
         </div>
         <div className='mb-2'>
             <div className='flex justify-between'>
@@ -383,9 +332,9 @@ const UserProfile = ({userData, email, apiCallHook, defaultUsername}) => {
                 {(email === userData?.email) &&
                 <span className='cursor-pointer mr-4'>
                     {usernameHidden ? 
-                    <span onClick={() => setUsernameHidden(false)}><BsToggleOff size={30} /></span> 
+                    <span className='text-green-400' onClick={() => setUsernameHidden(false)}><BsToggleOff size={30} /></span> 
                     : 
-                    <span onClick={() => setUsernameHidden(true)}><BsToggleOn size={30} /></span>}
+                    <span className='text-green-400' onClick={() => setUsernameHidden(true)}><BsToggleOn size={30} /></span>}
                 </span>}
             </div>
             {editForm && <input
@@ -396,9 +345,9 @@ const UserProfile = ({userData, email, apiCallHook, defaultUsername}) => {
             onChange={handleProfileInfo}
             disabled
             placeholder="Update your username"
-            className='p-1 my-1 rounded'
+            className='p-1 my-1 rounded-lg'
             />}
-            {!editForm && <div className={`${usernameHidden && 'hidden'} px-2`}>{username ? username : 'Not available'}</div>}
+            {!editForm && <div style={{fontSize: '0.7em'}} className={`${usernameHidden && 'hidden'} px-2`}>{username ? username : 'Not available'}</div>}
         </div>
         <div className='mb-2'>
             <div className='flex justify-between'>
@@ -406,9 +355,9 @@ const UserProfile = ({userData, email, apiCallHook, defaultUsername}) => {
                 {(email === userData?.email) &&
                 <span className='cursor-pointer mr-4'>
                     {bioHidden ? 
-                    <span onClick={() => setBioHidden(false)}><BsToggleOff size={30} /></span> 
+                    <span className='text-green-400' onClick={() => setBioHidden(false)}><BsToggleOff size={30} /></span> 
                     : 
-                    <span onClick={() => setBioHidden(true)}><BsToggleOn size={30} /></span>}
+                    <span className='text-green-400' onClick={() => setBioHidden(true)}><BsToggleOn size={30} /></span>}
                 </span>}
             </div>
             {editForm && <textarea
@@ -420,9 +369,9 @@ const UserProfile = ({userData, email, apiCallHook, defaultUsername}) => {
             style={{width: '18em', height: '8em'}}
             onChange={handleProfileInfo} 
             placeholder="Tell the world briefly about yourself"
-            className='text-sm p-1 my-1 rounded'
+            className='text-sm p-1 my-1 rounded-lg'
             />}
-            {!editForm && <div className={`${bioHidden && 'hidden'} px-2`}>{bio  ? bio : 'Not available'}</div>}
+            {!editForm && <div style={{fontSize: '0.7em'}} className={`${bioHidden && 'hidden'} px-2`}>{bio  ? bio : 'Not available'}</div>}
         </div>
         <div className='mb-2'>
             <div className='flex justify-between'>
@@ -430,9 +379,9 @@ const UserProfile = ({userData, email, apiCallHook, defaultUsername}) => {
                 {(email === userData?.email) &&
                 <span className='cursor-pointer mr-4'>
                     {locationHidden ? 
-                    <span onClick={() => setLocationHidden(false)}><BsToggleOff size={30} /></span> 
+                    <span className='text-green-400' onClick={() => setLocationHidden(false)}><BsToggleOff size={30} /></span> 
                     : 
-                    <span onClick={() => setLocationHidden(true)}><BsToggleOn size={30} /></span>}
+                    <span className='text-green-400' onClick={() => setLocationHidden(true)}><BsToggleOn size={30} /></span>}
                 </span>}
             </div>
             {editForm && <input
@@ -442,9 +391,9 @@ const UserProfile = ({userData, email, apiCallHook, defaultUsername}) => {
             style={{width: '16em'}}
             onChange={handleProfileInfo}
             placeholder="Share your location"
-            className='p-1 my-1 rounded'
+            className='p-1 my-1 rounded-lg'
             />}
-            {!editForm && <div className={`${locationHidden && 'hidden'} px-2`}>{location ? location : 'Not available'}</div>}
+            {!editForm && <div style={{fontSize: '0.7em'}} className={`${locationHidden && 'hidden'} px-2`}>{location ? location : 'Not available'}</div>}
         </div>
         <div className='mb-2'>
             <div className='flex justify-between'>
@@ -452,9 +401,9 @@ const UserProfile = ({userData, email, apiCallHook, defaultUsername}) => {
                 {(email === userData?.email) &&
                 <span className='cursor-pointer mr-4'>
                     {dobHidden ? 
-                    <span onClick={() => setDobHidden(false)}><BsToggleOff size={30} /></span> 
+                    <span className='text-green-400' onClick={() => setDobHidden(false)}><BsToggleOff size={30} /></span> 
                     : 
-                    <span onClick={() => setDobHidden(true)}><BsToggleOn size={30} /></span>}
+                    <span className='text-green-400' onClick={() => setDobHidden(true)}><BsToggleOn size={30} /></span>}
                 </span>}
             </div>
             {editForm && <input
@@ -464,9 +413,9 @@ const UserProfile = ({userData, email, apiCallHook, defaultUsername}) => {
             style={{width: '16em'}}
             onChange={handleProfileInfo}
             placeholder="Date of Birth"
-            className='p-1 my-1 rounded'
+            className='p-1 my-1 rounded-lg'
             />}
-            {!editForm && <div className={`${dobHidden && 'hidden'} px-2`}>{dob ? dob : 'Not available'}</div>}
+            {!editForm && <div style={{fontSize: '0.7em'}} className={`${dobHidden && 'hidden'} px-2`}>{dob ? dob : 'Not available'}</div>}
         </div>
         <div className='mb-2'>
             <div className='flex justify-between'>
@@ -474,9 +423,9 @@ const UserProfile = ({userData, email, apiCallHook, defaultUsername}) => {
                 {(email === userData?.email) &&
                 <span className='cursor-pointer mr-4'>
                     {mobileHidden ? 
-                    <span onClick={() => setMobileHidden(false)}><BsToggleOff size={30} /></span> 
+                    <span className='text-green-400' onClick={() => setMobileHidden(false)}><BsToggleOff size={30} /></span> 
                     : 
-                    <span onClick={() => setMobileHidden(true)}><BsToggleOn size={30} /></span>}
+                    <span className='text-green-400' onClick={() => setMobileHidden(true)}><BsToggleOn size={30} /></span>}
                 </span>}
             </div>
             {editForm && <input
@@ -487,69 +436,33 @@ const UserProfile = ({userData, email, apiCallHook, defaultUsername}) => {
             style={{width: '16em'}}
             onChange={handleProfileInfo}
             placeholder="Drop your mobile number "
-            className='p-1 my-1 rounded'
+            className='p-1 my-1 rounded-lg'
             />}
-            {!editForm && <div className={`${mobileHidden && 'hidden'} px-2`}>{mobile ? mobile : 'Not available'}</div>}
+            {!editForm && <div style={{fontSize: '0.7em'}} className={`${mobileHidden && 'hidden'} px-2`}>{mobile ? mobile : 'Not available'}</div>}
         </div>
       </div>
     )
 }
 
-function AttachProfileImage({imgUrl, error, email, userData, apiCallHook}) {
-    
-    const [limgUrl, setlImgUrl] = useState("");
 
-    const handleImage = async(e) => {
-        const serviceImage = e.target.files[0];
-        const data = new FormData();
-        const url = "https://api.cloudinary.com/v1_1/thevetdoctor/image/upload";
-        data.append("file", serviceImage);
-        data.append("upload_preset", "zunt8yrw");
-        const res = await fetch(url, {
-          method: "POST",
-          body: data
-        });
-        const imgLink = await res.json();
-        setlImgUrl(imgLink.secure_url);
-        apiCallHook('PATCH', `${baseUrl}/auth/imageurl/update`, {imageUrl: imgLink.secure_url});
-      }
 
-    return (
-        <div className="flex p-1 rounded ml-1 mr-4 md:w-1/5">
-            <label className={`${(email === userData?.email) && 'cursor-pointer'} -ml-2 -mr-5 flex`}>
-            {(limgUrl || imgUrl) ?
-                <>
-                {!error ? 
-                    <img src={limgUrl ? limgUrl : imgUrl} alt='avatar' className='w-40 max-h-52 flex-grow rounded-lg -mr-2'
-                    />:
-                    <span className='flex bg-gray-300 p-3 rounded flex-grow'>
-                        <BsPersonFill size={80} />
-                    </span>}
-                </>
-            :
-            <>
-                <span className='flex bg-gray-300 p-3 rounded flex-grow'>
-                    <BsPersonFill size={80} />
-                </span>
-            </>
-            //   {uploading === "loading" &&
-            //   <Loader 
-            //       type='TailSpin'
-            //       color='#000'
-            //       height={20} 
-            //       width={20} 
-            //   />}
-            }
-            {(email === userData?.email) &&
-
-            <input 
-                type="file"
-                placeholder=""
-                accept="image/*;capture"
-                className="hidden"
-                onChange={e => handleImage(e)}
-            />}
-        </label>
-        </div>
-    )
-}
+                    // const userTwits = twits.filter(obj => obj.twits.username === user);
+                    // const userDataInStore = res.data.data.users.filter(obj => obj.username === user)[0];
+                    // const followers = userDataInStore.followers.filter(user => user.follower.isFollowed);
+                    // const following = userDataInStore.following.filter(user => user.follower.isFollowed);
+                    // const checkIsFollower = followers.filter(user => user.email === email).length > 0;
+                    // const checkIsFollowing = following.filter(user => user.email === email).length > 0;
+                    // dispatch({
+                        //     type: 'SET_USER_DATA',
+                        //     data: userDataInStore
+                        // });
+                        // setFollowerCount(followers.length);
+                        // setFollowingCount(following.length);
+                        // setIsFollower(checkIsFollower);
+                        // setIsFollowing(checkIsFollowing);
+                    // setTwitCount(userTwits.length);
+                    
+                    // if(userDataInStore.imageUrl) {
+                        //     localStorage.setItem('profileImg', userDataInStore.imageUrl);
+                    //     setProfileImg(userDataInStore.imageUrl);
+                    // }
